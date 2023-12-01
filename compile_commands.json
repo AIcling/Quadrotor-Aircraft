@@ -1,0 +1,32 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/arm-none-eabi-gcc",
+      "-c",
+      "-mcpu=cortex-m4",
+      "-mthumb",
+      "-mfpu=fpv4-sp-d16",
+      "-mfloat-abi=hard",
+      "-DSTM32F401xx",
+      "-DUSE_STDPERIPH_DRIVER",
+      "-I./Start",
+      "-I./Hardware/Inc",
+      "-I./User/Inc",
+      "-I./Tools/Inc",
+      "-I./Lib/inc",
+      "-Og",
+      "-Wall",
+      "-fdata-sections",
+      "-ffunction-sections",
+      "-g",
+      "-O0",
+      "-Wa,-a,-ad,-alms=build/Serial.lst",
+      "-o",
+      "build/Serial.o",
+      "./Hardware/Src/Serial.c"
+    ],
+    "directory": "/mnt/e/Flyer/MPU_POSE",
+    "file": "/mnt/e/Flyer/MPU_POSE/Hardware/Src/Serial.c",
+    "output": "/mnt/e/Flyer/MPU_POSE/build/Serial.o"
+  }
+]

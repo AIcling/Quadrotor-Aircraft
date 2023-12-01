@@ -1,0 +1,479 @@
+ARM GAS  /tmp/ccZJNrV3.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 6
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"MPU6050.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "./Hardware/Src/MPU6050.c"
+  20              		.global	MPU6050_data
+  21              		.section	.bss.MPU6050_data,"aw",%nobits
+  22              		.align	2
+  25              	MPU6050_data:
+  26 0000 00000000 		.space	14
+  26      00000000 
+  26      00000000 
+  26      0000
+  27              		.section	.text.MPU6050_Init,"ax",%progbits
+  28              		.align	1
+  29              		.global	MPU6050_Init
+  30              		.syntax unified
+  31              		.thumb
+  32              		.thumb_func
+  34              	MPU6050_Init:
+  35              	.LFB123:
+   1:./Hardware/Src/MPU6050.c **** #include "delay.h"
+   2:./Hardware/Src/MPU6050.c **** #include "stm32f4xx.h"                  // Device header
+   3:./Hardware/Src/MPU6050.c **** #include "MPU6050.h"
+   4:./Hardware/Src/MPU6050.c **** #include "OLED.h"
+   5:./Hardware/Src/MPU6050.c **** #include <stdint.h>
+   6:./Hardware/Src/MPU6050.c **** #include "i2c_soft.h"
+   7:./Hardware/Src/MPU6050.c **** int16_t MPU6050_data[7];
+   8:./Hardware/Src/MPU6050.c **** void MPU6050_Init(void){  //初始化MPU6050
+  36              		.loc 1 8 24
+  37              		.cfi_startproc
+  38              		@ args = 0, pretend = 0, frame = 0
+  39              		@ frame_needed = 1, uses_anonymous_args = 0
+  40 0000 80B5     		push	{r7, lr}
+  41              		.cfi_def_cfa_offset 8
+  42              		.cfi_offset 7, -8
+  43              		.cfi_offset 14, -4
+  44 0002 00AF     		add	r7, sp, #0
+  45              		.cfi_def_cfa_register 7
+   9:./Hardware/Src/MPU6050.c **** 	MPU6050_SendByte(0x6B,0x80);//解除休眠状态
+  46              		.loc 1 9 2
+  47 0004 8021     		movs	r1, #128
+  48 0006 6B20     		movs	r0, #107
+ARM GAS  /tmp/ccZJNrV3.s 			page 2
+
+
+  49 0008 FFF7FEFF 		bl	MPU6050_SendByte
+  10:./Hardware/Src/MPU6050.c **** 	//  Delay_ms(1000); //等待器件就绪
+  11:./Hardware/Src/MPU6050.c **** 	// MPU6050_SendByte(0x6C,0xC0);
+  12:./Hardware/Src/MPU6050.c **** 	MPU6050_SendByte(0x6B,0x00);//8MZ内部晶振
+  50              		.loc 1 12 2
+  51 000c 0021     		movs	r1, #0
+  52 000e 6B20     		movs	r0, #107
+  53 0010 FFF7FEFF 		bl	MPU6050_SendByte
+  13:./Hardware/Src/MPU6050.c **** 	MPU6050_SendByte(0x19,0x01);//陀螺仪采样率
+  54              		.loc 1 13 2
+  55 0014 0121     		movs	r1, #1
+  56 0016 1920     		movs	r0, #25
+  57 0018 FFF7FEFF 		bl	MPU6050_SendByte
+  14:./Hardware/Src/MPU6050.c **** 	MPU6050_SendByte(0x1A,0x06);//中断和低通滤波器
+  58              		.loc 1 14 2
+  59 001c 0621     		movs	r1, #6
+  60 001e 1A20     		movs	r0, #26
+  61 0020 FFF7FEFF 		bl	MPU6050_SendByte
+  15:./Hardware/Src/MPU6050.c **** 	MPU6050_SendByte(0x1B,0x18);//陀螺仪自检及测量范围，典型值：0x18(不自检，2000de
+  62              		.loc 1 15 2
+  63 0024 1821     		movs	r1, #24
+  64 0026 1B20     		movs	r0, #27
+  65 0028 FFF7FEFF 		bl	MPU6050_SendByte
+  16:./Hardware/Src/MPU6050.c **** 	MPU6050_SendByte(0x1C,0x00);//配置加速度传感器工作在4G模式
+  66              		.loc 1 16 2
+  67 002c 0021     		movs	r1, #0
+  68 002e 1C20     		movs	r0, #28
+  69 0030 FFF7FEFF 		bl	MPU6050_SendByte
+  17:./Hardware/Src/MPU6050.c **** 	
+  18:./Hardware/Src/MPU6050.c **** 	//I2C_SEND_BYTE(0xD0,0x6A,0x00);//与HMC5883L有关
+  19:./Hardware/Src/MPU6050.c **** 	//I2C_SEND_BYTE(0xD0,0x37,0x02); 
+  20:./Hardware/Src/MPU6050.c **** }
+  70              		.loc 1 20 1
+  71 0034 00BF     		nop
+  72 0036 80BD     		pop	{r7, pc}
+  73              		.cfi_endproc
+  74              	.LFE123:
+  76              		.section	.text.MPU6050_SendByte,"ax",%progbits
+  77              		.align	1
+  78              		.global	MPU6050_SendByte
+  79              		.syntax unified
+  80              		.thumb
+  81              		.thumb_func
+  83              	MPU6050_SendByte:
+  84              	.LFB124:
+  21:./Hardware/Src/MPU6050.c **** void MPU6050_SendByte(u8 writeAddr,u8 pBuffer){
+  85              		.loc 1 21 47
+  86              		.cfi_startproc
+  87              		@ args = 0, pretend = 0, frame = 8
+  88              		@ frame_needed = 1, uses_anonymous_args = 0
+  89 0000 80B5     		push	{r7, lr}
+  90              		.cfi_def_cfa_offset 8
+  91              		.cfi_offset 7, -8
+  92              		.cfi_offset 14, -4
+  93 0002 82B0     		sub	sp, sp, #8
+  94              		.cfi_def_cfa_offset 16
+  95 0004 00AF     		add	r7, sp, #0
+ARM GAS  /tmp/ccZJNrV3.s 			page 3
+
+
+  96              		.cfi_def_cfa_register 7
+  97 0006 0346     		mov	r3, r0
+  98 0008 0A46     		mov	r2, r1
+  99 000a FB71     		strb	r3, [r7, #7]
+ 100 000c 1346     		mov	r3, r2
+ 101 000e BB71     		strb	r3, [r7, #6]
+  22:./Hardware/Src/MPU6050.c **** 	I2CStart();
+ 102              		.loc 1 22 2
+ 103 0010 FFF7FEFF 		bl	I2CStart
+  23:./Hardware/Src/MPU6050.c ****     I2CSendByte(MPU6050_ADD);
+ 104              		.loc 1 23 5
+ 105 0014 D020     		movs	r0, #208
+ 106 0016 FFF7FEFF 		bl	I2CSendByte
+  24:./Hardware/Src/MPU6050.c **** 	while(!I2CWaitAck());
+ 107              		.loc 1 24 7
+ 108 001a 00BF     		nop
+ 109              	.L3:
+ 110              		.loc 1 24 9 discriminator 1
+ 111 001c FFF7FEFF 		bl	I2CWaitAck
+ 112 0020 0346     		mov	r3, r0
+ 113              		.loc 1 24 8 discriminator 1
+ 114 0022 002B     		cmp	r3, #0
+ 115 0024 FAD0     		beq	.L3
+  25:./Hardware/Src/MPU6050.c **** 	I2CSendByte(writeAddr);
+ 116              		.loc 1 25 2
+ 117 0026 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 118 0028 1846     		mov	r0, r3
+ 119 002a FFF7FEFF 		bl	I2CSendByte
+  26:./Hardware/Src/MPU6050.c **** 	while(!I2CWaitAck());
+ 120              		.loc 1 26 7
+ 121 002e 00BF     		nop
+ 122              	.L4:
+ 123              		.loc 1 26 9 discriminator 1
+ 124 0030 FFF7FEFF 		bl	I2CWaitAck
+ 125 0034 0346     		mov	r3, r0
+ 126              		.loc 1 26 8 discriminator 1
+ 127 0036 002B     		cmp	r3, #0
+ 128 0038 FAD0     		beq	.L4
+  27:./Hardware/Src/MPU6050.c **** 	I2CSendByte(pBuffer);
+ 129              		.loc 1 27 2
+ 130 003a BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 131 003c 1846     		mov	r0, r3
+ 132 003e FFF7FEFF 		bl	I2CSendByte
+  28:./Hardware/Src/MPU6050.c **** 	while(!I2CWaitAck());
+ 133              		.loc 1 28 7
+ 134 0042 00BF     		nop
+ 135              	.L5:
+ 136              		.loc 1 28 9 discriminator 1
+ 137 0044 FFF7FEFF 		bl	I2CWaitAck
+ 138 0048 0346     		mov	r3, r0
+ 139              		.loc 1 28 8 discriminator 1
+ 140 004a 002B     		cmp	r3, #0
+ 141 004c FAD0     		beq	.L5
+  29:./Hardware/Src/MPU6050.c **** 	I2CStop();
+ 142              		.loc 1 29 2
+ 143 004e FFF7FEFF 		bl	I2CStop
+  30:./Hardware/Src/MPU6050.c **** }
+ARM GAS  /tmp/ccZJNrV3.s 			page 4
+
+
+ 144              		.loc 1 30 1
+ 145 0052 00BF     		nop
+ 146 0054 0837     		adds	r7, r7, #8
+ 147              		.cfi_def_cfa_offset 8
+ 148 0056 BD46     		mov	sp, r7
+ 149              		.cfi_def_cfa_register 13
+ 150              		@ sp needed
+ 151 0058 80BD     		pop	{r7, pc}
+ 152              		.cfi_endproc
+ 153              	.LFE124:
+ 155              		.section	.text.MPU6050_READ,"ax",%progbits
+ 156              		.align	1
+ 157              		.global	MPU6050_READ
+ 158              		.syntax unified
+ 159              		.thumb
+ 160              		.thumb_func
+ 162              	MPU6050_READ:
+ 163              	.LFB125:
+  31:./Hardware/Src/MPU6050.c **** 
+  32:./Hardware/Src/MPU6050.c **** void MPU6050_READ(int16_t* n){ //读出X、Y、Z三轴加速度/陀螺仪原始数据 //n[0]是AX
+ 164              		.loc 1 32 30
+ 165              		.cfi_startproc
+ 166              		@ args = 0, pretend = 0, frame = 24
+ 167              		@ frame_needed = 1, uses_anonymous_args = 0
+ 168 0000 80B5     		push	{r7, lr}
+ 169              		.cfi_def_cfa_offset 8
+ 170              		.cfi_offset 7, -8
+ 171              		.cfi_offset 14, -4
+ 172 0002 86B0     		sub	sp, sp, #24
+ 173              		.cfi_def_cfa_offset 32
+ 174 0004 00AF     		add	r7, sp, #0
+ 175              		.cfi_def_cfa_register 7
+ 176 0006 7860     		str	r0, [r7, #4]
+  33:./Hardware/Src/MPU6050.c **** 	u8 i;
+  34:./Hardware/Src/MPU6050.c ****     u8 t[14];
+  35:./Hardware/Src/MPU6050.c ****     MPU6050_ReadBuffer(0x3B,t,14); //读出连续的数据地址，包括了加速度和陀螺仪�
+ 177              		.loc 1 35 5
+ 178 0008 07F10803 		add	r3, r7, #8
+ 179 000c 0E22     		movs	r2, #14
+ 180 000e 1946     		mov	r1, r3
+ 181 0010 3B20     		movs	r0, #59
+ 182 0012 FFF7FEFF 		bl	MPU6050_ReadBuffer
+  36:./Hardware/Src/MPU6050.c ****     for(i=0; i<7; i++) 	//整合加速度、温度、陀螺仪
+ 183              		.loc 1 36 10
+ 184 0016 0023     		movs	r3, #0
+ 185 0018 FB75     		strb	r3, [r7, #23]
+ 186              		.loc 1 36 5
+ 187 001a 19E0     		b	.L7
+ 188              	.L8:
+  37:./Hardware/Src/MPU6050.c ****       n[i]=((t[2*i] << 8)+t[2*i+1]); 
+ 189              		.loc 1 37 17 discriminator 3
+ 190 001c FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 191 001e 5B00     		lsls	r3, r3, #1
+ 192              		.loc 1 37 15 discriminator 3
+ 193 0020 1833     		adds	r3, r3, #24
+ 194 0022 3B44     		add	r3, r3, r7
+ 195 0024 13F8103C 		ldrb	r3, [r3, #-16]	@ zero_extendqisi2
+ARM GAS  /tmp/ccZJNrV3.s 			page 5
+
+
+ 196              		.loc 1 37 21 discriminator 3
+ 197 0028 1B02     		lsls	r3, r3, #8
+ 198 002a 9BB2     		uxth	r3, r3
+ 199              		.loc 1 37 30 discriminator 3
+ 200 002c FA7D     		ldrb	r2, [r7, #23]	@ zero_extendqisi2
+ 201 002e 5200     		lsls	r2, r2, #1
+ 202              		.loc 1 37 32 discriminator 3
+ 203 0030 0132     		adds	r2, r2, #1
+ 204              		.loc 1 37 28 discriminator 3
+ 205 0032 1832     		adds	r2, r2, #24
+ 206 0034 3A44     		add	r2, r2, r7
+ 207 0036 12F8102C 		ldrb	r2, [r2, #-16]	@ zero_extendqisi2
+ 208              		.loc 1 37 26 discriminator 3
+ 209 003a 1344     		add	r3, r3, r2
+ 210 003c 99B2     		uxth	r1, r3
+ 211              		.loc 1 37 8 discriminator 3
+ 212 003e FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 213 0040 5B00     		lsls	r3, r3, #1
+ 214 0042 7A68     		ldr	r2, [r7, #4]
+ 215 0044 1344     		add	r3, r3, r2
+ 216              		.loc 1 37 26 discriminator 3
+ 217 0046 0AB2     		sxth	r2, r1
+ 218              		.loc 1 37 11 discriminator 3
+ 219 0048 1A80     		strh	r2, [r3]	@ movhi
+  36:./Hardware/Src/MPU6050.c ****     for(i=0; i<7; i++) 	//整合加速度、温度、陀螺仪
+ 220              		.loc 1 36 20 discriminator 3
+ 221 004a FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 222 004c 0133     		adds	r3, r3, #1
+ 223 004e FB75     		strb	r3, [r7, #23]
+ 224              	.L7:
+  36:./Hardware/Src/MPU6050.c ****     for(i=0; i<7; i++) 	//整合加速度、温度、陀螺仪
+ 225              		.loc 1 36 15 discriminator 1
+ 226 0050 FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 227 0052 062B     		cmp	r3, #6
+ 228 0054 E2D9     		bls	.L8
+  38:./Hardware/Src/MPU6050.c **** 	
+  39:./Hardware/Src/MPU6050.c **** //	t[0]=I2C_READ_BYTE(0xD0,0x3B);             
+  40:./Hardware/Src/MPU6050.c **** //	t[1]=I2C_READ_BYTE(0xD0,0x3C);      
+  41:./Hardware/Src/MPU6050.c **** //	n[0]=((t[0]<<8)+t[1]);   
+  42:./Hardware/Src/MPU6050.c **** 	
+  43:./Hardware/Src/MPU6050.c **** }
+ 229              		.loc 1 43 1
+ 230 0056 00BF     		nop
+ 231 0058 00BF     		nop
+ 232 005a 1837     		adds	r7, r7, #24
+ 233              		.cfi_def_cfa_offset 8
+ 234 005c BD46     		mov	sp, r7
+ 235              		.cfi_def_cfa_register 13
+ 236              		@ sp needed
+ 237 005e 80BD     		pop	{r7, pc}
+ 238              		.cfi_endproc
+ 239              	.LFE125:
+ 241              		.section	.text.MPU6050_ReadBuffer,"ax",%progbits
+ 242              		.align	1
+ 243              		.global	MPU6050_ReadBuffer
+ 244              		.syntax unified
+ 245              		.thumb
+ARM GAS  /tmp/ccZJNrV3.s 			page 6
+
+
+ 246              		.thumb_func
+ 248              	MPU6050_ReadBuffer:
+ 249              	.LFB126:
+  44:./Hardware/Src/MPU6050.c **** void MPU6050_ReadBuffer(u8 readAddr,u8* pBuffer,u16 NumByteToRead){
+ 250              		.loc 1 44 67
+ 251              		.cfi_startproc
+ 252              		@ args = 0, pretend = 0, frame = 8
+ 253              		@ frame_needed = 1, uses_anonymous_args = 0
+ 254 0000 80B5     		push	{r7, lr}
+ 255              		.cfi_def_cfa_offset 8
+ 256              		.cfi_offset 7, -8
+ 257              		.cfi_offset 14, -4
+ 258 0002 82B0     		sub	sp, sp, #8
+ 259              		.cfi_def_cfa_offset 16
+ 260 0004 00AF     		add	r7, sp, #0
+ 261              		.cfi_def_cfa_register 7
+ 262 0006 0346     		mov	r3, r0
+ 263 0008 3960     		str	r1, [r7]
+ 264 000a FB71     		strb	r3, [r7, #7]
+ 265 000c 1346     		mov	r3, r2	@ movhi
+ 266 000e BB80     		strh	r3, [r7, #4]	@ movhi
+  45:./Hardware/Src/MPU6050.c **** 	I2CStart();
+ 267              		.loc 1 45 2
+ 268 0010 FFF7FEFF 		bl	I2CStart
+  46:./Hardware/Src/MPU6050.c **** 	I2CSendByte(MPU6050_ADD);	
+ 269              		.loc 1 46 2
+ 270 0014 D020     		movs	r0, #208
+ 271 0016 FFF7FEFF 		bl	I2CSendByte
+  47:./Hardware/Src/MPU6050.c **** 	 while(!I2CWaitAck());
+ 272              		.loc 1 47 8
+ 273 001a 00BF     		nop
+ 274              	.L10:
+ 275              		.loc 1 47 10 discriminator 1
+ 276 001c FFF7FEFF 		bl	I2CWaitAck
+ 277 0020 0346     		mov	r3, r0
+ 278              		.loc 1 47 9 discriminator 1
+ 279 0022 002B     		cmp	r3, #0
+ 280 0024 FAD0     		beq	.L10
+  48:./Hardware/Src/MPU6050.c **** 	I2CSendByte(readAddr);
+ 281              		.loc 1 48 2
+ 282 0026 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 283 0028 1846     		mov	r0, r3
+ 284 002a FFF7FEFF 		bl	I2CSendByte
+  49:./Hardware/Src/MPU6050.c **** 	 while(!I2CWaitAck());
+ 285              		.loc 1 49 8
+ 286 002e 00BF     		nop
+ 287              	.L11:
+ 288              		.loc 1 49 10 discriminator 1
+ 289 0030 FFF7FEFF 		bl	I2CWaitAck
+ 290 0034 0346     		mov	r3, r0
+ 291              		.loc 1 49 9 discriminator 1
+ 292 0036 002B     		cmp	r3, #0
+ 293 0038 FAD0     		beq	.L11
+  50:./Hardware/Src/MPU6050.c **** 	I2CStart();
+ 294              		.loc 1 50 2
+ 295 003a FFF7FEFF 		bl	I2CStart
+  51:./Hardware/Src/MPU6050.c **** 	I2CSendByte(MPU6050_ADD|0x01);
+ARM GAS  /tmp/ccZJNrV3.s 			page 7
+
+
+ 296              		.loc 1 51 2
+ 297 003e D120     		movs	r0, #209
+ 298 0040 FFF7FEFF 		bl	I2CSendByte
+  52:./Hardware/Src/MPU6050.c **** 	 while(!I2CWaitAck());
+ 299              		.loc 1 52 8
+ 300 0044 00BF     		nop
+ 301              	.L12:
+ 302              		.loc 1 52 10 discriminator 1
+ 303 0046 FFF7FEFF 		bl	I2CWaitAck
+ 304 004a 0346     		mov	r3, r0
+ 305              		.loc 1 52 9 discriminator 1
+ 306 004c 002B     		cmp	r3, #0
+ 307 004e FAD0     		beq	.L12
+  53:./Hardware/Src/MPU6050.c **** 	while(NumByteToRead){
+ 308              		.loc 1 53 7
+ 309 0050 1BE0     		b	.L13
+ 310              	.L16:
+  54:./Hardware/Src/MPU6050.c **** 		if(NumByteToRead==1){
+ 311              		.loc 1 54 5
+ 312 0052 BB88     		ldrh	r3, [r7, #4]
+ 313 0054 012B     		cmp	r3, #1
+ 314 0056 0AD1     		bne	.L14
+  55:./Hardware/Src/MPU6050.c **** 			*pBuffer = I2CReceiveByte();
+ 315              		.loc 1 55 15
+ 316 0058 FFF7FEFF 		bl	I2CReceiveByte
+ 317 005c 0346     		mov	r3, r0
+ 318 005e 1A46     		mov	r2, r3
+ 319              		.loc 1 55 13
+ 320 0060 3B68     		ldr	r3, [r7]
+ 321 0062 1A70     		strb	r2, [r3]
+  56:./Hardware/Src/MPU6050.c **** 			I2CSendNotAck();
+ 322              		.loc 1 56 4
+ 323 0064 FFF7FEFF 		bl	I2CSendNotAck
+  57:./Hardware/Src/MPU6050.c **** 			I2CStop();
+ 324              		.loc 1 57 4
+ 325 0068 FFF7FEFF 		bl	I2CStop
+  58:./Hardware/Src/MPU6050.c **** 			break;
+ 326              		.loc 1 58 4
+ 327 006c 11E0     		b	.L15
+ 328              	.L14:
+  59:./Hardware/Src/MPU6050.c **** 		}else{
+  60:./Hardware/Src/MPU6050.c **** 		*pBuffer = I2CReceiveByte();
+ 329              		.loc 1 60 14
+ 330 006e FFF7FEFF 		bl	I2CReceiveByte
+ 331 0072 0346     		mov	r3, r0
+ 332 0074 1A46     		mov	r2, r3
+ 333              		.loc 1 60 12
+ 334 0076 3B68     		ldr	r3, [r7]
+ 335 0078 1A70     		strb	r2, [r3]
+  61:./Hardware/Src/MPU6050.c **** 		I2CSendAck();
+ 336              		.loc 1 61 3
+ 337 007a FFF7FEFF 		bl	I2CSendAck
+  62:./Hardware/Src/MPU6050.c **** 		pBuffer++;
+ 338              		.loc 1 62 10
+ 339 007e 3B68     		ldr	r3, [r7]
+ 340 0080 0133     		adds	r3, r3, #1
+ 341 0082 3B60     		str	r3, [r7]
+ARM GAS  /tmp/ccZJNrV3.s 			page 8
+
+
+  63:./Hardware/Src/MPU6050.c **** 		NumByteToRead--;
+ 342              		.loc 1 63 16
+ 343 0084 BB88     		ldrh	r3, [r7, #4]
+ 344 0086 013B     		subs	r3, r3, #1
+ 345 0088 BB80     		strh	r3, [r7, #4]	@ movhi
+ 346              	.L13:
+  53:./Hardware/Src/MPU6050.c **** 		if(NumByteToRead==1){
+ 347              		.loc 1 53 8
+ 348 008a BB88     		ldrh	r3, [r7, #4]
+ 349 008c 002B     		cmp	r3, #0
+ 350 008e E0D1     		bne	.L16
+  64:./Hardware/Src/MPU6050.c **** 		}
+  65:./Hardware/Src/MPU6050.c **** 	}
+  66:./Hardware/Src/MPU6050.c **** }                                    
+ 351              		.loc 1 66 1
+ 352 0090 00BF     		nop
+ 353              	.L15:
+ 354 0092 00BF     		nop
+ 355 0094 0837     		adds	r7, r7, #8
+ 356              		.cfi_def_cfa_offset 8
+ 357 0096 BD46     		mov	sp, r7
+ 358              		.cfi_def_cfa_register 13
+ 359              		@ sp needed
+ 360 0098 80BD     		pop	{r7, pc}
+ 361              		.cfi_endproc
+ 362              	.LFE126:
+ 364              		.text
+ 365              	.Letext0:
+ 366              		.file 2 "/usr/lib/gcc/arm-none-eabi/12.2.1/include/stdint.h"
+ 367              		.file 3 "./Start/stm32f4xx.h"
+ 368              		.file 4 "./Tools/Inc/i2c_soft.h"
+ 369              		.file 5 "./Hardware/Inc/MPU6050.h"
+ARM GAS  /tmp/ccZJNrV3.s 			page 9
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 MPU6050.c
+     /tmp/ccZJNrV3.s:25     .bss.MPU6050_data:0000000000000000 MPU6050_data
+     /tmp/ccZJNrV3.s:22     .bss.MPU6050_data:0000000000000000 $d
+     /tmp/ccZJNrV3.s:28     .text.MPU6050_Init:0000000000000000 $t
+     /tmp/ccZJNrV3.s:34     .text.MPU6050_Init:0000000000000000 MPU6050_Init
+     /tmp/ccZJNrV3.s:83     .text.MPU6050_SendByte:0000000000000000 MPU6050_SendByte
+     /tmp/ccZJNrV3.s:77     .text.MPU6050_SendByte:0000000000000000 $t
+     /tmp/ccZJNrV3.s:156    .text.MPU6050_READ:0000000000000000 $t
+     /tmp/ccZJNrV3.s:162    .text.MPU6050_READ:0000000000000000 MPU6050_READ
+     /tmp/ccZJNrV3.s:248    .text.MPU6050_ReadBuffer:0000000000000000 MPU6050_ReadBuffer
+     /tmp/ccZJNrV3.s:242    .text.MPU6050_ReadBuffer:0000000000000000 $t
+
+UNDEFINED SYMBOLS
+I2CStart
+I2CSendByte
+I2CWaitAck
+I2CStop
+I2CReceiveByte
+I2CSendNotAck
+I2CSendAck

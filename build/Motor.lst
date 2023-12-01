@@ -1,0 +1,490 @@
+ARM GAS  /tmp/cc6Y77wr.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 6
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"Motor.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "./Hardware/Src/Motor.c"
+  20              		.section	.text.Motor_Init,"ax",%progbits
+  21              		.align	1
+  22              		.global	Motor_Init
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	Motor_Init:
+  28              	.LFB123:
+   1:./Hardware/Src/Motor.c **** #include "Motor.h"
+   2:./Hardware/Src/Motor.c **** #include "delay.h"
+   3:./Hardware/Src/Motor.c **** 
+   4:./Hardware/Src/Motor.c **** void Motor_Init(void)
+   5:./Hardware/Src/Motor.c **** {
+  29              		.loc 1 5 1
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 40
+  32              		@ frame_needed = 1, uses_anonymous_args = 0
+  33 0000 80B5     		push	{r7, lr}
+  34              		.cfi_def_cfa_offset 8
+  35              		.cfi_offset 7, -8
+  36              		.cfi_offset 14, -4
+  37 0002 8AB0     		sub	sp, sp, #40
+  38              		.cfi_def_cfa_offset 48
+  39 0004 00AF     		add	r7, sp, #0
+  40              		.cfi_def_cfa_register 7
+   6:./Hardware/Src/Motor.c **** 	
+   7:./Hardware/Src/Motor.c **** 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC,ENABLE);//开启外设时钟
+  41              		.loc 1 7 2
+  42 0006 0121     		movs	r1, #1
+  43 0008 0420     		movs	r0, #4
+  44 000a FFF7FEFF 		bl	RCC_AHB1PeriphClockCmd
+   8:./Hardware/Src/Motor.c **** 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3,ENABLE);//开启外设时钟
+  45              		.loc 1 8 2
+  46 000e 0121     		movs	r1, #1
+  47 0010 0220     		movs	r0, #2
+  48 0012 FFF7FEFF 		bl	RCC_APB1PeriphClockCmd
+   9:./Hardware/Src/Motor.c **** 	/*  配置GPIO的模式和IO口 */
+  10:./Hardware/Src/Motor.c **** 	GPIO_InitTypeDef GPIO_InitStructure;
+ARM GAS  /tmp/cc6Y77wr.s 			page 2
+
+
+  11:./Hardware/Src/Motor.c **** 	GPIO_InitStructure.GPIO_Pin=GPIO_Pin_6|GPIO_Pin_7|GPIO_Pin_8|GPIO_Pin_9;// 四个通道全部初�
+  49              		.loc 1 11 29
+  50 0016 4FF47073 		mov	r3, #960
+  51 001a 3B62     		str	r3, [r7, #32]
+  12:./Hardware/Src/Motor.c **** 	GPIO_InitStructure.GPIO_Speed=GPIO_Speed_50MHz;
+  52              		.loc 1 12 31
+  53 001c 0223     		movs	r3, #2
+  54 001e 87F82530 		strb	r3, [r7, #37]
+  13:./Hardware/Src/Motor.c **** 	GPIO_InitStructure.GPIO_Mode=GPIO_Mode_AF;//配置为复用模式
+  55              		.loc 1 13 30
+  56 0022 0223     		movs	r3, #2
+  57 0024 87F82430 		strb	r3, [r7, #36]
+  14:./Hardware/Src/Motor.c **** 	GPIO_Init(GPIOC,&GPIO_InitStructure); //初始化GPIO
+  58              		.loc 1 14 2
+  59 0028 07F12003 		add	r3, r7, #32
+  60 002c 1946     		mov	r1, r3
+  61 002e 3248     		ldr	r0, .L2
+  62 0030 FFF7FEFF 		bl	GPIO_Init
+  15:./Hardware/Src/Motor.c **** 	GPIO_PinAFConfig(GPIOC, GPIO_PinSource6, GPIO_AF_TIM3);//配置PC6复用功能
+  63              		.loc 1 15 2
+  64 0034 0222     		movs	r2, #2
+  65 0036 0621     		movs	r1, #6
+  66 0038 2F48     		ldr	r0, .L2
+  67 003a FFF7FEFF 		bl	GPIO_PinAFConfig
+  16:./Hardware/Src/Motor.c **** 	GPIO_PinAFConfig(GPIOC, GPIO_PinSource7, GPIO_AF_TIM3);//配置PC7复用功能
+  68              		.loc 1 16 2
+  69 003e 0222     		movs	r2, #2
+  70 0040 0721     		movs	r1, #7
+  71 0042 2D48     		ldr	r0, .L2
+  72 0044 FFF7FEFF 		bl	GPIO_PinAFConfig
+  17:./Hardware/Src/Motor.c **** 	GPIO_PinAFConfig(GPIOC, GPIO_PinSource8, GPIO_AF_TIM3);//配置PC8复用功能
+  73              		.loc 1 17 2
+  74 0048 0222     		movs	r2, #2
+  75 004a 0821     		movs	r1, #8
+  76 004c 2A48     		ldr	r0, .L2
+  77 004e FFF7FEFF 		bl	GPIO_PinAFConfig
+  18:./Hardware/Src/Motor.c **** 	GPIO_PinAFConfig(GPIOC, GPIO_PinSource9, GPIO_AF_TIM3);//配置PC9复用功能
+  78              		.loc 1 18 2
+  79 0052 0222     		movs	r2, #2
+  80 0054 0921     		movs	r1, #9
+  81 0056 2848     		ldr	r0, .L2
+  82 0058 FFF7FEFF 		bl	GPIO_PinAFConfig
+  19:./Hardware/Src/Motor.c **** 	//TIM3定时器初始化	
+  20:./Hardware/Src/Motor.c **** 	TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure;
+  21:./Hardware/Src/Motor.c **** 	TIM_TimeBaseInitStructure.TIM_Period = 19999; //重载值
+  83              		.loc 1 21 39
+  84 005c 44F61F63 		movw	r3, #19999
+  85 0060 BB61     		str	r3, [r7, #24]
+  22:./Hardware/Src/Motor.c **** 	TIM_TimeBaseInitStructure.TIM_Prescaler = 199;//预分频系数
+  86              		.loc 1 22 42
+  87 0062 C723     		movs	r3, #199
+  88 0064 BB82     		strh	r3, [r7, #20]	@ movhi
+  23:./Hardware/Src/Motor.c **** 	TIM_TimeBaseInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;//不指定时钟分频
+  89              		.loc 1 23 46
+  90 0066 0023     		movs	r3, #0
+  91 0068 BB83     		strh	r3, [r7, #28]	@ movhi
+  24:./Hardware/Src/Motor.c **** 	TIM_TimeBaseInitStructure.TIM_CounterMode = TIM_CounterMode_Up;	//TIM向上计数模式
+ARM GAS  /tmp/cc6Y77wr.s 			page 3
+
+
+  92              		.loc 1 24 44
+  93 006a 0023     		movs	r3, #0
+  94 006c FB82     		strh	r3, [r7, #22]	@ movhi
+  25:./Hardware/Src/Motor.c **** 	TIM_TimeBaseInitStructure.TIM_RepetitionCounter=0;//重复计数值为0
+  95              		.loc 1 25 49
+  96 006e 0023     		movs	r3, #0
+  97 0070 BB77     		strb	r3, [r7, #30]
+  26:./Hardware/Src/Motor.c **** 	TIM_TimeBaseInit(TIM3, & TIM_TimeBaseInitStructure);//初始化时基单元
+  98              		.loc 1 26 2
+  99 0072 07F11403 		add	r3, r7, #20
+ 100 0076 1946     		mov	r1, r3
+ 101 0078 2048     		ldr	r0, .L2+4
+ 102 007a FFF7FEFF 		bl	TIM_TimeBaseInit
+  27:./Hardware/Src/Motor.c **** 	
+  28:./Hardware/Src/Motor.c **** 	//PWM配置	  
+  29:./Hardware/Src/Motor.c **** 	TIM_OCInitTypeDef TIM_OCInitStructure;
+  30:./Hardware/Src/Motor.c **** 	TIM_OCStructInit(&TIM_OCInitStructure);//先将无需特别设置的部分设为缺省值
+ 103              		.loc 1 30 2
+ 104 007e 3B46     		mov	r3, r7
+ 105 0080 1846     		mov	r0, r3
+ 106 0082 FFF7FEFF 		bl	TIM_OCStructInit
+  31:./Hardware/Src/Motor.c **** 	TIM_OCInitStructure.TIM_OCMode=TIM_OCMode_PWM1;//选择PWM1模式
+ 107              		.loc 1 31 32
+ 108 0086 6023     		movs	r3, #96
+ 109 0088 3B80     		strh	r3, [r7]	@ movhi
+  32:./Hardware/Src/Motor.c **** 	TIM_OCInitStructure.TIM_OCPolarity=TIM_OCPolarity_High;//选择极性
+ 110              		.loc 1 32 36
+ 111 008a 0023     		movs	r3, #0
+ 112 008c BB81     		strh	r3, [r7, #12]	@ movhi
+  33:./Hardware/Src/Motor.c **** 	TIM_OCInitStructure.TIM_OutputState=TIM_OutputState_Enable;//PWM输出使能
+ 113              		.loc 1 33 37
+ 114 008e 0123     		movs	r3, #1
+ 115 0090 7B80     		strh	r3, [r7, #2]	@ movhi
+  34:./Hardware/Src/Motor.c **** 	TIM_OCInitStructure.TIM_Pulse=0;//先将CCR设置为0
+ 116              		.loc 1 34 31
+ 117 0092 0023     		movs	r3, #0
+ 118 0094 BB60     		str	r3, [r7, #8]
+  35:./Hardware/Src/Motor.c **** 	
+  36:./Hardware/Src/Motor.c **** 	//分别初始化四个通道
+  37:./Hardware/Src/Motor.c **** 	TIM_OC1Init(TIM3,&TIM_OCInitStructure);
+ 119              		.loc 1 37 2
+ 120 0096 3B46     		mov	r3, r7
+ 121 0098 1946     		mov	r1, r3
+ 122 009a 1848     		ldr	r0, .L2+4
+ 123 009c FFF7FEFF 		bl	TIM_OC1Init
+  38:./Hardware/Src/Motor.c **** 	TIM_OC1PreloadConfig(TIM3, TIM_OCPreload_Enable);
+ 124              		.loc 1 38 2
+ 125 00a0 0821     		movs	r1, #8
+ 126 00a2 1648     		ldr	r0, .L2+4
+ 127 00a4 FFF7FEFF 		bl	TIM_OC1PreloadConfig
+  39:./Hardware/Src/Motor.c **** 	TIM_OC2Init(TIM3,&TIM_OCInitStructure);
+ 128              		.loc 1 39 2
+ 129 00a8 3B46     		mov	r3, r7
+ 130 00aa 1946     		mov	r1, r3
+ 131 00ac 1348     		ldr	r0, .L2+4
+ 132 00ae FFF7FEFF 		bl	TIM_OC2Init
+  40:./Hardware/Src/Motor.c **** 	TIM_OC2PreloadConfig(TIM3, TIM_OCPreload_Enable);
+ARM GAS  /tmp/cc6Y77wr.s 			page 4
+
+
+ 133              		.loc 1 40 2
+ 134 00b2 0821     		movs	r1, #8
+ 135 00b4 1148     		ldr	r0, .L2+4
+ 136 00b6 FFF7FEFF 		bl	TIM_OC2PreloadConfig
+  41:./Hardware/Src/Motor.c **** 	TIM_OC3Init(TIM3,&TIM_OCInitStructure);
+ 137              		.loc 1 41 2
+ 138 00ba 3B46     		mov	r3, r7
+ 139 00bc 1946     		mov	r1, r3
+ 140 00be 0F48     		ldr	r0, .L2+4
+ 141 00c0 FFF7FEFF 		bl	TIM_OC3Init
+  42:./Hardware/Src/Motor.c **** 	TIM_OC3PreloadConfig(TIM3, TIM_OCPreload_Enable);
+ 142              		.loc 1 42 2
+ 143 00c4 0821     		movs	r1, #8
+ 144 00c6 0D48     		ldr	r0, .L2+4
+ 145 00c8 FFF7FEFF 		bl	TIM_OC3PreloadConfig
+  43:./Hardware/Src/Motor.c **** 	TIM_OC4Init(TIM3,&TIM_OCInitStructure);
+ 146              		.loc 1 43 2
+ 147 00cc 3B46     		mov	r3, r7
+ 148 00ce 1946     		mov	r1, r3
+ 149 00d0 0A48     		ldr	r0, .L2+4
+ 150 00d2 FFF7FEFF 		bl	TIM_OC4Init
+  44:./Hardware/Src/Motor.c **** 	TIM_OC4PreloadConfig(TIM3, TIM_OCPreload_Enable);
+ 151              		.loc 1 44 2
+ 152 00d6 0821     		movs	r1, #8
+ 153 00d8 0848     		ldr	r0, .L2+4
+ 154 00da FFF7FEFF 		bl	TIM_OC4PreloadConfig
+  45:./Hardware/Src/Motor.c **** 	
+  46:./Hardware/Src/Motor.c **** 	TIM_ARRPreloadConfig(TIM3,ENABLE);
+ 155              		.loc 1 46 2
+ 156 00de 0121     		movs	r1, #1
+ 157 00e0 0648     		ldr	r0, .L2+4
+ 158 00e2 FFF7FEFF 		bl	TIM_ARRPreloadConfig
+  47:./Hardware/Src/Motor.c **** 	TIM_Cmd(TIM3,ENABLE);
+ 159              		.loc 1 47 2
+ 160 00e6 0121     		movs	r1, #1
+ 161 00e8 0448     		ldr	r0, .L2+4
+ 162 00ea FFF7FEFF 		bl	TIM_Cmd
+  48:./Hardware/Src/Motor.c **** }
+ 163              		.loc 1 48 1
+ 164 00ee 00BF     		nop
+ 165 00f0 2837     		adds	r7, r7, #40
+ 166              		.cfi_def_cfa_offset 8
+ 167 00f2 BD46     		mov	sp, r7
+ 168              		.cfi_def_cfa_register 13
+ 169              		@ sp needed
+ 170 00f4 80BD     		pop	{r7, pc}
+ 171              	.L3:
+ 172 00f6 00BF     		.align	2
+ 173              	.L2:
+ 174 00f8 00080240 		.word	1073874944
+ 175 00fc 00040040 		.word	1073742848
+ 176              		.cfi_endproc
+ 177              	.LFE123:
+ 179              		.section	.text.ESC_Calibration,"ax",%progbits
+ 180              		.align	1
+ 181              		.global	ESC_Calibration
+ 182              		.syntax unified
+ARM GAS  /tmp/cc6Y77wr.s 			page 5
+
+
+ 183              		.thumb
+ 184              		.thumb_func
+ 186              	ESC_Calibration:
+ 187              	.LFB124:
+  49:./Hardware/Src/Motor.c **** void ESC_Calibration(void)
+  50:./Hardware/Src/Motor.c **** {	
+ 188              		.loc 1 50 1
+ 189              		.cfi_startproc
+ 190              		@ args = 0, pretend = 0, frame = 0
+ 191              		@ frame_needed = 1, uses_anonymous_args = 0
+ 192 0000 80B5     		push	{r7, lr}
+ 193              		.cfi_def_cfa_offset 8
+ 194              		.cfi_offset 7, -8
+ 195              		.cfi_offset 14, -4
+ 196 0002 00AF     		add	r7, sp, #0
+ 197              		.cfi_def_cfa_register 7
+  51:./Hardware/Src/Motor.c **** 	TIM_SetCompare1(TIM3, 2000);//10%
+ 198              		.loc 1 51 2
+ 199 0004 4FF4FA61 		mov	r1, #2000
+ 200 0008 1748     		ldr	r0, .L5
+ 201 000a FFF7FEFF 		bl	TIM_SetCompare1
+  52:./Hardware/Src/Motor.c **** 	TIM_SetCompare2(TIM3, 2000);
+ 202              		.loc 1 52 2
+ 203 000e 4FF4FA61 		mov	r1, #2000
+ 204 0012 1548     		ldr	r0, .L5
+ 205 0014 FFF7FEFF 		bl	TIM_SetCompare2
+  53:./Hardware/Src/Motor.c **** 	TIM_SetCompare3(TIM3, 2000);
+ 206              		.loc 1 53 2
+ 207 0018 4FF4FA61 		mov	r1, #2000
+ 208 001c 1248     		ldr	r0, .L5
+ 209 001e FFF7FEFF 		bl	TIM_SetCompare3
+  54:./Hardware/Src/Motor.c **** 	TIM_SetCompare4(TIM3, 2000);
+ 210              		.loc 1 54 2
+ 211 0022 4FF4FA61 		mov	r1, #2000
+ 212 0026 1048     		ldr	r0, .L5
+ 213 0028 FFF7FEFF 		bl	TIM_SetCompare4
+  55:./Hardware/Src/Motor.c **** 	Delay_ms(4000);
+ 214              		.loc 1 55 2
+ 215 002c 4FF47A60 		mov	r0, #4000
+ 216 0030 FFF7FEFF 		bl	Delay_ms
+  56:./Hardware/Src/Motor.c **** 	TIM_SetCompare1(TIM3, 1000);//5%
+ 217              		.loc 1 56 2
+ 218 0034 4FF47A71 		mov	r1, #1000
+ 219 0038 0B48     		ldr	r0, .L5
+ 220 003a FFF7FEFF 		bl	TIM_SetCompare1
+  57:./Hardware/Src/Motor.c **** 	TIM_SetCompare2(TIM3, 1000);
+ 221              		.loc 1 57 2
+ 222 003e 4FF47A71 		mov	r1, #1000
+ 223 0042 0948     		ldr	r0, .L5
+ 224 0044 FFF7FEFF 		bl	TIM_SetCompare2
+  58:./Hardware/Src/Motor.c **** 	TIM_SetCompare3(TIM3, 1000);
+ 225              		.loc 1 58 2
+ 226 0048 4FF47A71 		mov	r1, #1000
+ 227 004c 0648     		ldr	r0, .L5
+ 228 004e FFF7FEFF 		bl	TIM_SetCompare3
+  59:./Hardware/Src/Motor.c **** 	TIM_SetCompare4(TIM3, 1000);
+ 229              		.loc 1 59 2
+ARM GAS  /tmp/cc6Y77wr.s 			page 6
+
+
+ 230 0052 4FF47A71 		mov	r1, #1000
+ 231 0056 0448     		ldr	r0, .L5
+ 232 0058 FFF7FEFF 		bl	TIM_SetCompare4
+  60:./Hardware/Src/Motor.c **** 	Delay_ms(4000);
+ 233              		.loc 1 60 2
+ 234 005c 4FF47A60 		mov	r0, #4000
+ 235 0060 FFF7FEFF 		bl	Delay_ms
+  61:./Hardware/Src/Motor.c **** }
+ 236              		.loc 1 61 1
+ 237 0064 00BF     		nop
+ 238 0066 80BD     		pop	{r7, pc}
+ 239              	.L6:
+ 240              		.align	2
+ 241              	.L5:
+ 242 0068 00040040 		.word	1073742848
+ 243              		.cfi_endproc
+ 244              	.LFE124:
+ 246              		.section	.text.Set_Speed,"ax",%progbits
+ 247              		.align	1
+ 248              		.global	Set_Speed
+ 249              		.syntax unified
+ 250              		.thumb
+ 251              		.thumb_func
+ 253              	Set_Speed:
+ 254              	.LFB125:
+  62:./Hardware/Src/Motor.c **** 
+  63:./Hardware/Src/Motor.c **** //电机调速部分，传入的值表示电机满速的百分之多少
+  64:./Hardware/Src/Motor.c **** void Set_Speed(uint8_t motor,uint16_t speed)
+  65:./Hardware/Src/Motor.c **** {
+ 255              		.loc 1 65 1
+ 256              		.cfi_startproc
+ 257              		@ args = 0, pretend = 0, frame = 8
+ 258              		@ frame_needed = 1, uses_anonymous_args = 0
+ 259 0000 80B5     		push	{r7, lr}
+ 260              		.cfi_def_cfa_offset 8
+ 261              		.cfi_offset 7, -8
+ 262              		.cfi_offset 14, -4
+ 263 0002 82B0     		sub	sp, sp, #8
+ 264              		.cfi_def_cfa_offset 16
+ 265 0004 00AF     		add	r7, sp, #0
+ 266              		.cfi_def_cfa_register 7
+ 267 0006 0346     		mov	r3, r0
+ 268 0008 0A46     		mov	r2, r1
+ 269 000a FB71     		strb	r3, [r7, #7]
+ 270 000c 1346     		mov	r3, r2	@ movhi
+ 271 000e BB80     		strh	r3, [r7, #4]	@ movhi
+  66:./Hardware/Src/Motor.c **** 	if(speed<10||speed>20)//电机速度取值范围为10-20，10为停止转动，20为满速转动
+ 272              		.loc 1 66 4
+ 273 0010 BB88     		ldrh	r3, [r7, #4]
+ 274 0012 092B     		cmp	r3, #9
+ 275 0014 26D9     		bls	.L14
+ 276              		.loc 1 66 13 discriminator 1
+ 277 0016 BB88     		ldrh	r3, [r7, #4]
+ 278 0018 142B     		cmp	r3, #20
+ 279 001a 23D8     		bhi	.L14
+  67:./Hardware/Src/Motor.c **** 	{
+  68:./Hardware/Src/Motor.c **** 		return;
+ARM GAS  /tmp/cc6Y77wr.s 			page 7
+
+
+  69:./Hardware/Src/Motor.c **** 	}
+  70:./Hardware/Src/Motor.c **** 	if(motor==1)//一号电机
+ 280              		.loc 1 70 4
+ 281 001c FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 282 001e 012B     		cmp	r3, #1
+ 283 0020 05D1     		bne	.L11
+  71:./Hardware/Src/Motor.c **** 	{
+  72:./Hardware/Src/Motor.c **** 		TIM_SetCompare1(TIM3,speed);//利用库函数修改CCR值
+ 284              		.loc 1 72 3
+ 285 0022 BB88     		ldrh	r3, [r7, #4]
+ 286 0024 1946     		mov	r1, r3
+ 287 0026 1148     		ldr	r0, .L15
+ 288 0028 FFF7FEFF 		bl	TIM_SetCompare1
+ 289 002c 1BE0     		b	.L7
+ 290              	.L11:
+  73:./Hardware/Src/Motor.c **** 	}
+  74:./Hardware/Src/Motor.c **** 	else if(motor==2)//二号电机
+ 291              		.loc 1 74 9
+ 292 002e FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 293 0030 022B     		cmp	r3, #2
+ 294 0032 05D1     		bne	.L12
+  75:./Hardware/Src/Motor.c **** 	{
+  76:./Hardware/Src/Motor.c **** 		TIM_SetCompare2(TIM3,speed);
+ 295              		.loc 1 76 3
+ 296 0034 BB88     		ldrh	r3, [r7, #4]
+ 297 0036 1946     		mov	r1, r3
+ 298 0038 0C48     		ldr	r0, .L15
+ 299 003a FFF7FEFF 		bl	TIM_SetCompare2
+ 300 003e 12E0     		b	.L7
+ 301              	.L12:
+  77:./Hardware/Src/Motor.c **** 	}
+  78:./Hardware/Src/Motor.c **** 	else if(motor==3)//三号电机
+ 302              		.loc 1 78 9
+ 303 0040 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 304 0042 032B     		cmp	r3, #3
+ 305 0044 05D1     		bne	.L13
+  79:./Hardware/Src/Motor.c **** 	{
+  80:./Hardware/Src/Motor.c **** 		TIM_SetCompare3(TIM3,speed);
+ 306              		.loc 1 80 3
+ 307 0046 BB88     		ldrh	r3, [r7, #4]
+ 308 0048 1946     		mov	r1, r3
+ 309 004a 0848     		ldr	r0, .L15
+ 310 004c FFF7FEFF 		bl	TIM_SetCompare3
+ 311 0050 09E0     		b	.L7
+ 312              	.L13:
+  81:./Hardware/Src/Motor.c **** 	}
+  82:./Hardware/Src/Motor.c **** 	else if(motor==4)//四号电机
+ 313              		.loc 1 82 9
+ 314 0052 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 315 0054 042B     		cmp	r3, #4
+ 316 0056 06D1     		bne	.L7
+  83:./Hardware/Src/Motor.c **** 	{
+  84:./Hardware/Src/Motor.c **** 		TIM_SetCompare4(TIM3,speed);
+ 317              		.loc 1 84 3
+ 318 0058 BB88     		ldrh	r3, [r7, #4]
+ 319 005a 1946     		mov	r1, r3
+ 320 005c 0348     		ldr	r0, .L15
+ARM GAS  /tmp/cc6Y77wr.s 			page 8
+
+
+ 321 005e FFF7FEFF 		bl	TIM_SetCompare4
+ 322 0062 00E0     		b	.L7
+ 323              	.L14:
+  68:./Hardware/Src/Motor.c **** 	}
+ 324              		.loc 1 68 3
+ 325 0064 00BF     		nop
+ 326              	.L7:
+  85:./Hardware/Src/Motor.c **** 	}
+  86:./Hardware/Src/Motor.c **** }...
+ 327              		.loc 1 86 1
+ 328 0066 0837     		adds	r7, r7, #8
+ 329              		.cfi_def_cfa_offset 8
+ 330 0068 BD46     		mov	sp, r7
+ 331              		.cfi_def_cfa_register 13
+ 332              		@ sp needed
+ 333 006a 80BD     		pop	{r7, pc}
+ 334              	.L16:
+ 335              		.align	2
+ 336              	.L15:
+ 337 006c 00040040 		.word	1073742848
+ 338              		.cfi_endproc
+ 339              	.LFE125:
+ 341              		.text
+ 342              	.Letext0:
+ 343              		.file 2 "/usr/lib/gcc/arm-none-eabi/12.2.1/include/stdint.h"
+ 344              		.file 3 "./Start/stm32f4xx.h"
+ 345              		.file 4 "./Lib/inc/stm32f4xx_gpio.h"
+ 346              		.file 5 "./Lib/inc/stm32f4xx_tim.h"
+ 347              		.file 6 "./Tools/Inc/delay.h"
+ 348              		.file 7 "./Lib/inc/stm32f4xx_rcc.h"
+ARM GAS  /tmp/cc6Y77wr.s 			page 9
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 Motor.c
+     /tmp/cc6Y77wr.s:21     .text.Motor_Init:0000000000000000 $t
+     /tmp/cc6Y77wr.s:27     .text.Motor_Init:0000000000000000 Motor_Init
+     /tmp/cc6Y77wr.s:174    .text.Motor_Init:00000000000000f8 $d
+     /tmp/cc6Y77wr.s:180    .text.ESC_Calibration:0000000000000000 $t
+     /tmp/cc6Y77wr.s:186    .text.ESC_Calibration:0000000000000000 ESC_Calibration
+     /tmp/cc6Y77wr.s:242    .text.ESC_Calibration:0000000000000068 $d
+     /tmp/cc6Y77wr.s:247    .text.Set_Speed:0000000000000000 $t
+     /tmp/cc6Y77wr.s:253    .text.Set_Speed:0000000000000000 Set_Speed
+     /tmp/cc6Y77wr.s:337    .text.Set_Speed:000000000000006c $d
+
+UNDEFINED SYMBOLS
+RCC_AHB1PeriphClockCmd
+RCC_APB1PeriphClockCmd
+GPIO_Init
+GPIO_PinAFConfig
+TIM_TimeBaseInit
+TIM_OCStructInit
+TIM_OC1Init
+TIM_OC1PreloadConfig
+TIM_OC2Init
+TIM_OC2PreloadConfig
+TIM_OC3Init
+TIM_OC3PreloadConfig
+TIM_OC4Init
+TIM_OC4PreloadConfig
+TIM_ARRPreloadConfig
+TIM_Cmd
+TIM_SetCompare1
+TIM_SetCompare2
+TIM_SetCompare3
+TIM_SetCompare4
+Delay_ms

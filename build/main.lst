@@ -1,0 +1,764 @@
+ARM GAS  /tmp/ccGytGRm.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 6
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"main.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "./User/Src/main.c"
+  20              		.global	betime
+  21              		.section	.bss.betime,"aw",%nobits
+  22              		.align	2
+  25              	betime:
+  26 0000 00000000 		.space	4
+  27              		.global	aftime
+  28              		.section	.bss.aftime,"aw",%nobits
+  29              		.align	2
+  32              	aftime:
+  33 0000 00000000 		.space	4
+  34              		.global	sendbuffer
+  35              		.section	.bss.sendbuffer,"aw",%nobits
+  36              		.align	2
+  39              	sendbuffer:
+  40 0000 00000000 		.space	50
+  40      00000000 
+  40      00000000 
+  40      00000000 
+  40      00000000 
+  41              		.global	betick
+  42              		.section	.bss.betick,"aw",%nobits
+  43              		.align	2
+  46              	betick:
+  47 0000 00000000 		.space	4
+  48              		.global	aftick
+  49              		.section	.bss.aftick,"aw",%nobits
+  50              		.align	2
+  53              	aftick:
+  54 0000 00000000 		.space	4
+  55              		.global	times
+  56              		.section	.data.times,"aw"
+  57              		.align	2
+  60              	times:
+  61 0000 64000000 		.word	100
+  62              		.section	.text.main,"ax",%progbits
+  63              		.align	1
+  64              		.global	main
+  65              		.syntax unified
+ARM GAS  /tmp/ccGytGRm.s 			page 2
+
+
+  66              		.thumb
+  67              		.thumb_func
+  69              	main:
+  70              	.LFB126:
+   1:./User/Src/main.c **** #include "stm32f4xx.h"                  // Device header
+   2:./User/Src/main.c **** #include "OLED.h"
+   3:./User/Src/main.c **** #include "MPU6050.h"
+   4:./User/Src/main.c **** #include "HMC5883L.h"
+   5:./User/Src/main.c **** #include "i2c.h"
+   6:./User/Src/main.c **** #include "stm32f4xx_rcc.h"
+   7:./User/Src/main.c **** #include "Serial.h"
+   8:./User/Src/main.c **** #include "IMU.h"
+   9:./User/Src/main.c **** 
+  10:./User/Src/main.c **** #include "stm32f4xx_usart.h"
+  11:./User/Src/main.c **** #include "sysTick.h"
+  12:./User/Src/main.c **** #include "usart.h"
+  13:./User/Src/main.c **** #include "delay.h"
+  14:./User/Src/main.c **** #include "sys.h"
+  15:./User/Src/main.c **** #include "i2c_soft.h"
+  16:./User/Src/main.c **** #include <stdint.h>
+  17:./User/Src/main.c **** #include <string.h>
+  18:./User/Src/main.c **** #include "Receiver.h"
+  19:./User/Src/main.c **** #include "Motor.h"
+  20:./User/Src/main.c **** #include "HMC5883L.h"
+  21:./User/Src/main.c **** 
+  22:./User/Src/main.c **** //#include "ucos_ii.h"
+  23:./User/Src/main.c **** //#include "os_trace_events.h"
+  24:./User/Src/main.c **** void Send_PPM(void);
+  25:./User/Src/main.c **** void Send_Pose(void);
+  26:./User/Src/main.c **** u32 betime = 0, aftime = 0;
+  27:./User/Src/main.c **** char sendbuffer[50];
+  28:./User/Src/main.c **** u32 betick= 0, aftick = 0;
+  29:./User/Src/main.c **** int times = 100;
+  30:./User/Src/main.c **** int main(){
+  71              		.loc 1 30 11
+  72              		.cfi_startproc
+  73              		@ args = 0, pretend = 0, frame = 8
+  74              		@ frame_needed = 1, uses_anonymous_args = 0
+  75 0000 80B5     		push	{r7, lr}
+  76              		.cfi_def_cfa_offset 8
+  77              		.cfi_offset 7, -8
+  78              		.cfi_offset 14, -4
+  79 0002 82B0     		sub	sp, sp, #8
+  80              		.cfi_def_cfa_offset 16
+  81 0004 00AF     		add	r7, sp, #0
+  82              		.cfi_def_cfa_register 7
+  31:./User/Src/main.c **** 	SystemInit();
+  83              		.loc 1 31 2
+  84 0006 FFF7FEFF 		bl	SystemInit
+  32:./User/Src/main.c **** 	SysTick->LOAD = 0xffffff;
+  85              		.loc 1 32 9
+  86 000a 334B     		ldr	r3, .L6
+  87              		.loc 1 32 16
+  88 000c 6FF07F42 		mvn	r2, #-16777216
+  89 0010 5A60     		str	r2, [r3, #4]
+  33:./User/Src/main.c **** 	SysTick->CTRL|=SysTick_CTRL_ENABLE_Msk; 
+  90              		.loc 1 33 9
+ARM GAS  /tmp/ccGytGRm.s 			page 3
+
+
+  91 0012 314B     		ldr	r3, .L6
+  92 0014 1B68     		ldr	r3, [r3]
+  93 0016 304A     		ldr	r2, .L6
+  94              		.loc 1 33 15
+  95 0018 43F00103 		orr	r3, r3, #1
+  96 001c 1360     		str	r3, [r2]
+  34:./User/Src/main.c **** 	//  int16_t MPU6050_data[7] = {0};
+  35:./User/Src/main.c **** 	I2CInit();
+  97              		.loc 1 35 2
+  98 001e FFF7FEFF 		bl	I2CInit
+  36:./User/Src/main.c **** 	// Delay_ms(5);
+  37:./User/Src/main.c **** 	// I2C_Configuration();
+  38:./User/Src/main.c **** 	MPU6050_Init();
+  99              		.loc 1 38 2
+ 100 0022 FFF7FEFF 		bl	MPU6050_Init
+  39:./User/Src/main.c **** 	HMC5883L_Init();
+ 101              		.loc 1 39 2
+ 102 0026 FFF7FEFF 		bl	HMC5883L_Init
+  40:./User/Src/main.c **** 	Delay_ms(5);
+ 103              		.loc 1 40 2
+ 104 002a 0520     		movs	r0, #5
+ 105 002c FFF7FEFF 		bl	Delay_ms
+  41:./User/Src/main.c **** 	//HMC5883L_Motify();
+  42:./User/Src/main.c **** 	get_MPU6050err();
+ 106              		.loc 1 42 2
+ 107 0030 FFF7FEFF 		bl	get_MPU6050err
+ 108              	.LBB2:
+  43:./User/Src/main.c **** 	for(int i=0;i<5;i++) HMC588CL_ReadData(HMC5883L_data);
+ 109              		.loc 1 43 10
+ 110 0034 0023     		movs	r3, #0
+ 111 0036 7B60     		str	r3, [r7, #4]
+ 112              		.loc 1 43 2
+ 113 0038 05E0     		b	.L2
+ 114              	.L3:
+ 115              		.loc 1 43 23 discriminator 3
+ 116 003a 2848     		ldr	r0, .L6+4
+ 117 003c FFF7FEFF 		bl	HMC588CL_ReadData
+ 118              		.loc 1 43 19 discriminator 3
+ 119 0040 7B68     		ldr	r3, [r7, #4]
+ 120 0042 0133     		adds	r3, r3, #1
+ 121 0044 7B60     		str	r3, [r7, #4]
+ 122              	.L2:
+ 123              		.loc 1 43 15 discriminator 1
+ 124 0046 7B68     		ldr	r3, [r7, #4]
+ 125 0048 042B     		cmp	r3, #4
+ 126 004a F6DD     		ble	.L3
+ 127              	.LBE2:
+  44:./User/Src/main.c **** 	// float a = (int)fabsf(HMC5883L_data[0]);
+  45:./User/Src/main.c **** 	// Ellipsoid_Fitting();
+  46:./User/Src/main.c **** 	uart_init();
+ 128              		.loc 1 46 2
+ 129 004c FFF7FEFF 		bl	uart_init
+  47:./User/Src/main.c **** 	My_Receiver_Init();
+ 130              		.loc 1 47 2
+ 131 0050 FFF7FEFF 		bl	My_Receiver_Init
+  48:./User/Src/main.c **** 	Motor_Init();
+ 132              		.loc 1 48 2
+ARM GAS  /tmp/ccGytGRm.s 			page 4
+
+
+ 133 0054 FFF7FEFF 		bl	Motor_Init
+  49:./User/Src/main.c **** 	// ESC_Calibration();
+  50:./User/Src/main.c **** 	PoseData_Init();
+ 134              		.loc 1 50 2
+ 135 0058 FFF7FEFF 		bl	PoseData_Init
+  51:./User/Src/main.c **** 	// Delay_ms(5);
+  52:./User/Src/main.c ****     //   USART_SendData(USART1,a);
+  53:./User/Src/main.c **** 	// MPU6050_READ(MPU6050_data)
+  54:./User/Src/main.c **** 	 betime = SysTick->VAL;
+ 136              		.loc 1 54 19
+ 137 005c 1E4B     		ldr	r3, .L6
+ 138 005e 9B68     		ldr	r3, [r3, #8]
+ 139              		.loc 1 54 10
+ 140 0060 1F4A     		ldr	r2, .L6+8
+ 141 0062 1360     		str	r3, [r2]
+  55:./User/Src/main.c **** 	 betick = SysTick->VAL;
+ 142              		.loc 1 55 19
+ 143 0064 1C4B     		ldr	r3, .L6
+ 144 0066 9B68     		ldr	r3, [r3, #8]
+ 145              		.loc 1 55 10
+ 146 0068 1E4A     		ldr	r2, .L6+12
+ 147 006a 1360     		str	r3, [r2]
+ 148              	.L5:
+ 149              	.LBB3:
+  56:./User/Src/main.c **** 	while(1){
+  57:./User/Src/main.c **** 		MPU6050_READ(MPU6050_data);
+ 150              		.loc 1 57 3
+ 151 006c 1E48     		ldr	r0, .L6+16
+ 152 006e FFF7FEFF 		bl	MPU6050_READ
+  58:./User/Src/main.c **** 		HMC588CL_ReadData(HMC5883L_data);
+ 153              		.loc 1 58 3
+ 154 0072 1A48     		ldr	r0, .L6+4
+ 155 0074 FFF7FEFF 		bl	HMC588CL_ReadData
+  59:./User/Src/main.c **** 		aftime = SysTick->VAL;
+ 156              		.loc 1 59 19
+ 157 0078 174B     		ldr	r3, .L6
+ 158 007a 9B68     		ldr	r3, [r3, #8]
+ 159              		.loc 1 59 10
+ 160 007c 1B4A     		ldr	r2, .L6+20
+ 161 007e 1360     		str	r3, [r2]
+  60:./User/Src/main.c **** 		if((betime - aftime)<0) betime += SysTick->LOAD;
+  61:./User/Src/main.c **** 		float intertime = (betime-aftime)/2000000.0f;
+ 162              		.loc 1 61 28
+ 163 0080 174B     		ldr	r3, .L6+8
+ 164 0082 1A68     		ldr	r2, [r3]
+ 165 0084 194B     		ldr	r3, .L6+20
+ 166 0086 1B68     		ldr	r3, [r3]
+ 167 0088 D31A     		subs	r3, r2, r3
+ 168              		.loc 1 61 36
+ 169 008a 07EE903A 		vmov	s15, r3	@ int
+ 170 008e B8EE677A 		vcvt.f32.u32	s14, s15
+ 171              		.loc 1 61 9
+ 172 0092 DFED176A 		vldr.32	s13, .L6+24
+ 173 0096 C7EE267A 		vdiv.f32	s15, s14, s13
+ 174 009a C7ED007A 		vstr.32	s15, [r7]
+  62:./User/Src/main.c **** 		betime = aftime;
+ 175              		.loc 1 62 10
+ARM GAS  /tmp/ccGytGRm.s 			page 5
+
+
+ 176 009e 134B     		ldr	r3, .L6+20
+ 177 00a0 1B68     		ldr	r3, [r3]
+ 178 00a2 0F4A     		ldr	r2, .L6+8
+ 179 00a4 1360     		str	r3, [r2]
+  63:./User/Src/main.c **** 		CalAngle(&angle, intertime);
+ 180              		.loc 1 63 3
+ 181 00a6 97ED000A 		vldr.32	s0, [r7]
+ 182 00aa 1248     		ldr	r0, .L6+28
+ 183 00ac FFF7FEFF 		bl	CalAngle
+  64:./User/Src/main.c **** 		aftick = SysTick->VAL;
+ 184              		.loc 1 64 19
+ 185 00b0 094B     		ldr	r3, .L6
+ 186 00b2 9B68     		ldr	r3, [r3, #8]
+ 187              		.loc 1 64 10
+ 188 00b4 104A     		ldr	r2, .L6+32
+ 189 00b6 1360     		str	r3, [r2]
+  65:./User/Src/main.c **** 		 if((betick- aftick)<0) betick += SysTick->LOAD;
+  66:./User/Src/main.c **** 		 if(betick-aftick>100000){
+ 190              		.loc 1 66 13
+ 191 00b8 0A4B     		ldr	r3, .L6+12
+ 192 00ba 1A68     		ldr	r2, [r3]
+ 193 00bc 0E4B     		ldr	r3, .L6+32
+ 194 00be 1B68     		ldr	r3, [r3]
+ 195 00c0 D31A     		subs	r3, r2, r3
+ 196              		.loc 1 66 6
+ 197 00c2 0E4A     		ldr	r2, .L6+36
+ 198 00c4 9342     		cmp	r3, r2
+ 199 00c6 D1D9     		bls	.L5
+  67:./User/Src/main.c **** 			// Send_PPM();
+  68:./User/Src/main.c **** 			  Send_Elua();
+ 200              		.loc 1 68 6
+ 201 00c8 FFF7FEFF 		bl	Send_Elua
+  69:./User/Src/main.c **** 			// Send_Pose();
+  70:./User/Src/main.c **** 			betick = aftick;
+ 202              		.loc 1 70 11
+ 203 00cc 0A4B     		ldr	r3, .L6+32
+ 204 00ce 1B68     		ldr	r3, [r3]
+ 205 00d0 044A     		ldr	r2, .L6+12
+ 206 00d2 1360     		str	r3, [r2]
+ 207              	.LBE3:
+  56:./User/Src/main.c **** 		MPU6050_READ(MPU6050_data);
+ 208              		.loc 1 56 10
+ 209 00d4 CAE7     		b	.L5
+ 210              	.L7:
+ 211 00d6 00BF     		.align	2
+ 212              	.L6:
+ 213 00d8 10E000E0 		.word	-536813552
+ 214 00dc 00000000 		.word	HMC5883L_data
+ 215 00e0 00000000 		.word	betime
+ 216 00e4 00000000 		.word	betick
+ 217 00e8 00000000 		.word	MPU6050_data
+ 218 00ec 00000000 		.word	aftime
+ 219 00f0 0024F449 		.word	1240736768
+ 220 00f4 00000000 		.word	angle
+ 221 00f8 00000000 		.word	aftick
+ 222 00fc A0860100 		.word	100000
+ 223              		.cfi_endproc
+ARM GAS  /tmp/ccGytGRm.s 			page 6
+
+
+ 224              	.LFE126:
+ 226              		.section	.rodata
+ 227              		.align	2
+ 228              	.LC0:
+ 229 0000 25642025 		.ascii	"%d %d %d %d %d %d %d %d %d\012\000"
+ 229      64202564 
+ 229      20256420 
+ 229      25642025 
+ 229      64202564 
+ 230              		.section	.text.Send_PPM,"ax",%progbits
+ 231              		.align	1
+ 232              		.global	Send_PPM
+ 233              		.syntax unified
+ 234              		.thumb
+ 235              		.thumb_func
+ 237              	Send_PPM:
+ 238              	.LFB127:
+  71:./User/Src/main.c **** 		//  }
+  72:./User/Src/main.c **** 	}
+  73:./User/Src/main.c **** }
+  74:./User/Src/main.c **** 
+  75:./User/Src/main.c **** 
+  76:./User/Src/main.c **** 
+  77:./User/Src/main.c **** 
+  78:./User/Src/main.c **** }
+  79:./User/Src/main.c **** void Send_PPM(void){
+ 239              		.loc 1 79 20
+ 240              		.cfi_startproc
+ 241              		@ args = 0, pretend = 0, frame = 112
+ 242              		@ frame_needed = 1, uses_anonymous_args = 0
+ 243 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 244              		.cfi_def_cfa_offset 20
+ 245              		.cfi_offset 4, -20
+ 246              		.cfi_offset 5, -16
+ 247              		.cfi_offset 6, -12
+ 248              		.cfi_offset 7, -8
+ 249              		.cfi_offset 14, -4
+ 250 0002 A5B0     		sub	sp, sp, #148
+ 251              		.cfi_def_cfa_offset 168
+ 252 0004 08AF     		add	r7, sp, #32
+ 253              		.cfi_def_cfa 7, 136
+  80:./User/Src/main.c **** 	char ppmbuffer[100];
+  81:./User/Src/main.c **** 	sprintf(ppmbuffer,"%d %d %d %d %d %d %d %d %d\n",PPM_Data[0],PPM_Data[1],PPM_Data[2],PPM_Data[3],P
+ 254              		.loc 1 81 59
+ 255 0006 194B     		ldr	r3, .L9
+ 256 0008 1B88     		ldrh	r3, [r3]
+ 257              		.loc 1 81 2
+ 258 000a 9C46     		mov	ip, r3
+ 259              		.loc 1 81 71
+ 260 000c 174B     		ldr	r3, .L9
+ 261 000e 5B88     		ldrh	r3, [r3, #2]
+ 262              		.loc 1 81 2
+ 263 0010 9E46     		mov	lr, r3
+ 264              		.loc 1 81 83
+ 265 0012 164B     		ldr	r3, .L9
+ 266 0014 9B88     		ldrh	r3, [r3, #4]
+ 267              		.loc 1 81 2
+ARM GAS  /tmp/ccGytGRm.s 			page 7
+
+
+ 268 0016 1A46     		mov	r2, r3
+ 269              		.loc 1 81 95
+ 270 0018 144B     		ldr	r3, .L9
+ 271 001a DB88     		ldrh	r3, [r3, #6]
+ 272              		.loc 1 81 2
+ 273 001c 1946     		mov	r1, r3
+ 274              		.loc 1 81 107
+ 275 001e 134B     		ldr	r3, .L9
+ 276 0020 1B89     		ldrh	r3, [r3, #8]
+ 277              		.loc 1 81 2
+ 278 0022 1C46     		mov	r4, r3
+ 279              		.loc 1 81 119
+ 280 0024 114B     		ldr	r3, .L9
+ 281 0026 5B89     		ldrh	r3, [r3, #10]
+ 282              		.loc 1 81 2
+ 283 0028 1D46     		mov	r5, r3
+ 284              		.loc 1 81 131
+ 285 002a 104B     		ldr	r3, .L9
+ 286 002c 9B89     		ldrh	r3, [r3, #12]
+ 287              		.loc 1 81 2
+ 288 002e 1E46     		mov	r6, r3
+ 289              		.loc 1 81 143
+ 290 0030 0E4B     		ldr	r3, .L9
+ 291 0032 DB89     		ldrh	r3, [r3, #14]
+ 292              		.loc 1 81 2
+ 293 0034 7B60     		str	r3, [r7, #4]
+ 294              		.loc 1 81 155
+ 295 0036 0D4B     		ldr	r3, .L9
+ 296 0038 1B8A     		ldrh	r3, [r3, #16]
+ 297              		.loc 1 81 2
+ 298 003a 07F10C00 		add	r0, r7, #12
+ 299 003e 0693     		str	r3, [sp, #24]
+ 300 0040 7B68     		ldr	r3, [r7, #4]
+ 301 0042 0593     		str	r3, [sp, #20]
+ 302 0044 0496     		str	r6, [sp, #16]
+ 303 0046 0395     		str	r5, [sp, #12]
+ 304 0048 0294     		str	r4, [sp, #8]
+ 305 004a 0191     		str	r1, [sp, #4]
+ 306 004c 0092     		str	r2, [sp]
+ 307 004e 7346     		mov	r3, lr
+ 308 0050 6246     		mov	r2, ip
+ 309 0052 0749     		ldr	r1, .L9+4
+ 310 0054 FFF7FEFF 		bl	sprintf
+  82:./User/Src/main.c **** 	USARTSendStr(USART1,ppmbuffer);
+ 311              		.loc 1 82 2
+ 312 0058 07F10C03 		add	r3, r7, #12
+ 313 005c 1946     		mov	r1, r3
+ 314 005e 0548     		ldr	r0, .L9+8
+ 315 0060 FFF7FEFF 		bl	USARTSendStr
+  83:./User/Src/main.c **** }
+ 316              		.loc 1 83 1
+ 317 0064 00BF     		nop
+ 318 0066 7437     		adds	r7, r7, #116
+ 319              		.cfi_def_cfa_offset 20
+ 320 0068 BD46     		mov	sp, r7
+ 321              		.cfi_def_cfa_register 13
+ 322              		@ sp needed
+ARM GAS  /tmp/ccGytGRm.s 			page 8
+
+
+ 323 006a F0BD     		pop	{r4, r5, r6, r7, pc}
+ 324              	.L10:
+ 325              		.align	2
+ 326              	.L9:
+ 327 006c 00000000 		.word	PPM_Data
+ 328 0070 00000000 		.word	.LC0
+ 329 0074 00100140 		.word	1073811456
+ 330              		.cfi_endproc
+ 331              	.LFE127:
+ 333              		.section	.text.get_MPU6050err,"ax",%progbits
+ 334              		.align	1
+ 335              		.global	get_MPU6050err
+ 336              		.syntax unified
+ 337              		.thumb
+ 338              		.thumb_func
+ 340              	get_MPU6050err:
+ 341              	.LFB128:
+  84:./User/Src/main.c **** void get_MPU6050err(void){
+ 342              		.loc 1 84 26
+ 343              		.cfi_startproc
+ 344              		@ args = 0, pretend = 0, frame = 16
+ 345              		@ frame_needed = 1, uses_anonymous_args = 0
+ 346 0000 80B5     		push	{r7, lr}
+ 347              		.cfi_def_cfa_offset 8
+ 348              		.cfi_offset 7, -8
+ 349              		.cfi_offset 14, -4
+ 350 0002 84B0     		sub	sp, sp, #16
+ 351              		.cfi_def_cfa_offset 24
+ 352 0004 00AF     		add	r7, sp, #0
+ 353              		.cfi_def_cfa_register 7
+  85:./User/Src/main.c ****   float Gyro_Xerrsum,Gyro_Yerrsum,Gyro_Zerrsum = 0;
+ 354              		.loc 1 85 35
+ 355 0006 4FF00003 		mov	r3, #0
+ 356 000a 7B60     		str	r3, [r7, #4]	@ float
+ 357              	.LBB4:
+  86:./User/Src/main.c ****   for(int i=0;i<times;i++){
+ 358              		.loc 1 86 11
+ 359 000c 0023     		movs	r3, #0
+ 360 000e 3B60     		str	r3, [r7]
+ 361              		.loc 1 86 3
+ 362 0010 2CE0     		b	.L12
+ 363              	.L13:
+  87:./User/Src/main.c **** 	MPU6050_READ(MPU6050_data);
+ 364              		.loc 1 87 2 discriminator 3
+ 365 0012 2E48     		ldr	r0, .L14
+ 366 0014 FFF7FEFF 		bl	MPU6050_READ
+  88:./User/Src/main.c ****     Gyro_Xerrsum += MPU6050_data[4];
+ 367              		.loc 1 88 33 discriminator 3
+ 368 0018 2C4B     		ldr	r3, .L14
+ 369 001a B3F90830 		ldrsh	r3, [r3, #8]
+ 370              		.loc 1 88 18 discriminator 3
+ 371 001e 07EE903A 		vmov	s15, r3	@ int
+ 372 0022 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 373 0026 97ED037A 		vldr.32	s14, [r7, #12]
+ 374 002a 77EE277A 		vadd.f32	s15, s14, s15
+ 375 002e C7ED037A 		vstr.32	s15, [r7, #12]
+  89:./User/Src/main.c **** 	Gyro_Yerrsum += MPU6050_data[5];
+ARM GAS  /tmp/ccGytGRm.s 			page 9
+
+
+ 376              		.loc 1 89 30 discriminator 3
+ 377 0032 264B     		ldr	r3, .L14
+ 378 0034 B3F90A30 		ldrsh	r3, [r3, #10]
+ 379              		.loc 1 89 15 discriminator 3
+ 380 0038 07EE903A 		vmov	s15, r3	@ int
+ 381 003c F8EEE77A 		vcvt.f32.s32	s15, s15
+ 382 0040 97ED027A 		vldr.32	s14, [r7, #8]
+ 383 0044 77EE277A 		vadd.f32	s15, s14, s15
+ 384 0048 C7ED027A 		vstr.32	s15, [r7, #8]
+  90:./User/Src/main.c **** 	Gyro_Zerrsum += MPU6050_data[6];
+ 385              		.loc 1 90 30 discriminator 3
+ 386 004c 1F4B     		ldr	r3, .L14
+ 387 004e B3F90C30 		ldrsh	r3, [r3, #12]
+ 388              		.loc 1 90 15 discriminator 3
+ 389 0052 07EE903A 		vmov	s15, r3	@ int
+ 390 0056 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 391 005a 97ED017A 		vldr.32	s14, [r7, #4]
+ 392 005e 77EE277A 		vadd.f32	s15, s14, s15
+ 393 0062 C7ED017A 		vstr.32	s15, [r7, #4]
+  86:./User/Src/main.c **** 	MPU6050_READ(MPU6050_data);
+ 394              		.loc 1 86 24 discriminator 3
+ 395 0066 3B68     		ldr	r3, [r7]
+ 396 0068 0133     		adds	r3, r3, #1
+ 397 006a 3B60     		str	r3, [r7]
+ 398              	.L12:
+  86:./User/Src/main.c **** 	MPU6050_READ(MPU6050_data);
+ 399              		.loc 1 86 16 discriminator 1
+ 400 006c 184B     		ldr	r3, .L14+4
+ 401 006e 1B68     		ldr	r3, [r3]
+ 402 0070 3A68     		ldr	r2, [r7]
+ 403 0072 9A42     		cmp	r2, r3
+ 404 0074 CDDB     		blt	.L13
+ 405              	.LBE4:
+  91:./User/Src/main.c ****   }
+  92:./User/Src/main.c ****   Gyro_Xerr = Gyro_Xerrsum/times;
+ 406              		.loc 1 92 27
+ 407 0076 164B     		ldr	r3, .L14+4
+ 408 0078 1B68     		ldr	r3, [r3]
+ 409 007a 07EE903A 		vmov	s15, r3	@ int
+ 410 007e B8EEE77A 		vcvt.f32.s32	s14, s15
+ 411 0082 D7ED036A 		vldr.32	s13, [r7, #12]
+ 412 0086 C6EE877A 		vdiv.f32	s15, s13, s14
+ 413              		.loc 1 92 13
+ 414 008a 124B     		ldr	r3, .L14+8
+ 415 008c C3ED007A 		vstr.32	s15, [r3]
+  93:./User/Src/main.c ****   Gyro_Yerr = Gyro_Yerrsum/times;
+ 416              		.loc 1 93 27
+ 417 0090 0F4B     		ldr	r3, .L14+4
+ 418 0092 1B68     		ldr	r3, [r3]
+ 419 0094 07EE903A 		vmov	s15, r3	@ int
+ 420 0098 B8EEE77A 		vcvt.f32.s32	s14, s15
+ 421 009c D7ED026A 		vldr.32	s13, [r7, #8]
+ 422 00a0 C6EE877A 		vdiv.f32	s15, s13, s14
+ 423              		.loc 1 93 13
+ 424 00a4 0C4B     		ldr	r3, .L14+12
+ 425 00a6 C3ED007A 		vstr.32	s15, [r3]
+  94:./User/Src/main.c ****   Gyro_Zerr = Gyro_Zerrsum/times;
+ARM GAS  /tmp/ccGytGRm.s 			page 10
+
+
+ 426              		.loc 1 94 27
+ 427 00aa 094B     		ldr	r3, .L14+4
+ 428 00ac 1B68     		ldr	r3, [r3]
+ 429 00ae 07EE903A 		vmov	s15, r3	@ int
+ 430 00b2 B8EEE77A 		vcvt.f32.s32	s14, s15
+ 431 00b6 D7ED016A 		vldr.32	s13, [r7, #4]
+ 432 00ba C6EE877A 		vdiv.f32	s15, s13, s14
+ 433              		.loc 1 94 13
+ 434 00be 074B     		ldr	r3, .L14+16
+ 435 00c0 C3ED007A 		vstr.32	s15, [r3]
+  95:./User/Src/main.c **** }
+ 436              		.loc 1 95 1
+ 437 00c4 00BF     		nop
+ 438 00c6 1037     		adds	r7, r7, #16
+ 439              		.cfi_def_cfa_offset 8
+ 440 00c8 BD46     		mov	sp, r7
+ 441              		.cfi_def_cfa_register 13
+ 442              		@ sp needed
+ 443 00ca 80BD     		pop	{r7, pc}
+ 444              	.L15:
+ 445              		.align	2
+ 446              	.L14:
+ 447 00cc 00000000 		.word	MPU6050_data
+ 448 00d0 00000000 		.word	times
+ 449 00d4 00000000 		.word	Gyro_Xerr
+ 450 00d8 00000000 		.word	Gyro_Yerr
+ 451 00dc 00000000 		.word	Gyro_Zerr
+ 452              		.cfi_endproc
+ 453              	.LFE128:
+ 455              		.global	__aeabi_f2d
+ 456              		.global	__aeabi_dmul
+ 457              		.global	__aeabi_d2iz
+ 458              		.section	.rodata
+ 459              		.align	2
+ 460              	.LC1:
+ 461 001c 252E3364 		.ascii	"%.3d %.3d %.3d\012\000"
+ 461      20252E33 
+ 461      6420252E 
+ 461      33640A00 
+ 462              		.section	.text.Send_Pose,"ax",%progbits
+ 463              		.align	1
+ 464              		.global	Send_Pose
+ 465              		.syntax unified
+ 466              		.thumb
+ 467              		.thumb_func
+ 469              	Send_Pose:
+ 470              	.LFB129:
+  96:./User/Src/main.c **** void Send_Pose(void){
+ 471              		.loc 1 96 21
+ 472              		.cfi_startproc
+ 473              		@ args = 0, pretend = 0, frame = 56
+ 474              		@ frame_needed = 1, uses_anonymous_args = 0
+ 475 0000 B0B5     		push	{r4, r5, r7, lr}
+ 476              		.cfi_def_cfa_offset 16
+ 477              		.cfi_offset 4, -16
+ 478              		.cfi_offset 5, -12
+ 479              		.cfi_offset 7, -8
+ARM GAS  /tmp/ccGytGRm.s 			page 11
+
+
+ 480              		.cfi_offset 14, -4
+ 481 0002 90B0     		sub	sp, sp, #64
+ 482              		.cfi_def_cfa_offset 80
+ 483 0004 02AF     		add	r7, sp, #8
+ 484              		.cfi_def_cfa 7, 72
+  97:./User/Src/main.c **** 	char sendbuffer[50];
+  98:./User/Src/main.c **** 	sprintf(sendbuffer,"%.3d %.3d %.3d\n",(int)(angle.pitch*57.3),(int)(angle.roll*57.3),(int)(angle.y
+ 485              		.loc 1 98 51
+ 486 0006 244B     		ldr	r3, .L17+8
+ 487 0008 1B68     		ldr	r3, [r3]	@ float
+ 488 000a 1846     		mov	r0, r3	@ float
+ 489 000c FFF7FEFF 		bl	__aeabi_f2d
+ 490              		.loc 1 98 57
+ 491 0010 1FA3     		adr	r3, .L17
+ 492 0012 D3E90023 		ldrd	r2, [r3]
+ 493 0016 FFF7FEFF 		bl	__aeabi_dmul
+ 494 001a 0246     		mov	r2, r0
+ 495 001c 0B46     		mov	r3, r1
+ 496              		.loc 1 98 2
+ 497 001e 1046     		mov	r0, r2
+ 498 0020 1946     		mov	r1, r3
+ 499 0022 FFF7FEFF 		bl	__aeabi_d2iz
+ 500 0026 0446     		mov	r4, r0
+ 501              		.loc 1 98 75
+ 502 0028 1B4B     		ldr	r3, .L17+8
+ 503 002a 5B68     		ldr	r3, [r3, #4]	@ float
+ 504 002c 1846     		mov	r0, r3	@ float
+ 505 002e FFF7FEFF 		bl	__aeabi_f2d
+ 506              		.loc 1 98 80
+ 507 0032 17A3     		adr	r3, .L17
+ 508 0034 D3E90023 		ldrd	r2, [r3]
+ 509 0038 FFF7FEFF 		bl	__aeabi_dmul
+ 510 003c 0246     		mov	r2, r0
+ 511 003e 0B46     		mov	r3, r1
+ 512              		.loc 1 98 2
+ 513 0040 1046     		mov	r0, r2
+ 514 0042 1946     		mov	r1, r3
+ 515 0044 FFF7FEFF 		bl	__aeabi_d2iz
+ 516 0048 0546     		mov	r5, r0
+ 517              		.loc 1 98 98
+ 518 004a 134B     		ldr	r3, .L17+8
+ 519 004c 9B68     		ldr	r3, [r3, #8]	@ float
+ 520 004e 1846     		mov	r0, r3	@ float
+ 521 0050 FFF7FEFF 		bl	__aeabi_f2d
+ 522              		.loc 1 98 102
+ 523 0054 0EA3     		adr	r3, .L17
+ 524 0056 D3E90023 		ldrd	r2, [r3]
+ 525 005a FFF7FEFF 		bl	__aeabi_dmul
+ 526 005e 0246     		mov	r2, r0
+ 527 0060 0B46     		mov	r3, r1
+ 528              		.loc 1 98 2
+ 529 0062 1046     		mov	r0, r2
+ 530 0064 1946     		mov	r1, r3
+ 531 0066 FFF7FEFF 		bl	__aeabi_d2iz
+ 532 006a 0346     		mov	r3, r0
+ 533 006c 381D     		adds	r0, r7, #4
+ 534 006e 0093     		str	r3, [sp]
+ARM GAS  /tmp/ccGytGRm.s 			page 12
+
+
+ 535 0070 2B46     		mov	r3, r5
+ 536 0072 2246     		mov	r2, r4
+ 537 0074 0949     		ldr	r1, .L17+12
+ 538 0076 FFF7FEFF 		bl	sprintf
+  99:./User/Src/main.c **** 	USARTSendStr(USART1, sendbuffer);
+ 539              		.loc 1 99 2
+ 540 007a 3B1D     		adds	r3, r7, #4
+ 541 007c 1946     		mov	r1, r3
+ 542 007e 0848     		ldr	r0, .L17+16
+ 543 0080 FFF7FEFF 		bl	USARTSendStr
+ 100:./User/Src/main.c **** }
+ 544              		.loc 1 100 1
+ 545 0084 00BF     		nop
+ 546 0086 3837     		adds	r7, r7, #56
+ 547              		.cfi_def_cfa_offset 16
+ 548 0088 BD46     		mov	sp, r7
+ 549              		.cfi_def_cfa_register 13
+ 550              		@ sp needed
+ 551 008a B0BD     		pop	{r4, r5, r7, pc}
+ 552              	.L18:
+ 553 008c AFF30080 		.align	3
+ 554              	.L17:
+ 555 0090 66666666 		.word	1717986918
+ 556 0094 66A64C40 		.word	1078765158
+ 557 0098 00000000 		.word	angle
+ 558 009c 1C000000 		.word	.LC1
+ 559 00a0 00100140 		.word	1073811456
+ 560              		.cfi_endproc
+ 561              	.LFE129:
+ 563              		.text
+ 564              	.Letext0:
+ 565              		.file 2 "/usr/lib/gcc/arm-none-eabi/12.2.1/include/stdint.h"
+ 566              		.file 3 "./Start/core_cm4.h"
+ 567              		.file 4 "./Start/stm32f4xx.h"
+ 568              		.file 5 "./Hardware/Inc/MPU6050.h"
+ 569              		.file 6 "./Hardware/Inc/HMC5883L.h"
+ 570              		.file 7 "./Hardware/Inc/IMU.h"
+ 571              		.file 8 "./Hardware/Inc/Receiver.h"
+ 572              		.file 9 "./Hardware/Inc/Serial.h"
+ 573              		.file 10 "./Hardware/Inc/Motor.h"
+ 574              		.file 11 "./Tools/Inc/delay.h"
+ 575              		.file 12 "./Tools/Inc/i2c_soft.h"
+ 576              		.file 13 "./Start/system_stm32f4xx.h"
+ 577              		.file 14 "/usr/include/newlib/stdio.h"
+ARM GAS  /tmp/ccGytGRm.s 			page 13
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 main.c
+     /tmp/ccGytGRm.s:25     .bss.betime:0000000000000000 betime
+     /tmp/ccGytGRm.s:22     .bss.betime:0000000000000000 $d
+     /tmp/ccGytGRm.s:32     .bss.aftime:0000000000000000 aftime
+     /tmp/ccGytGRm.s:29     .bss.aftime:0000000000000000 $d
+     /tmp/ccGytGRm.s:39     .bss.sendbuffer:0000000000000000 sendbuffer
+     /tmp/ccGytGRm.s:36     .bss.sendbuffer:0000000000000000 $d
+     /tmp/ccGytGRm.s:46     .bss.betick:0000000000000000 betick
+     /tmp/ccGytGRm.s:43     .bss.betick:0000000000000000 $d
+     /tmp/ccGytGRm.s:53     .bss.aftick:0000000000000000 aftick
+     /tmp/ccGytGRm.s:50     .bss.aftick:0000000000000000 $d
+     /tmp/ccGytGRm.s:60     .data.times:0000000000000000 times
+     /tmp/ccGytGRm.s:57     .data.times:0000000000000000 $d
+     /tmp/ccGytGRm.s:63     .text.main:0000000000000000 $t
+     /tmp/ccGytGRm.s:69     .text.main:0000000000000000 main
+     /tmp/ccGytGRm.s:340    .text.get_MPU6050err:0000000000000000 get_MPU6050err
+     /tmp/ccGytGRm.s:213    .text.main:00000000000000d8 $d
+     /tmp/ccGytGRm.s:227    .rodata:0000000000000000 $d
+     /tmp/ccGytGRm.s:231    .text.Send_PPM:0000000000000000 $t
+     /tmp/ccGytGRm.s:237    .text.Send_PPM:0000000000000000 Send_PPM
+     /tmp/ccGytGRm.s:327    .text.Send_PPM:000000000000006c $d
+     /tmp/ccGytGRm.s:334    .text.get_MPU6050err:0000000000000000 $t
+     /tmp/ccGytGRm.s:447    .text.get_MPU6050err:00000000000000cc $d
+     /tmp/ccGytGRm.s:463    .text.Send_Pose:0000000000000000 $t
+     /tmp/ccGytGRm.s:469    .text.Send_Pose:0000000000000000 Send_Pose
+     /tmp/ccGytGRm.s:555    .text.Send_Pose:0000000000000090 $d
+
+UNDEFINED SYMBOLS
+SystemInit
+I2CInit
+MPU6050_Init
+HMC5883L_Init
+Delay_ms
+HMC588CL_ReadData
+uart_init
+My_Receiver_Init
+Motor_Init
+PoseData_Init
+MPU6050_READ
+CalAngle
+Send_Elua
+HMC5883L_data
+MPU6050_data
+angle
+sprintf
+USARTSendStr
+PPM_Data
+Gyro_Xerr
+Gyro_Yerr
+Gyro_Zerr
+__aeabi_f2d
+__aeabi_dmul
+__aeabi_d2iz

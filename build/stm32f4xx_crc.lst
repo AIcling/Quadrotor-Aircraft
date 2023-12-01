@@ -1,0 +1,459 @@
+ARM GAS  /tmp/ccTINh3r.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 6
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"stm32f4xx_crc.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "./Lib/Src/stm32f4xx_crc.c"
+  20              		.section	.text.CRC_ResetDR,"ax",%progbits
+  21              		.align	1
+  22              		.global	CRC_ResetDR
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	CRC_ResetDR:
+  28              	.LFB123:
+   1:./Lib/Src/stm32f4xx_crc.c **** /**
+   2:./Lib/Src/stm32f4xx_crc.c ****   ******************************************************************************
+   3:./Lib/Src/stm32f4xx_crc.c ****   * @file    stm32f4xx_crc.c
+   4:./Lib/Src/stm32f4xx_crc.c ****   * @author  MCD Application Team
+   5:./Lib/Src/stm32f4xx_crc.c ****   * @version V1.8.1
+   6:./Lib/Src/stm32f4xx_crc.c ****   * @date    27-January-2022
+   7:./Lib/Src/stm32f4xx_crc.c ****   * @brief   This file provides all the CRC firmware functions.
+   8:./Lib/Src/stm32f4xx_crc.c ****   ******************************************************************************
+   9:./Lib/Src/stm32f4xx_crc.c ****   * @attention
+  10:./Lib/Src/stm32f4xx_crc.c ****   *
+  11:./Lib/Src/stm32f4xx_crc.c ****   * Copyright (c) 2016 STMicroelectronics.
+  12:./Lib/Src/stm32f4xx_crc.c ****   * All rights reserved.
+  13:./Lib/Src/stm32f4xx_crc.c ****   *
+  14:./Lib/Src/stm32f4xx_crc.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  15:./Lib/Src/stm32f4xx_crc.c ****   * in the root directory of this software component.
+  16:./Lib/Src/stm32f4xx_crc.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  17:./Lib/Src/stm32f4xx_crc.c ****   *
+  18:./Lib/Src/stm32f4xx_crc.c ****   ******************************************************************************
+  19:./Lib/Src/stm32f4xx_crc.c ****   */
+  20:./Lib/Src/stm32f4xx_crc.c **** 
+  21:./Lib/Src/stm32f4xx_crc.c **** /* Includes ------------------------------------------------------------------*/
+  22:./Lib/Src/stm32f4xx_crc.c **** #include "stm32f4xx_crc.h"
+  23:./Lib/Src/stm32f4xx_crc.c **** 
+  24:./Lib/Src/stm32f4xx_crc.c **** /** @addtogroup STM32F4xx_StdPeriph_Driver
+  25:./Lib/Src/stm32f4xx_crc.c ****   * @{
+  26:./Lib/Src/stm32f4xx_crc.c ****   */
+  27:./Lib/Src/stm32f4xx_crc.c **** 
+  28:./Lib/Src/stm32f4xx_crc.c **** /** @defgroup CRC 
+  29:./Lib/Src/stm32f4xx_crc.c ****   * @brief CRC driver modules
+  30:./Lib/Src/stm32f4xx_crc.c ****   * @{
+ARM GAS  /tmp/ccTINh3r.s 			page 2
+
+
+  31:./Lib/Src/stm32f4xx_crc.c ****   */
+  32:./Lib/Src/stm32f4xx_crc.c **** 
+  33:./Lib/Src/stm32f4xx_crc.c **** /* Private typedef -----------------------------------------------------------*/
+  34:./Lib/Src/stm32f4xx_crc.c **** /* Private define ------------------------------------------------------------*/
+  35:./Lib/Src/stm32f4xx_crc.c **** /* Private macro -------------------------------------------------------------*/
+  36:./Lib/Src/stm32f4xx_crc.c **** /* Private variables ---------------------------------------------------------*/
+  37:./Lib/Src/stm32f4xx_crc.c **** /* Private function prototypes -----------------------------------------------*/
+  38:./Lib/Src/stm32f4xx_crc.c **** /* Private functions ---------------------------------------------------------*/
+  39:./Lib/Src/stm32f4xx_crc.c **** 
+  40:./Lib/Src/stm32f4xx_crc.c **** /** @defgroup CRC_Private_Functions
+  41:./Lib/Src/stm32f4xx_crc.c ****   * @{
+  42:./Lib/Src/stm32f4xx_crc.c ****   */
+  43:./Lib/Src/stm32f4xx_crc.c **** 
+  44:./Lib/Src/stm32f4xx_crc.c **** /**
+  45:./Lib/Src/stm32f4xx_crc.c ****   * @brief  Resets the CRC Data register (DR).
+  46:./Lib/Src/stm32f4xx_crc.c ****   * @param  None
+  47:./Lib/Src/stm32f4xx_crc.c ****   * @retval None
+  48:./Lib/Src/stm32f4xx_crc.c ****   */
+  49:./Lib/Src/stm32f4xx_crc.c **** void CRC_ResetDR(void)
+  50:./Lib/Src/stm32f4xx_crc.c **** {
+  29              		.loc 1 50 1
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 1, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  34 0000 80B4     		push	{r7}
+  35              		.cfi_def_cfa_offset 4
+  36              		.cfi_offset 7, -4
+  37 0002 00AF     		add	r7, sp, #0
+  38              		.cfi_def_cfa_register 7
+  51:./Lib/Src/stm32f4xx_crc.c ****   /* Reset CRC generator */
+  52:./Lib/Src/stm32f4xx_crc.c ****   CRC->CR = CRC_CR_RESET;
+  39              		.loc 1 52 6
+  40 0004 034B     		ldr	r3, .L2
+  41              		.loc 1 52 11
+  42 0006 0122     		movs	r2, #1
+  43 0008 9A60     		str	r2, [r3, #8]
+  53:./Lib/Src/stm32f4xx_crc.c **** }
+  44              		.loc 1 53 1
+  45 000a 00BF     		nop
+  46 000c BD46     		mov	sp, r7
+  47              		.cfi_def_cfa_register 13
+  48              		@ sp needed
+  49 000e 5DF8047B 		ldr	r7, [sp], #4
+  50              		.cfi_restore 7
+  51              		.cfi_def_cfa_offset 0
+  52 0012 7047     		bx	lr
+  53              	.L3:
+  54              		.align	2
+  55              	.L2:
+  56 0014 00300240 		.word	1073885184
+  57              		.cfi_endproc
+  58              	.LFE123:
+  60              		.section	.text.CRC_CalcCRC,"ax",%progbits
+  61              		.align	1
+  62              		.global	CRC_CalcCRC
+  63              		.syntax unified
+ARM GAS  /tmp/ccTINh3r.s 			page 3
+
+
+  64              		.thumb
+  65              		.thumb_func
+  67              	CRC_CalcCRC:
+  68              	.LFB124:
+  54:./Lib/Src/stm32f4xx_crc.c **** 
+  55:./Lib/Src/stm32f4xx_crc.c **** /**
+  56:./Lib/Src/stm32f4xx_crc.c ****   * @brief  Computes the 32-bit CRC of a given data word(32-bit).
+  57:./Lib/Src/stm32f4xx_crc.c ****   * @param  Data: data word(32-bit) to compute its CRC
+  58:./Lib/Src/stm32f4xx_crc.c ****   * @retval 32-bit CRC
+  59:./Lib/Src/stm32f4xx_crc.c ****   */
+  60:./Lib/Src/stm32f4xx_crc.c **** uint32_t CRC_CalcCRC(uint32_t Data)
+  61:./Lib/Src/stm32f4xx_crc.c **** {
+  69              		.loc 1 61 1
+  70              		.cfi_startproc
+  71              		@ args = 0, pretend = 0, frame = 8
+  72              		@ frame_needed = 1, uses_anonymous_args = 0
+  73              		@ link register save eliminated.
+  74 0000 80B4     		push	{r7}
+  75              		.cfi_def_cfa_offset 4
+  76              		.cfi_offset 7, -4
+  77 0002 83B0     		sub	sp, sp, #12
+  78              		.cfi_def_cfa_offset 16
+  79 0004 00AF     		add	r7, sp, #0
+  80              		.cfi_def_cfa_register 7
+  81 0006 7860     		str	r0, [r7, #4]
+  62:./Lib/Src/stm32f4xx_crc.c ****   CRC->DR = Data;
+  82              		.loc 1 62 6
+  83 0008 054A     		ldr	r2, .L6
+  84              		.loc 1 62 11
+  85 000a 7B68     		ldr	r3, [r7, #4]
+  86 000c 1360     		str	r3, [r2]
+  63:./Lib/Src/stm32f4xx_crc.c ****   
+  64:./Lib/Src/stm32f4xx_crc.c ****   return (CRC->DR);
+  87              		.loc 1 64 14
+  88 000e 044B     		ldr	r3, .L6
+  89 0010 1B68     		ldr	r3, [r3]
+  65:./Lib/Src/stm32f4xx_crc.c **** }
+  90              		.loc 1 65 1
+  91 0012 1846     		mov	r0, r3
+  92 0014 0C37     		adds	r7, r7, #12
+  93              		.cfi_def_cfa_offset 4
+  94 0016 BD46     		mov	sp, r7
+  95              		.cfi_def_cfa_register 13
+  96              		@ sp needed
+  97 0018 5DF8047B 		ldr	r7, [sp], #4
+  98              		.cfi_restore 7
+  99              		.cfi_def_cfa_offset 0
+ 100 001c 7047     		bx	lr
+ 101              	.L7:
+ 102 001e 00BF     		.align	2
+ 103              	.L6:
+ 104 0020 00300240 		.word	1073885184
+ 105              		.cfi_endproc
+ 106              	.LFE124:
+ 108              		.section	.text.CRC_CalcBlockCRC,"ax",%progbits
+ 109              		.align	1
+ 110              		.global	CRC_CalcBlockCRC
+ARM GAS  /tmp/ccTINh3r.s 			page 4
+
+
+ 111              		.syntax unified
+ 112              		.thumb
+ 113              		.thumb_func
+ 115              	CRC_CalcBlockCRC:
+ 116              	.LFB125:
+  66:./Lib/Src/stm32f4xx_crc.c **** 
+  67:./Lib/Src/stm32f4xx_crc.c **** /**
+  68:./Lib/Src/stm32f4xx_crc.c ****   * @brief  Computes the 32-bit CRC of a given buffer of data word(32-bit).
+  69:./Lib/Src/stm32f4xx_crc.c ****   * @param  pBuffer: pointer to the buffer containing the data to be computed
+  70:./Lib/Src/stm32f4xx_crc.c ****   * @param  BufferLength: length of the buffer to be computed					
+  71:./Lib/Src/stm32f4xx_crc.c ****   * @retval 32-bit CRC
+  72:./Lib/Src/stm32f4xx_crc.c ****   */
+  73:./Lib/Src/stm32f4xx_crc.c **** uint32_t CRC_CalcBlockCRC(uint32_t pBuffer[], uint32_t BufferLength)
+  74:./Lib/Src/stm32f4xx_crc.c **** {
+ 117              		.loc 1 74 1
+ 118              		.cfi_startproc
+ 119              		@ args = 0, pretend = 0, frame = 16
+ 120              		@ frame_needed = 1, uses_anonymous_args = 0
+ 121              		@ link register save eliminated.
+ 122 0000 80B4     		push	{r7}
+ 123              		.cfi_def_cfa_offset 4
+ 124              		.cfi_offset 7, -4
+ 125 0002 85B0     		sub	sp, sp, #20
+ 126              		.cfi_def_cfa_offset 24
+ 127 0004 00AF     		add	r7, sp, #0
+ 128              		.cfi_def_cfa_register 7
+ 129 0006 7860     		str	r0, [r7, #4]
+ 130 0008 3960     		str	r1, [r7]
+  75:./Lib/Src/stm32f4xx_crc.c ****   uint32_t index = 0;
+ 131              		.loc 1 75 12
+ 132 000a 0023     		movs	r3, #0
+ 133 000c FB60     		str	r3, [r7, #12]
+  76:./Lib/Src/stm32f4xx_crc.c ****   
+  77:./Lib/Src/stm32f4xx_crc.c ****   for(index = 0; index < BufferLength; index++)
+ 134              		.loc 1 77 13
+ 135 000e 0023     		movs	r3, #0
+ 136 0010 FB60     		str	r3, [r7, #12]
+ 137              		.loc 1 77 3
+ 138 0012 09E0     		b	.L9
+ 139              	.L10:
+  78:./Lib/Src/stm32f4xx_crc.c ****   {
+  79:./Lib/Src/stm32f4xx_crc.c ****     CRC->DR = pBuffer[index];
+ 140              		.loc 1 79 22 discriminator 3
+ 141 0014 FB68     		ldr	r3, [r7, #12]
+ 142 0016 9B00     		lsls	r3, r3, #2
+ 143 0018 7A68     		ldr	r2, [r7, #4]
+ 144 001a 1344     		add	r3, r3, r2
+ 145              		.loc 1 79 8 discriminator 3
+ 146 001c 084A     		ldr	r2, .L12
+ 147              		.loc 1 79 22 discriminator 3
+ 148 001e 1B68     		ldr	r3, [r3]
+ 149              		.loc 1 79 13 discriminator 3
+ 150 0020 1360     		str	r3, [r2]
+  77:./Lib/Src/stm32f4xx_crc.c ****   {
+ 151              		.loc 1 77 45 discriminator 3
+ 152 0022 FB68     		ldr	r3, [r7, #12]
+ 153 0024 0133     		adds	r3, r3, #1
+ARM GAS  /tmp/ccTINh3r.s 			page 5
+
+
+ 154 0026 FB60     		str	r3, [r7, #12]
+ 155              	.L9:
+  77:./Lib/Src/stm32f4xx_crc.c ****   {
+ 156              		.loc 1 77 24 discriminator 1
+ 157 0028 FA68     		ldr	r2, [r7, #12]
+ 158 002a 3B68     		ldr	r3, [r7]
+ 159 002c 9A42     		cmp	r2, r3
+ 160 002e F1D3     		bcc	.L10
+  80:./Lib/Src/stm32f4xx_crc.c ****   }
+  81:./Lib/Src/stm32f4xx_crc.c ****   return (CRC->DR);
+ 161              		.loc 1 81 14
+ 162 0030 034B     		ldr	r3, .L12
+ 163 0032 1B68     		ldr	r3, [r3]
+  82:./Lib/Src/stm32f4xx_crc.c **** }
+ 164              		.loc 1 82 1
+ 165 0034 1846     		mov	r0, r3
+ 166 0036 1437     		adds	r7, r7, #20
+ 167              		.cfi_def_cfa_offset 4
+ 168 0038 BD46     		mov	sp, r7
+ 169              		.cfi_def_cfa_register 13
+ 170              		@ sp needed
+ 171 003a 5DF8047B 		ldr	r7, [sp], #4
+ 172              		.cfi_restore 7
+ 173              		.cfi_def_cfa_offset 0
+ 174 003e 7047     		bx	lr
+ 175              	.L13:
+ 176              		.align	2
+ 177              	.L12:
+ 178 0040 00300240 		.word	1073885184
+ 179              		.cfi_endproc
+ 180              	.LFE125:
+ 182              		.section	.text.CRC_GetCRC,"ax",%progbits
+ 183              		.align	1
+ 184              		.global	CRC_GetCRC
+ 185              		.syntax unified
+ 186              		.thumb
+ 187              		.thumb_func
+ 189              	CRC_GetCRC:
+ 190              	.LFB126:
+  83:./Lib/Src/stm32f4xx_crc.c **** 
+  84:./Lib/Src/stm32f4xx_crc.c **** /**
+  85:./Lib/Src/stm32f4xx_crc.c ****   * @brief  Returns the current CRC value.
+  86:./Lib/Src/stm32f4xx_crc.c ****   * @param  None
+  87:./Lib/Src/stm32f4xx_crc.c ****   * @retval 32-bit CRC
+  88:./Lib/Src/stm32f4xx_crc.c ****   */
+  89:./Lib/Src/stm32f4xx_crc.c **** uint32_t CRC_GetCRC(void)
+  90:./Lib/Src/stm32f4xx_crc.c **** {
+ 191              		.loc 1 90 1
+ 192              		.cfi_startproc
+ 193              		@ args = 0, pretend = 0, frame = 0
+ 194              		@ frame_needed = 1, uses_anonymous_args = 0
+ 195              		@ link register save eliminated.
+ 196 0000 80B4     		push	{r7}
+ 197              		.cfi_def_cfa_offset 4
+ 198              		.cfi_offset 7, -4
+ 199 0002 00AF     		add	r7, sp, #0
+ 200              		.cfi_def_cfa_register 7
+ARM GAS  /tmp/ccTINh3r.s 			page 6
+
+
+  91:./Lib/Src/stm32f4xx_crc.c ****   return (CRC->DR);
+ 201              		.loc 1 91 14
+ 202 0004 034B     		ldr	r3, .L16
+ 203 0006 1B68     		ldr	r3, [r3]
+  92:./Lib/Src/stm32f4xx_crc.c **** }
+ 204              		.loc 1 92 1
+ 205 0008 1846     		mov	r0, r3
+ 206 000a BD46     		mov	sp, r7
+ 207              		.cfi_def_cfa_register 13
+ 208              		@ sp needed
+ 209 000c 5DF8047B 		ldr	r7, [sp], #4
+ 210              		.cfi_restore 7
+ 211              		.cfi_def_cfa_offset 0
+ 212 0010 7047     		bx	lr
+ 213              	.L17:
+ 214 0012 00BF     		.align	2
+ 215              	.L16:
+ 216 0014 00300240 		.word	1073885184
+ 217              		.cfi_endproc
+ 218              	.LFE126:
+ 220              		.section	.text.CRC_SetIDRegister,"ax",%progbits
+ 221              		.align	1
+ 222              		.global	CRC_SetIDRegister
+ 223              		.syntax unified
+ 224              		.thumb
+ 225              		.thumb_func
+ 227              	CRC_SetIDRegister:
+ 228              	.LFB127:
+  93:./Lib/Src/stm32f4xx_crc.c **** 
+  94:./Lib/Src/stm32f4xx_crc.c **** /**
+  95:./Lib/Src/stm32f4xx_crc.c ****   * @brief  Stores a 8-bit data in the Independent Data(ID) register.
+  96:./Lib/Src/stm32f4xx_crc.c ****   * @param  IDValue: 8-bit value to be stored in the ID register 					
+  97:./Lib/Src/stm32f4xx_crc.c ****   * @retval None
+  98:./Lib/Src/stm32f4xx_crc.c ****   */
+  99:./Lib/Src/stm32f4xx_crc.c **** void CRC_SetIDRegister(uint8_t IDValue)
+ 100:./Lib/Src/stm32f4xx_crc.c **** {
+ 229              		.loc 1 100 1
+ 230              		.cfi_startproc
+ 231              		@ args = 0, pretend = 0, frame = 8
+ 232              		@ frame_needed = 1, uses_anonymous_args = 0
+ 233              		@ link register save eliminated.
+ 234 0000 80B4     		push	{r7}
+ 235              		.cfi_def_cfa_offset 4
+ 236              		.cfi_offset 7, -4
+ 237 0002 83B0     		sub	sp, sp, #12
+ 238              		.cfi_def_cfa_offset 16
+ 239 0004 00AF     		add	r7, sp, #0
+ 240              		.cfi_def_cfa_register 7
+ 241 0006 0346     		mov	r3, r0
+ 242 0008 FB71     		strb	r3, [r7, #7]
+ 101:./Lib/Src/stm32f4xx_crc.c ****   CRC->IDR = IDValue;
+ 243              		.loc 1 101 6
+ 244 000a 044A     		ldr	r2, .L19
+ 245              		.loc 1 101 12
+ 246 000c FB79     		ldrb	r3, [r7, #7]
+ 247 000e 1371     		strb	r3, [r2, #4]
+ 102:./Lib/Src/stm32f4xx_crc.c **** }
+ARM GAS  /tmp/ccTINh3r.s 			page 7
+
+
+ 248              		.loc 1 102 1
+ 249 0010 00BF     		nop
+ 250 0012 0C37     		adds	r7, r7, #12
+ 251              		.cfi_def_cfa_offset 4
+ 252 0014 BD46     		mov	sp, r7
+ 253              		.cfi_def_cfa_register 13
+ 254              		@ sp needed
+ 255 0016 5DF8047B 		ldr	r7, [sp], #4
+ 256              		.cfi_restore 7
+ 257              		.cfi_def_cfa_offset 0
+ 258 001a 7047     		bx	lr
+ 259              	.L20:
+ 260              		.align	2
+ 261              	.L19:
+ 262 001c 00300240 		.word	1073885184
+ 263              		.cfi_endproc
+ 264              	.LFE127:
+ 266              		.section	.text.CRC_GetIDRegister,"ax",%progbits
+ 267              		.align	1
+ 268              		.global	CRC_GetIDRegister
+ 269              		.syntax unified
+ 270              		.thumb
+ 271              		.thumb_func
+ 273              	CRC_GetIDRegister:
+ 274              	.LFB128:
+ 103:./Lib/Src/stm32f4xx_crc.c **** 
+ 104:./Lib/Src/stm32f4xx_crc.c **** /**
+ 105:./Lib/Src/stm32f4xx_crc.c ****   * @brief  Returns the 8-bit data stored in the Independent Data(ID) register
+ 106:./Lib/Src/stm32f4xx_crc.c ****   * @param  None
+ 107:./Lib/Src/stm32f4xx_crc.c ****   * @retval 8-bit value of the ID register 
+ 108:./Lib/Src/stm32f4xx_crc.c ****   */
+ 109:./Lib/Src/stm32f4xx_crc.c **** uint8_t CRC_GetIDRegister(void)
+ 110:./Lib/Src/stm32f4xx_crc.c **** {
+ 275              		.loc 1 110 1
+ 276              		.cfi_startproc
+ 277              		@ args = 0, pretend = 0, frame = 0
+ 278              		@ frame_needed = 1, uses_anonymous_args = 0
+ 279              		@ link register save eliminated.
+ 280 0000 80B4     		push	{r7}
+ 281              		.cfi_def_cfa_offset 4
+ 282              		.cfi_offset 7, -4
+ 283 0002 00AF     		add	r7, sp, #0
+ 284              		.cfi_def_cfa_register 7
+ 111:./Lib/Src/stm32f4xx_crc.c ****   return (CRC->IDR);
+ 285              		.loc 1 111 14
+ 286 0004 034B     		ldr	r3, .L23
+ 287 0006 1B79     		ldrb	r3, [r3, #4]
+ 288 0008 DBB2     		uxtb	r3, r3
+ 112:./Lib/Src/stm32f4xx_crc.c **** }
+ 289              		.loc 1 112 1
+ 290 000a 1846     		mov	r0, r3
+ 291 000c BD46     		mov	sp, r7
+ 292              		.cfi_def_cfa_register 13
+ 293              		@ sp needed
+ 294 000e 5DF8047B 		ldr	r7, [sp], #4
+ 295              		.cfi_restore 7
+ 296              		.cfi_def_cfa_offset 0
+ARM GAS  /tmp/ccTINh3r.s 			page 8
+
+
+ 297 0012 7047     		bx	lr
+ 298              	.L24:
+ 299              		.align	2
+ 300              	.L23:
+ 301 0014 00300240 		.word	1073885184
+ 302              		.cfi_endproc
+ 303              	.LFE128:
+ 305              		.text
+ 306              	.Letext0:
+ 307              		.file 2 "/usr/lib/gcc/arm-none-eabi/12.2.1/include/stdint.h"
+ 308              		.file 3 "./Start/stm32f4xx.h"
+ARM GAS  /tmp/ccTINh3r.s 			page 9
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 stm32f4xx_crc.c
+     /tmp/ccTINh3r.s:21     .text.CRC_ResetDR:0000000000000000 $t
+     /tmp/ccTINh3r.s:27     .text.CRC_ResetDR:0000000000000000 CRC_ResetDR
+     /tmp/ccTINh3r.s:56     .text.CRC_ResetDR:0000000000000014 $d
+     /tmp/ccTINh3r.s:61     .text.CRC_CalcCRC:0000000000000000 $t
+     /tmp/ccTINh3r.s:67     .text.CRC_CalcCRC:0000000000000000 CRC_CalcCRC
+     /tmp/ccTINh3r.s:104    .text.CRC_CalcCRC:0000000000000020 $d
+     /tmp/ccTINh3r.s:109    .text.CRC_CalcBlockCRC:0000000000000000 $t
+     /tmp/ccTINh3r.s:115    .text.CRC_CalcBlockCRC:0000000000000000 CRC_CalcBlockCRC
+     /tmp/ccTINh3r.s:178    .text.CRC_CalcBlockCRC:0000000000000040 $d
+     /tmp/ccTINh3r.s:183    .text.CRC_GetCRC:0000000000000000 $t
+     /tmp/ccTINh3r.s:189    .text.CRC_GetCRC:0000000000000000 CRC_GetCRC
+     /tmp/ccTINh3r.s:216    .text.CRC_GetCRC:0000000000000014 $d
+     /tmp/ccTINh3r.s:221    .text.CRC_SetIDRegister:0000000000000000 $t
+     /tmp/ccTINh3r.s:227    .text.CRC_SetIDRegister:0000000000000000 CRC_SetIDRegister
+     /tmp/ccTINh3r.s:262    .text.CRC_SetIDRegister:000000000000001c $d
+     /tmp/ccTINh3r.s:267    .text.CRC_GetIDRegister:0000000000000000 $t
+     /tmp/ccTINh3r.s:273    .text.CRC_GetIDRegister:0000000000000000 CRC_GetIDRegister
+     /tmp/ccTINh3r.s:301    .text.CRC_GetIDRegister:0000000000000014 $d
+
+NO UNDEFINED SYMBOLS

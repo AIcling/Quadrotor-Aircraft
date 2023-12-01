@@ -1,0 +1,2315 @@
+ARM GAS  /tmp/ccWoyaXE.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 6
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"Matrix.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "./Hardware/Src/Matrix.c"
+  20              		.section	.text.cal_Cof,"ax",%progbits
+  21              		.align	1
+  22              		.global	cal_Cof
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	cal_Cof:
+  28              	.LFB0:
+   1:./Hardware/Src/Matrix.c **** #include "Matrix.h"
+   2:./Hardware/Src/Matrix.c **** // #include <math.h>
+   3:./Hardware/Src/Matrix.c **** #include <stdint.h>
+   4:./Hardware/Src/Matrix.c **** #include <string.h>
+   5:./Hardware/Src/Matrix.c **** #include <stdlib.h>
+   6:./Hardware/Src/Matrix.c **** #include <stddef.h>
+   7:./Hardware/Src/Matrix.c **** 
+   8:./Hardware/Src/Matrix.c **** 
+   9:./Hardware/Src/Matrix.c **** float cal_Cof(const float array[MarNum][MarNum],int i,int n){
+  29              		.loc 1 9 61
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 168
+  32              		@ frame_needed = 1, uses_anonymous_args = 0
+  33 0000 80B5     		push	{r7, lr}
+  34              		.cfi_def_cfa_offset 8
+  35              		.cfi_offset 7, -8
+  36              		.cfi_offset 14, -4
+  37 0002 AAB0     		sub	sp, sp, #168
+  38              		.cfi_def_cfa_offset 176
+  39 0004 00AF     		add	r7, sp, #0
+  40              		.cfi_def_cfa_register 7
+  41 0006 F860     		str	r0, [r7, #12]
+  42 0008 B960     		str	r1, [r7, #8]
+  43 000a 7A60     		str	r2, [r7, #4]
+  10:./Hardware/Src/Matrix.c **** 
+  11:./Hardware/Src/Matrix.c **** 	int k = 0;
+  44              		.loc 1 11 6
+  45 000c 0023     		movs	r3, #0
+  46 000e C7F8A430 		str	r3, [r7, #164]
+  12:./Hardware/Src/Matrix.c **** 	int j = 0;
+ARM GAS  /tmp/ccWoyaXE.s 			page 2
+
+
+  47              		.loc 1 12 6
+  48 0012 0023     		movs	r3, #0
+  49 0014 C7F8A030 		str	r3, [r7, #160]
+  13:./Hardware/Src/Matrix.c **** 	float arr2[MarNum][MarNum] = { 0 };
+  50              		.loc 1 13 8
+  51 0018 07F11003 		add	r3, r7, #16
+  52 001c 9022     		movs	r2, #144
+  53 001e 0021     		movs	r1, #0
+  54 0020 1846     		mov	r0, r3
+  55 0022 FFF7FEFF 		bl	memset
+  14:./Hardware/Src/Matrix.c **** 	for (k = 0; k < n - 1; k++)//去除0行i列，剩下的组成新的矩阵
+  56              		.loc 1 14 9
+  57 0026 0023     		movs	r3, #0
+  58 0028 C7F8A430 		str	r3, [r7, #164]
+  59              		.loc 1 14 2
+  60 002c 54E0     		b	.L2
+  61              	.L7:
+  15:./Hardware/Src/Matrix.c **** 	{
+  16:./Hardware/Src/Matrix.c **** 		for (j = 0; j < n - 1; j++)
+  62              		.loc 1 16 10
+  63 002e 0023     		movs	r3, #0
+  64 0030 C7F8A030 		str	r3, [r7, #160]
+  65              		.loc 1 16 3
+  66 0034 45E0     		b	.L3
+  67              	.L6:
+  17:./Hardware/Src/Matrix.c **** 		{
+  18:./Hardware/Src/Matrix.c **** 			if (j < i)
+  68              		.loc 1 18 7
+  69 0036 D7F8A020 		ldr	r2, [r7, #160]
+  70 003a BB68     		ldr	r3, [r7, #8]
+  71 003c 9A42     		cmp	r2, r3
+  72 003e 1DDA     		bge	.L4
+  19:./Hardware/Src/Matrix.c **** 			{
+  20:./Hardware/Src/Matrix.c **** 				arr2[k][j] = array[k + 1][j];
+  73              		.loc 1 20 23
+  74 0040 D7F8A430 		ldr	r3, [r7, #164]
+  75 0044 5A1C     		adds	r2, r3, #1
+  76 0046 1346     		mov	r3, r2
+  77 0048 5B00     		lsls	r3, r3, #1
+  78 004a 1344     		add	r3, r3, r2
+  79 004c DB00     		lsls	r3, r3, #3
+  80 004e 1A46     		mov	r2, r3
+  81 0050 FB68     		ldr	r3, [r7, #12]
+  82 0052 1A44     		add	r2, r2, r3
+  83              		.loc 1 20 30
+  84 0054 D7F8A030 		ldr	r3, [r7, #160]
+  85 0058 9B00     		lsls	r3, r3, #2
+  86 005a 1344     		add	r3, r3, r2
+  87 005c 1968     		ldr	r1, [r3]	@ float
+  88              		.loc 1 20 16
+  89 005e D7F8A420 		ldr	r2, [r7, #164]
+  90 0062 1346     		mov	r3, r2
+  91 0064 5B00     		lsls	r3, r3, #1
+  92 0066 1344     		add	r3, r3, r2
+  93 0068 5B00     		lsls	r3, r3, #1
+  94 006a D7F8A020 		ldr	r2, [r7, #160]
+  95 006e 1344     		add	r3, r3, r2
+ARM GAS  /tmp/ccWoyaXE.s 			page 3
+
+
+  96 0070 9B00     		lsls	r3, r3, #2
+  97 0072 A833     		adds	r3, r3, #168
+  98 0074 3B44     		add	r3, r3, r7
+  99 0076 983B     		subs	r3, r3, #152
+ 100 0078 1960     		str	r1, [r3]	@ float
+ 101 007a 1DE0     		b	.L5
+ 102              	.L4:
+  21:./Hardware/Src/Matrix.c **** 			}
+  22:./Hardware/Src/Matrix.c **** 			else
+  23:./Hardware/Src/Matrix.c **** 			{
+  24:./Hardware/Src/Matrix.c **** 				arr2[k][j] = array[k + 1][j + 1];
+ 103              		.loc 1 24 23
+ 104 007c D7F8A430 		ldr	r3, [r7, #164]
+ 105 0080 5A1C     		adds	r2, r3, #1
+ 106 0082 1346     		mov	r3, r2
+ 107 0084 5B00     		lsls	r3, r3, #1
+ 108 0086 1344     		add	r3, r3, r2
+ 109 0088 DB00     		lsls	r3, r3, #3
+ 110 008a 1A46     		mov	r2, r3
+ 111 008c FB68     		ldr	r3, [r7, #12]
+ 112 008e 1A44     		add	r2, r2, r3
+ 113              		.loc 1 24 33
+ 114 0090 D7F8A030 		ldr	r3, [r7, #160]
+ 115 0094 0133     		adds	r3, r3, #1
+ 116              		.loc 1 24 30
+ 117 0096 9B00     		lsls	r3, r3, #2
+ 118 0098 1344     		add	r3, r3, r2
+ 119 009a 1968     		ldr	r1, [r3]	@ float
+ 120              		.loc 1 24 16
+ 121 009c D7F8A420 		ldr	r2, [r7, #164]
+ 122 00a0 1346     		mov	r3, r2
+ 123 00a2 5B00     		lsls	r3, r3, #1
+ 124 00a4 1344     		add	r3, r3, r2
+ 125 00a6 5B00     		lsls	r3, r3, #1
+ 126 00a8 D7F8A020 		ldr	r2, [r7, #160]
+ 127 00ac 1344     		add	r3, r3, r2
+ 128 00ae 9B00     		lsls	r3, r3, #2
+ 129 00b0 A833     		adds	r3, r3, #168
+ 130 00b2 3B44     		add	r3, r3, r7
+ 131 00b4 983B     		subs	r3, r3, #152
+ 132 00b6 1960     		str	r1, [r3]	@ float
+ 133              	.L5:
+  16:./Hardware/Src/Matrix.c **** 		{
+ 134              		.loc 1 16 27 discriminator 2
+ 135 00b8 D7F8A030 		ldr	r3, [r7, #160]
+ 136 00bc 0133     		adds	r3, r3, #1
+ 137 00be C7F8A030 		str	r3, [r7, #160]
+ 138              	.L3:
+  16:./Hardware/Src/Matrix.c **** 		{
+ 139              		.loc 1 16 21 discriminator 1
+ 140 00c2 7B68     		ldr	r3, [r7, #4]
+ 141 00c4 013B     		subs	r3, r3, #1
+  16:./Hardware/Src/Matrix.c **** 		{
+ 142              		.loc 1 16 17 discriminator 1
+ 143 00c6 D7F8A020 		ldr	r2, [r7, #160]
+ 144 00ca 9A42     		cmp	r2, r3
+ 145 00cc B3DB     		blt	.L6
+ARM GAS  /tmp/ccWoyaXE.s 			page 4
+
+
+  14:./Hardware/Src/Matrix.c **** 	{
+ 146              		.loc 1 14 26 discriminator 2
+ 147 00ce D7F8A430 		ldr	r3, [r7, #164]
+ 148 00d2 0133     		adds	r3, r3, #1
+ 149 00d4 C7F8A430 		str	r3, [r7, #164]
+ 150              	.L2:
+  14:./Hardware/Src/Matrix.c **** 	{
+ 151              		.loc 1 14 20 discriminator 1
+ 152 00d8 7B68     		ldr	r3, [r7, #4]
+ 153 00da 013B     		subs	r3, r3, #1
+  14:./Hardware/Src/Matrix.c **** 	{
+ 154              		.loc 1 14 16 discriminator 1
+ 155 00dc D7F8A420 		ldr	r2, [r7, #164]
+ 156 00e0 9A42     		cmp	r2, r3
+ 157 00e2 A4DB     		blt	.L7
+  25:./Hardware/Src/Matrix.c **** 			}
+  26:./Hardware/Src/Matrix.c **** 		}
+  27:./Hardware/Src/Matrix.c **** 	}
+  28:./Hardware/Src/Matrix.c **** 	return cal_Det(arr2, n - 1);
+ 158              		.loc 1 28 9
+ 159 00e4 7B68     		ldr	r3, [r7, #4]
+ 160 00e6 5A1E     		subs	r2, r3, #1
+ 161 00e8 07F11003 		add	r3, r7, #16
+ 162 00ec 1146     		mov	r1, r2
+ 163 00ee 1846     		mov	r0, r3
+ 164 00f0 FFF7FEFF 		bl	cal_Det
+ 165 00f4 F0EE407A 		vmov.f32	s15, s0
+  29:./Hardware/Src/Matrix.c **** }
+ 166              		.loc 1 29 1
+ 167 00f8 B0EE670A 		vmov.f32	s0, s15
+ 168 00fc A837     		adds	r7, r7, #168
+ 169              		.cfi_def_cfa_offset 8
+ 170 00fe BD46     		mov	sp, r7
+ 171              		.cfi_def_cfa_register 13
+ 172              		@ sp needed
+ 173 0100 80BD     		pop	{r7, pc}
+ 174              		.cfi_endproc
+ 175              	.LFE0:
+ 177              		.global	__aeabi_i2d
+ 178              		.global	__aeabi_d2iz
+ 179              		.section	.text.cal_Det,"ax",%progbits
+ 180              		.align	1
+ 181              		.global	cal_Det
+ 182              		.syntax unified
+ 183              		.thumb
+ 184              		.thumb_func
+ 186              	cal_Det:
+ 187              	.LFB1:
+  30:./Hardware/Src/Matrix.c **** 
+  31:./Hardware/Src/Matrix.c **** float cal_Det(const float array[MarNum][MarNum],int n){
+ 188              		.loc 1 31 55
+ 189              		.cfi_startproc
+ 190              		@ args = 0, pretend = 0, frame = 16
+ 191              		@ frame_needed = 1, uses_anonymous_args = 0
+ 192 0000 80B5     		push	{r7, lr}
+ 193              		.cfi_def_cfa_offset 8
+ 194              		.cfi_offset 7, -8
+ARM GAS  /tmp/ccWoyaXE.s 			page 5
+
+
+ 195              		.cfi_offset 14, -4
+ 196 0002 2DED028B 		vpush.64	{d8}
+ 197              		.cfi_def_cfa_offset 16
+ 198              		.cfi_offset 80, -16
+ 199              		.cfi_offset 81, -12
+ 200 0006 84B0     		sub	sp, sp, #16
+ 201              		.cfi_def_cfa_offset 32
+ 202 0008 00AF     		add	r7, sp, #0
+ 203              		.cfi_def_cfa_register 7
+ 204 000a 7860     		str	r0, [r7, #4]
+ 205 000c 3960     		str	r1, [r7]
+  32:./Hardware/Src/Matrix.c **** 	float sum = 0;
+ 206              		.loc 1 32 8
+ 207 000e 4FF00003 		mov	r3, #0
+ 208 0012 FB60     		str	r3, [r7, #12]	@ float
+  33:./Hardware/Src/Matrix.c **** 	int i = 0;
+ 209              		.loc 1 33 6
+ 210 0014 0023     		movs	r3, #0
+ 211 0016 BB60     		str	r3, [r7, #8]
+  34:./Hardware/Src/Matrix.c **** 	if (n == 1)//1阶行列式直接得出结果
+ 212              		.loc 1 34 5
+ 213 0018 3B68     		ldr	r3, [r7]
+ 214 001a 012B     		cmp	r3, #1
+ 215 001c 03D1     		bne	.L10
+  35:./Hardware/Src/Matrix.c **** 	{
+  36:./Hardware/Src/Matrix.c **** 		sum = array[0][0];
+ 216              		.loc 1 36 7
+ 217 001e 7B68     		ldr	r3, [r7, #4]
+ 218 0020 1B68     		ldr	r3, [r3]	@ float
+ 219 0022 FB60     		str	r3, [r7, #12]	@ float
+ 220 0024 CDE0     		b	.L11
+ 221              	.L10:
+  37:./Hardware/Src/Matrix.c **** 	}
+  38:./Hardware/Src/Matrix.c **** 	else if (n == 2)
+ 222              		.loc 1 38 10
+ 223 0026 3B68     		ldr	r3, [r7]
+ 224 0028 022B     		cmp	r3, #2
+ 225 002a 16D1     		bne	.L12
+  39:./Hardware/Src/Matrix.c **** 	{
+  40:./Hardware/Src/Matrix.c **** 		sum = array[0][0] * array[1][1] - array[0][1] * array[1][0];//杀戮法求解
+ 226              		.loc 1 40 17
+ 227 002c 7B68     		ldr	r3, [r7, #4]
+ 228 002e 93ED007A 		vldr.32	s14, [r3]
+ 229              		.loc 1 40 28
+ 230 0032 7B68     		ldr	r3, [r7, #4]
+ 231 0034 1833     		adds	r3, r3, #24
+ 232              		.loc 1 40 31
+ 233 0036 D3ED017A 		vldr.32	s15, [r3, #4]
+ 234              		.loc 1 40 21
+ 235 003a 27EE277A 		vmul.f32	s14, s14, s15
+ 236              		.loc 1 40 45
+ 237 003e 7B68     		ldr	r3, [r7, #4]
+ 238 0040 D3ED016A 		vldr.32	s13, [r3, #4]
+ 239              		.loc 1 40 56
+ 240 0044 7B68     		ldr	r3, [r7, #4]
+ 241 0046 1833     		adds	r3, r3, #24
+ 242              		.loc 1 40 59
+ARM GAS  /tmp/ccWoyaXE.s 			page 6
+
+
+ 243 0048 D3ED007A 		vldr.32	s15, [r3]
+ 244              		.loc 1 40 49
+ 245 004c 66EEA77A 		vmul.f32	s15, s13, s15
+ 246              		.loc 1 40 7
+ 247 0050 77EE677A 		vsub.f32	s15, s14, s15
+ 248 0054 C7ED037A 		vstr.32	s15, [r7, #12]
+ 249 0058 B3E0     		b	.L11
+ 250              	.L12:
+  41:./Hardware/Src/Matrix.c **** 	}
+  42:./Hardware/Src/Matrix.c **** 	else if (n == 3)
+ 251              		.loc 1 42 10
+ 252 005a 3B68     		ldr	r3, [r7]
+ 253 005c 032B     		cmp	r3, #3
+ 254 005e 66D1     		bne	.L13
+  43:./Hardware/Src/Matrix.c **** 	{
+  44:./Hardware/Src/Matrix.c **** 		sum = array[0][0] * array[1][1] * array[2][2]
+ 255              		.loc 1 44 17
+ 256 0060 7B68     		ldr	r3, [r7, #4]
+ 257 0062 93ED007A 		vldr.32	s14, [r3]
+ 258              		.loc 1 44 28
+ 259 0066 7B68     		ldr	r3, [r7, #4]
+ 260 0068 1833     		adds	r3, r3, #24
+ 261              		.loc 1 44 31
+ 262 006a D3ED017A 		vldr.32	s15, [r3, #4]
+ 263              		.loc 1 44 21
+ 264 006e 27EE277A 		vmul.f32	s14, s14, s15
+ 265              		.loc 1 44 42
+ 266 0072 7B68     		ldr	r3, [r7, #4]
+ 267 0074 3033     		adds	r3, r3, #48
+ 268              		.loc 1 44 45
+ 269 0076 D3ED027A 		vldr.32	s15, [r3, #8]
+ 270              		.loc 1 44 35
+ 271 007a 27EE277A 		vmul.f32	s14, s14, s15
+  45:./Hardware/Src/Matrix.c **** 			+ array[0][1] * array[1][2] * array[2][0]
+ 272              		.loc 1 45 14
+ 273 007e 7B68     		ldr	r3, [r7, #4]
+ 274 0080 D3ED016A 		vldr.32	s13, [r3, #4]
+ 275              		.loc 1 45 25
+ 276 0084 7B68     		ldr	r3, [r7, #4]
+ 277 0086 1833     		adds	r3, r3, #24
+ 278              		.loc 1 45 28
+ 279 0088 D3ED027A 		vldr.32	s15, [r3, #8]
+ 280              		.loc 1 45 18
+ 281 008c 66EEA76A 		vmul.f32	s13, s13, s15
+ 282              		.loc 1 45 39
+ 283 0090 7B68     		ldr	r3, [r7, #4]
+ 284 0092 3033     		adds	r3, r3, #48
+ 285              		.loc 1 45 42
+ 286 0094 D3ED007A 		vldr.32	s15, [r3]
+ 287              		.loc 1 45 32
+ 288 0098 66EEA77A 		vmul.f32	s15, s13, s15
+ 289              		.loc 1 45 4
+ 290 009c 37EE277A 		vadd.f32	s14, s14, s15
+  46:./Hardware/Src/Matrix.c **** 			+ array[1][0] * array[2][1] * array[0][2]
+ 291              		.loc 1 46 11
+ 292 00a0 7B68     		ldr	r3, [r7, #4]
+ 293 00a2 1833     		adds	r3, r3, #24
+ARM GAS  /tmp/ccWoyaXE.s 			page 7
+
+
+ 294              		.loc 1 46 14
+ 295 00a4 D3ED006A 		vldr.32	s13, [r3]
+ 296              		.loc 1 46 25
+ 297 00a8 7B68     		ldr	r3, [r7, #4]
+ 298 00aa 3033     		adds	r3, r3, #48
+ 299              		.loc 1 46 28
+ 300 00ac D3ED017A 		vldr.32	s15, [r3, #4]
+ 301              		.loc 1 46 18
+ 302 00b0 66EEA76A 		vmul.f32	s13, s13, s15
+ 303              		.loc 1 46 42
+ 304 00b4 7B68     		ldr	r3, [r7, #4]
+ 305 00b6 D3ED027A 		vldr.32	s15, [r3, #8]
+ 306              		.loc 1 46 32
+ 307 00ba 66EEA77A 		vmul.f32	s15, s13, s15
+ 308              		.loc 1 46 4
+ 309 00be 37EE277A 		vadd.f32	s14, s14, s15
+  47:./Hardware/Src/Matrix.c **** 			- array[0][2] * array[1][1] * array[2][0]
+ 310              		.loc 1 47 14
+ 311 00c2 7B68     		ldr	r3, [r7, #4]
+ 312 00c4 D3ED026A 		vldr.32	s13, [r3, #8]
+ 313              		.loc 1 47 25
+ 314 00c8 7B68     		ldr	r3, [r7, #4]
+ 315 00ca 1833     		adds	r3, r3, #24
+ 316              		.loc 1 47 28
+ 317 00cc D3ED017A 		vldr.32	s15, [r3, #4]
+ 318              		.loc 1 47 18
+ 319 00d0 66EEA76A 		vmul.f32	s13, s13, s15
+ 320              		.loc 1 47 39
+ 321 00d4 7B68     		ldr	r3, [r7, #4]
+ 322 00d6 3033     		adds	r3, r3, #48
+ 323              		.loc 1 47 42
+ 324 00d8 D3ED007A 		vldr.32	s15, [r3]
+ 325              		.loc 1 47 32
+ 326 00dc 66EEA77A 		vmul.f32	s15, s13, s15
+ 327              		.loc 1 47 4
+ 328 00e0 37EE677A 		vsub.f32	s14, s14, s15
+  48:./Hardware/Src/Matrix.c **** 			- array[0][1] * array[1][0] * array[2][2]
+ 329              		.loc 1 48 14
+ 330 00e4 7B68     		ldr	r3, [r7, #4]
+ 331 00e6 D3ED016A 		vldr.32	s13, [r3, #4]
+ 332              		.loc 1 48 25
+ 333 00ea 7B68     		ldr	r3, [r7, #4]
+ 334 00ec 1833     		adds	r3, r3, #24
+ 335              		.loc 1 48 28
+ 336 00ee D3ED007A 		vldr.32	s15, [r3]
+ 337              		.loc 1 48 18
+ 338 00f2 66EEA76A 		vmul.f32	s13, s13, s15
+ 339              		.loc 1 48 39
+ 340 00f6 7B68     		ldr	r3, [r7, #4]
+ 341 00f8 3033     		adds	r3, r3, #48
+ 342              		.loc 1 48 42
+ 343 00fa D3ED027A 		vldr.32	s15, [r3, #8]
+ 344              		.loc 1 48 32
+ 345 00fe 66EEA77A 		vmul.f32	s15, s13, s15
+ 346              		.loc 1 48 4
+ 347 0102 37EE677A 		vsub.f32	s14, s14, s15
+  49:./Hardware/Src/Matrix.c **** 			- array[1][2] * array[2][1] * array[0][0];//划线法求解
+ARM GAS  /tmp/ccWoyaXE.s 			page 8
+
+
+ 348              		.loc 1 49 11
+ 349 0106 7B68     		ldr	r3, [r7, #4]
+ 350 0108 1833     		adds	r3, r3, #24
+ 351              		.loc 1 49 14
+ 352 010a D3ED026A 		vldr.32	s13, [r3, #8]
+ 353              		.loc 1 49 25
+ 354 010e 7B68     		ldr	r3, [r7, #4]
+ 355 0110 3033     		adds	r3, r3, #48
+ 356              		.loc 1 49 28
+ 357 0112 D3ED017A 		vldr.32	s15, [r3, #4]
+ 358              		.loc 1 49 18
+ 359 0116 66EEA76A 		vmul.f32	s13, s13, s15
+ 360              		.loc 1 49 42
+ 361 011a 7B68     		ldr	r3, [r7, #4]
+ 362 011c D3ED007A 		vldr.32	s15, [r3]
+ 363              		.loc 1 49 32
+ 364 0120 66EEA77A 		vmul.f32	s15, s13, s15
+  44:./Hardware/Src/Matrix.c **** 			+ array[0][1] * array[1][2] * array[2][0]
+ 365              		.loc 1 44 7
+ 366 0124 77EE677A 		vsub.f32	s15, s14, s15
+ 367 0128 C7ED037A 		vstr.32	s15, [r7, #12]
+ 368 012c 49E0     		b	.L11
+ 369              	.L13:
+  50:./Hardware/Src/Matrix.c **** 	}
+  51:./Hardware/Src/Matrix.c **** 	else
+  52:./Hardware/Src/Matrix.c **** 	{
+  53:./Hardware/Src/Matrix.c **** 		for (i = 0; i < n; i++)//按第一行展开
+ 370              		.loc 1 53 10
+ 371 012e 0023     		movs	r3, #0
+ 372 0130 BB60     		str	r3, [r7, #8]
+ 373              		.loc 1 53 3
+ 374 0132 42E0     		b	.L14
+ 375              	.L17:
+  54:./Hardware/Src/Matrix.c **** 		{
+  55:./Hardware/Src/Matrix.c **** 			if (array[0][i] != 0)//展开项不为0才计算
+ 376              		.loc 1 55 16
+ 377 0134 7A68     		ldr	r2, [r7, #4]
+ 378 0136 BB68     		ldr	r3, [r7, #8]
+ 379 0138 9B00     		lsls	r3, r3, #2
+ 380 013a 1344     		add	r3, r3, r2
+ 381 013c D3ED007A 		vldr.32	s15, [r3]
+ 382              		.loc 1 55 7
+ 383 0140 F5EE407A 		vcmp.f32	s15, #0
+ 384 0144 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 385 0148 2CD0     		beq	.L15
+  56:./Hardware/Src/Matrix.c **** 			{
+  57:./Hardware/Src/Matrix.c **** 				sum += ((int)pow(-1, i + 0)) * array[0][i] * (cal_Cof(array, i, n));//2阶以上继续递归		
+ 386              		.loc 1 57 18
+ 387 014a B868     		ldr	r0, [r7, #8]
+ 388 014c FFF7FEFF 		bl	__aeabi_i2d
+ 389 0150 0246     		mov	r2, r0
+ 390 0152 0B46     		mov	r3, r1
+ 391 0154 43EC112B 		vmov	d1, r2, r3
+ 392 0158 9FED1F0B 		vldr.64	d0, .L19
+ 393 015c FFF7FEFF 		bl	pow
+ 394 0160 53EC102B 		vmov	r2, r3, d0
+ 395              		.loc 1 57 13
+ARM GAS  /tmp/ccWoyaXE.s 			page 9
+
+
+ 396 0164 1046     		mov	r0, r2
+ 397 0166 1946     		mov	r1, r3
+ 398 0168 FFF7FEFF 		bl	__aeabi_d2iz
+ 399 016c 07EE900A 		vmov	s15, r0	@ int
+ 400              		.loc 1 57 34
+ 401 0170 B8EEE77A 		vcvt.f32.s32	s14, s15
+ 402              		.loc 1 57 44
+ 403 0174 7A68     		ldr	r2, [r7, #4]
+ 404 0176 BB68     		ldr	r3, [r7, #8]
+ 405 0178 9B00     		lsls	r3, r3, #2
+ 406 017a 1344     		add	r3, r3, r2
+ 407 017c D3ED007A 		vldr.32	s15, [r3]
+ 408              		.loc 1 57 34
+ 409 0180 27EE278A 		vmul.f32	s16, s14, s15
+ 410              		.loc 1 57 51
+ 411 0184 3A68     		ldr	r2, [r7]
+ 412 0186 B968     		ldr	r1, [r7, #8]
+ 413 0188 7868     		ldr	r0, [r7, #4]
+ 414 018a FFF7FEFF 		bl	cal_Cof
+ 415 018e F0EE407A 		vmov.f32	s15, s0
+ 416              		.loc 1 57 48
+ 417 0192 68EE277A 		vmul.f32	s15, s16, s15
+ 418              		.loc 1 57 9
+ 419 0196 97ED037A 		vldr.32	s14, [r7, #12]
+ 420 019a 77EE277A 		vadd.f32	s15, s14, s15
+ 421 019e C7ED037A 		vstr.32	s15, [r7, #12]
+ 422 01a2 07E0     		b	.L16
+ 423              	.L15:
+  58:./Hardware/Src/Matrix.c **** 			}
+  59:./Hardware/Src/Matrix.c **** 			else
+  60:./Hardware/Src/Matrix.c **** 				sum += 0;//展开项为0
+ 424              		.loc 1 60 9
+ 425 01a4 D7ED037A 		vldr.32	s15, [r7, #12]
+ 426 01a8 9FED0D7A 		vldr.32	s14, .L19+8
+ 427 01ac 77EE877A 		vadd.f32	s15, s15, s14
+ 428 01b0 C7ED037A 		vstr.32	s15, [r7, #12]
+ 429              	.L16:
+  53:./Hardware/Src/Matrix.c **** 		{
+ 430              		.loc 1 53 23 discriminator 2
+ 431 01b4 BB68     		ldr	r3, [r7, #8]
+ 432 01b6 0133     		adds	r3, r3, #1
+ 433 01b8 BB60     		str	r3, [r7, #8]
+ 434              	.L14:
+  53:./Hardware/Src/Matrix.c **** 		{
+ 435              		.loc 1 53 17 discriminator 1
+ 436 01ba BA68     		ldr	r2, [r7, #8]
+ 437 01bc 3B68     		ldr	r3, [r7]
+ 438 01be 9A42     		cmp	r2, r3
+ 439 01c0 B8DB     		blt	.L17
+ 440              	.L11:
+  61:./Hardware/Src/Matrix.c **** 		}
+  62:./Hardware/Src/Matrix.c **** 	}
+  63:./Hardware/Src/Matrix.c **** 	return sum;
+ 441              		.loc 1 63 9
+ 442 01c2 FB68     		ldr	r3, [r7, #12]	@ float
+ 443 01c4 07EE903A 		vmov	s15, r3
+  64:./Hardware/Src/Matrix.c **** }
+ARM GAS  /tmp/ccWoyaXE.s 			page 10
+
+
+ 444              		.loc 1 64 1
+ 445 01c8 B0EE670A 		vmov.f32	s0, s15
+ 446 01cc 1037     		adds	r7, r7, #16
+ 447              		.cfi_def_cfa_offset 16
+ 448 01ce BD46     		mov	sp, r7
+ 449              		.cfi_def_cfa_register 13
+ 450              		@ sp needed
+ 451 01d0 BDEC028B 		vldm	sp!, {d8}
+ 452              		.cfi_restore 80
+ 453              		.cfi_restore 81
+ 454              		.cfi_def_cfa_offset 8
+ 455 01d4 80BD     		pop	{r7, pc}
+ 456              	.L20:
+ 457 01d6 00BF     		.align	3
+ 458              	.L19:
+ 459 01d8 00000000 		.word	0
+ 460 01dc 0000F0BF 		.word	-1074790400
+ 461 01e0 00000000 		.word	0
+ 462              		.cfi_endproc
+ 463              	.LFE1:
+ 465              		.section	.text.FindCof,"ax",%progbits
+ 466              		.align	1
+ 467              		.global	FindCof
+ 468              		.syntax unified
+ 469              		.thumb
+ 470              		.thumb_func
+ 472              	FindCof:
+ 473              	.LFB2:
+  65:./Hardware/Src/Matrix.c **** void FindCof(float arr[MarNum][MarNum], float arr2[MarNum][MarNum], int i, int j, int n)
+  66:./Hardware/Src/Matrix.c **** {
+ 474              		.loc 1 66 1
+ 475              		.cfi_startproc
+ 476              		@ args = 4, pretend = 0, frame = 24
+ 477              		@ frame_needed = 1, uses_anonymous_args = 0
+ 478              		@ link register save eliminated.
+ 479 0000 90B4     		push	{r4, r7}
+ 480              		.cfi_def_cfa_offset 8
+ 481              		.cfi_offset 4, -8
+ 482              		.cfi_offset 7, -4
+ 483 0002 86B0     		sub	sp, sp, #24
+ 484              		.cfi_def_cfa_offset 32
+ 485 0004 00AF     		add	r7, sp, #0
+ 486              		.cfi_def_cfa_register 7
+ 487 0006 F860     		str	r0, [r7, #12]
+ 488 0008 B960     		str	r1, [r7, #8]
+ 489 000a 7A60     		str	r2, [r7, #4]
+ 490 000c 3B60     		str	r3, [r7]
+  67:./Hardware/Src/Matrix.c **** 	int m = 0;
+ 491              		.loc 1 67 6
+ 492 000e 0023     		movs	r3, #0
+ 493 0010 7B61     		str	r3, [r7, #20]
+  68:./Hardware/Src/Matrix.c **** 	int k = 0;
+ 494              		.loc 1 68 6
+ 495 0012 0023     		movs	r3, #0
+ 496 0014 3B61     		str	r3, [r7, #16]
+  69:./Hardware/Src/Matrix.c **** 	for (m = 0; m < n - 1; m++)
+ 497              		.loc 1 69 9
+ARM GAS  /tmp/ccWoyaXE.s 			page 11
+
+
+ 498 0016 0023     		movs	r3, #0
+ 499 0018 7B61     		str	r3, [r7, #20]
+ 500              		.loc 1 69 2
+ 501 001a 80E0     		b	.L22
+ 502              	.L29:
+  70:./Hardware/Src/Matrix.c **** 	{
+  71:./Hardware/Src/Matrix.c **** 		for (k = 0; k < n - 1; k++)
+ 503              		.loc 1 71 10
+ 504 001c 0023     		movs	r3, #0
+ 505 001e 3B61     		str	r3, [r7, #16]
+ 506              		.loc 1 71 3
+ 507 0020 75E0     		b	.L23
+ 508              	.L28:
+  72:./Hardware/Src/Matrix.c **** 		{
+  73:./Hardware/Src/Matrix.c **** 			if (k < j)
+ 509              		.loc 1 73 7
+ 510 0022 3A69     		ldr	r2, [r7, #16]
+ 511 0024 3B68     		ldr	r3, [r7]
+ 512 0026 9A42     		cmp	r2, r3
+ 513 0028 36DA     		bge	.L24
+  74:./Hardware/Src/Matrix.c **** 			{
+  75:./Hardware/Src/Matrix.c **** 				if (m < i)
+ 514              		.loc 1 75 8
+ 515 002a 7A69     		ldr	r2, [r7, #20]
+ 516 002c 7B68     		ldr	r3, [r7, #4]
+ 517 002e 9A42     		cmp	r2, r3
+ 518 0030 18DA     		bge	.L25
+  76:./Hardware/Src/Matrix.c **** 				{
+  77:./Hardware/Src/Matrix.c **** 					arr2[m][k] = arr[m][k];
+ 519              		.loc 1 77 22
+ 520 0032 7A69     		ldr	r2, [r7, #20]
+ 521 0034 1346     		mov	r3, r2
+ 522 0036 5B00     		lsls	r3, r3, #1
+ 523 0038 1344     		add	r3, r3, r2
+ 524 003a DB00     		lsls	r3, r3, #3
+ 525 003c 1A46     		mov	r2, r3
+ 526 003e FB68     		ldr	r3, [r7, #12]
+ 527 0040 9818     		adds	r0, r3, r2
+ 528              		.loc 1 77 10
+ 529 0042 7A69     		ldr	r2, [r7, #20]
+ 530 0044 1346     		mov	r3, r2
+ 531 0046 5B00     		lsls	r3, r3, #1
+ 532 0048 1344     		add	r3, r3, r2
+ 533 004a DB00     		lsls	r3, r3, #3
+ 534 004c 1A46     		mov	r2, r3
+ 535 004e BB68     		ldr	r3, [r7, #8]
+ 536 0050 9918     		adds	r1, r3, r2
+ 537              		.loc 1 77 25
+ 538 0052 3B69     		ldr	r3, [r7, #16]
+ 539 0054 9B00     		lsls	r3, r3, #2
+ 540 0056 0344     		add	r3, r3, r0
+ 541 0058 1A68     		ldr	r2, [r3]	@ float
+ 542              		.loc 1 77 17
+ 543 005a 3B69     		ldr	r3, [r7, #16]
+ 544 005c 9B00     		lsls	r3, r3, #2
+ 545 005e 0B44     		add	r3, r3, r1
+ 546 0060 1A60     		str	r2, [r3]	@ float
+ARM GAS  /tmp/ccWoyaXE.s 			page 12
+
+
+ 547 0062 51E0     		b	.L26
+ 548              	.L25:
+  78:./Hardware/Src/Matrix.c **** 				}
+  79:./Hardware/Src/Matrix.c **** 				else
+  80:./Hardware/Src/Matrix.c **** 				{
+  81:./Hardware/Src/Matrix.c **** 					arr2[m][k] = arr[m + 1][k];
+ 549              		.loc 1 81 22
+ 550 0064 7B69     		ldr	r3, [r7, #20]
+ 551 0066 5A1C     		adds	r2, r3, #1
+ 552 0068 1346     		mov	r3, r2
+ 553 006a 5B00     		lsls	r3, r3, #1
+ 554 006c 1344     		add	r3, r3, r2
+ 555 006e DB00     		lsls	r3, r3, #3
+ 556 0070 1A46     		mov	r2, r3
+ 557 0072 FB68     		ldr	r3, [r7, #12]
+ 558 0074 9818     		adds	r0, r3, r2
+ 559              		.loc 1 81 10
+ 560 0076 7A69     		ldr	r2, [r7, #20]
+ 561 0078 1346     		mov	r3, r2
+ 562 007a 5B00     		lsls	r3, r3, #1
+ 563 007c 1344     		add	r3, r3, r2
+ 564 007e DB00     		lsls	r3, r3, #3
+ 565 0080 1A46     		mov	r2, r3
+ 566 0082 BB68     		ldr	r3, [r7, #8]
+ 567 0084 9918     		adds	r1, r3, r2
+ 568              		.loc 1 81 29
+ 569 0086 3B69     		ldr	r3, [r7, #16]
+ 570 0088 9B00     		lsls	r3, r3, #2
+ 571 008a 0344     		add	r3, r3, r0
+ 572 008c 1A68     		ldr	r2, [r3]	@ float
+ 573              		.loc 1 81 17
+ 574 008e 3B69     		ldr	r3, [r7, #16]
+ 575 0090 9B00     		lsls	r3, r3, #2
+ 576 0092 0B44     		add	r3, r3, r1
+ 577 0094 1A60     		str	r2, [r3]	@ float
+ 578 0096 37E0     		b	.L26
+ 579              	.L24:
+  82:./Hardware/Src/Matrix.c **** 				}
+  83:./Hardware/Src/Matrix.c **** 			}
+  84:./Hardware/Src/Matrix.c **** 			else
+  85:./Hardware/Src/Matrix.c **** 			{
+  86:./Hardware/Src/Matrix.c **** 				if (m < i)
+ 580              		.loc 1 86 8
+ 581 0098 7A69     		ldr	r2, [r7, #20]
+ 582 009a 7B68     		ldr	r3, [r7, #4]
+ 583 009c 9A42     		cmp	r2, r3
+ 584 009e 19DA     		bge	.L27
+  87:./Hardware/Src/Matrix.c **** 				{
+  88:./Hardware/Src/Matrix.c **** 					arr2[m][k] = arr[m][k + 1];
+ 585              		.loc 1 88 22
+ 586 00a0 7A69     		ldr	r2, [r7, #20]
+ 587 00a2 1346     		mov	r3, r2
+ 588 00a4 5B00     		lsls	r3, r3, #1
+ 589 00a6 1344     		add	r3, r3, r2
+ 590 00a8 DB00     		lsls	r3, r3, #3
+ 591 00aa 1A46     		mov	r2, r3
+ 592 00ac FB68     		ldr	r3, [r7, #12]
+ARM GAS  /tmp/ccWoyaXE.s 			page 13
+
+
+ 593 00ae 9818     		adds	r0, r3, r2
+ 594              		.loc 1 88 28
+ 595 00b0 3B69     		ldr	r3, [r7, #16]
+ 596 00b2 5C1C     		adds	r4, r3, #1
+ 597              		.loc 1 88 10
+ 598 00b4 7A69     		ldr	r2, [r7, #20]
+ 599 00b6 1346     		mov	r3, r2
+ 600 00b8 5B00     		lsls	r3, r3, #1
+ 601 00ba 1344     		add	r3, r3, r2
+ 602 00bc DB00     		lsls	r3, r3, #3
+ 603 00be 1A46     		mov	r2, r3
+ 604 00c0 BB68     		ldr	r3, [r7, #8]
+ 605 00c2 9918     		adds	r1, r3, r2
+ 606              		.loc 1 88 25
+ 607 00c4 A300     		lsls	r3, r4, #2
+ 608 00c6 0344     		add	r3, r3, r0
+ 609 00c8 1A68     		ldr	r2, [r3]	@ float
+ 610              		.loc 1 88 17
+ 611 00ca 3B69     		ldr	r3, [r7, #16]
+ 612 00cc 9B00     		lsls	r3, r3, #2
+ 613 00ce 0B44     		add	r3, r3, r1
+ 614 00d0 1A60     		str	r2, [r3]	@ float
+ 615 00d2 19E0     		b	.L26
+ 616              	.L27:
+  89:./Hardware/Src/Matrix.c **** 				}
+  90:./Hardware/Src/Matrix.c **** 				else
+  91:./Hardware/Src/Matrix.c **** 				{
+  92:./Hardware/Src/Matrix.c **** 					arr2[m][k] = arr[m + 1][k + 1];
+ 617              		.loc 1 92 22
+ 618 00d4 7B69     		ldr	r3, [r7, #20]
+ 619 00d6 5A1C     		adds	r2, r3, #1
+ 620 00d8 1346     		mov	r3, r2
+ 621 00da 5B00     		lsls	r3, r3, #1
+ 622 00dc 1344     		add	r3, r3, r2
+ 623 00de DB00     		lsls	r3, r3, #3
+ 624 00e0 1A46     		mov	r2, r3
+ 625 00e2 FB68     		ldr	r3, [r7, #12]
+ 626 00e4 9818     		adds	r0, r3, r2
+ 627              		.loc 1 92 32
+ 628 00e6 3B69     		ldr	r3, [r7, #16]
+ 629 00e8 5C1C     		adds	r4, r3, #1
+ 630              		.loc 1 92 10
+ 631 00ea 7A69     		ldr	r2, [r7, #20]
+ 632 00ec 1346     		mov	r3, r2
+ 633 00ee 5B00     		lsls	r3, r3, #1
+ 634 00f0 1344     		add	r3, r3, r2
+ 635 00f2 DB00     		lsls	r3, r3, #3
+ 636 00f4 1A46     		mov	r2, r3
+ 637 00f6 BB68     		ldr	r3, [r7, #8]
+ 638 00f8 9918     		adds	r1, r3, r2
+ 639              		.loc 1 92 29
+ 640 00fa A300     		lsls	r3, r4, #2
+ 641 00fc 0344     		add	r3, r3, r0
+ 642 00fe 1A68     		ldr	r2, [r3]	@ float
+ 643              		.loc 1 92 17
+ 644 0100 3B69     		ldr	r3, [r7, #16]
+ 645 0102 9B00     		lsls	r3, r3, #2
+ARM GAS  /tmp/ccWoyaXE.s 			page 14
+
+
+ 646 0104 0B44     		add	r3, r3, r1
+ 647 0106 1A60     		str	r2, [r3]	@ float
+ 648              	.L26:
+  71:./Hardware/Src/Matrix.c **** 		{
+ 649              		.loc 1 71 27 discriminator 2
+ 650 0108 3B69     		ldr	r3, [r7, #16]
+ 651 010a 0133     		adds	r3, r3, #1
+ 652 010c 3B61     		str	r3, [r7, #16]
+ 653              	.L23:
+  71:./Hardware/Src/Matrix.c **** 		{
+ 654              		.loc 1 71 21 discriminator 1
+ 655 010e 3B6A     		ldr	r3, [r7, #32]
+ 656 0110 013B     		subs	r3, r3, #1
+  71:./Hardware/Src/Matrix.c **** 		{
+ 657              		.loc 1 71 17 discriminator 1
+ 658 0112 3A69     		ldr	r2, [r7, #16]
+ 659 0114 9A42     		cmp	r2, r3
+ 660 0116 84DB     		blt	.L28
+  69:./Hardware/Src/Matrix.c **** 	{
+ 661              		.loc 1 69 26 discriminator 2
+ 662 0118 7B69     		ldr	r3, [r7, #20]
+ 663 011a 0133     		adds	r3, r3, #1
+ 664 011c 7B61     		str	r3, [r7, #20]
+ 665              	.L22:
+  69:./Hardware/Src/Matrix.c **** 	{
+ 666              		.loc 1 69 20 discriminator 1
+ 667 011e 3B6A     		ldr	r3, [r7, #32]
+ 668 0120 013B     		subs	r3, r3, #1
+  69:./Hardware/Src/Matrix.c **** 	{
+ 669              		.loc 1 69 16 discriminator 1
+ 670 0122 7A69     		ldr	r2, [r7, #20]
+ 671 0124 9A42     		cmp	r2, r3
+ 672 0126 FFF679AF 		blt	.L29
+  93:./Hardware/Src/Matrix.c **** 				}
+  94:./Hardware/Src/Matrix.c **** 			}
+  95:./Hardware/Src/Matrix.c **** 		}
+  96:./Hardware/Src/Matrix.c **** 	}
+  97:./Hardware/Src/Matrix.c **** }
+ 673              		.loc 1 97 1
+ 674 012a 00BF     		nop
+ 675 012c 00BF     		nop
+ 676 012e 1837     		adds	r7, r7, #24
+ 677              		.cfi_def_cfa_offset 8
+ 678 0130 BD46     		mov	sp, r7
+ 679              		.cfi_def_cfa_register 13
+ 680              		@ sp needed
+ 681 0132 90BC     		pop	{r4, r7}
+ 682              		.cfi_restore 7
+ 683              		.cfi_restore 4
+ 684              		.cfi_def_cfa_offset 0
+ 685 0134 7047     		bx	lr
+ 686              		.cfi_endproc
+ 687              	.LFE2:
+ 689              		.global	__aeabi_f2d
+ 690              		.global	__aeabi_ddiv
+ 691              		.global	__aeabi_d2f
+ 692              		.global	__aeabi_dmul
+ARM GAS  /tmp/ccWoyaXE.s 			page 15
+
+
+ 693              		.section	.text.matrix_inver,"ax",%progbits
+ 694              		.align	1
+ 695              		.global	matrix_inver
+ 696              		.syntax unified
+ 697              		.thumb
+ 698              		.thumb_func
+ 700              	matrix_inver:
+ 701              	.LFB3:
+  98:./Hardware/Src/Matrix.c **** 
+  99:./Hardware/Src/Matrix.c **** void matrix_inver(float arr[MarNum][MarNum])
+ 100:./Hardware/Src/Matrix.c **** {
+ 702              		.loc 1 100 1
+ 703              		.cfi_startproc
+ 704              		@ args = 0, pretend = 0, frame = 320
+ 705              		@ frame_needed = 1, uses_anonymous_args = 0
+ 706 0000 B0B5     		push	{r4, r5, r7, lr}
+ 707              		.cfi_def_cfa_offset 16
+ 708              		.cfi_offset 4, -16
+ 709              		.cfi_offset 5, -12
+ 710              		.cfi_offset 7, -8
+ 711              		.cfi_offset 14, -4
+ 712 0002 D2B0     		sub	sp, sp, #328
+ 713              		.cfi_def_cfa_offset 344
+ 714 0004 02AF     		add	r7, sp, #8
+ 715              		.cfi_def_cfa 7, 336
+ 716 0006 07F5A073 		add	r3, r7, #320
+ 717 000a A3F59E73 		sub	r3, r3, #316
+ 718 000e 1860     		str	r0, [r3]
+ 101:./Hardware/Src/Matrix.c **** 	int i, j, n=MarNum;
+ 719              		.loc 1 101 12
+ 720 0010 0623     		movs	r3, #6
+ 721 0012 C7F83431 		str	r3, [r7, #308]
+ 102:./Hardware/Src/Matrix.c **** 	float tmp[MarNum][MarNum] = { 0 };
+ 722              		.loc 1 102 8
+ 723 0016 07F19C03 		add	r3, r7, #156
+ 724 001a 9022     		movs	r2, #144
+ 725 001c 0021     		movs	r1, #0
+ 726 001e 1846     		mov	r0, r3
+ 727 0020 FFF7FEFF 		bl	memset
+ 103:./Hardware/Src/Matrix.c **** 	//保护arr，将arr指向内存的数据拷贝到tmp二维数组中
+ 104:./Hardware/Src/Matrix.c **** 	for (i = 0; i < n; i++)
+ 728              		.loc 1 104 9
+ 729 0024 0023     		movs	r3, #0
+ 730 0026 C7F83C31 		str	r3, [r7, #316]
+ 731              		.loc 1 104 2
+ 732 002a 34E0     		b	.L31
+ 733              	.L34:
+ 105:./Hardware/Src/Matrix.c **** 	{
+ 106:./Hardware/Src/Matrix.c **** 		for(j=0;j<n;j++){
+ 734              		.loc 1 106 8
+ 735 002c 0023     		movs	r3, #0
+ 736 002e C7F83831 		str	r3, [r7, #312]
+ 737              		.loc 1 106 3
+ 738 0032 25E0     		b	.L32
+ 739              	.L33:
+ 107:./Hardware/Src/Matrix.c ****             tmp[i][j] = arr[i][j];
+ 740              		.loc 1 107 28 discriminator 3
+ARM GAS  /tmp/ccWoyaXE.s 			page 16
+
+
+ 741 0034 D7F83C21 		ldr	r2, [r7, #316]
+ 742 0038 1346     		mov	r3, r2
+ 743 003a 5B00     		lsls	r3, r3, #1
+ 744 003c 1344     		add	r3, r3, r2
+ 745 003e DB00     		lsls	r3, r3, #3
+ 746 0040 1A46     		mov	r2, r3
+ 747 0042 07F5A073 		add	r3, r7, #320
+ 748 0046 A3F59E73 		sub	r3, r3, #316
+ 749 004a 1B68     		ldr	r3, [r3]
+ 750 004c 1A44     		add	r2, r2, r3
+ 751              		.loc 1 107 31 discriminator 3
+ 752 004e D7F83831 		ldr	r3, [r7, #312]
+ 753 0052 9B00     		lsls	r3, r3, #2
+ 754 0054 1344     		add	r3, r3, r2
+ 755 0056 1968     		ldr	r1, [r3]	@ float
+ 756              		.loc 1 107 23 discriminator 3
+ 757 0058 D7F83C21 		ldr	r2, [r7, #316]
+ 758 005c 1346     		mov	r3, r2
+ 759 005e 5B00     		lsls	r3, r3, #1
+ 760 0060 1344     		add	r3, r3, r2
+ 761 0062 5B00     		lsls	r3, r3, #1
+ 762 0064 D7F83821 		ldr	r2, [r7, #312]
+ 763 0068 1344     		add	r3, r3, r2
+ 764 006a 9B00     		lsls	r3, r3, #2
+ 765 006c 03F5A073 		add	r3, r3, #320
+ 766 0070 3B44     		add	r3, r3, r7
+ 767 0072 A43B     		subs	r3, r3, #164
+ 768 0074 1960     		str	r1, [r3]	@ float
+ 106:./Hardware/Src/Matrix.c ****             tmp[i][j] = arr[i][j];
+ 769              		.loc 1 106 16 discriminator 3
+ 770 0076 D7F83831 		ldr	r3, [r7, #312]
+ 771 007a 0133     		adds	r3, r3, #1
+ 772 007c C7F83831 		str	r3, [r7, #312]
+ 773              	.L32:
+ 106:./Hardware/Src/Matrix.c ****             tmp[i][j] = arr[i][j];
+ 774              		.loc 1 106 12 discriminator 1
+ 775 0080 D7F83821 		ldr	r2, [r7, #312]
+ 776 0084 D7F83431 		ldr	r3, [r7, #308]
+ 777 0088 9A42     		cmp	r2, r3
+ 778 008a D3DB     		blt	.L33
+ 104:./Hardware/Src/Matrix.c **** 	{
+ 779              		.loc 1 104 22 discriminator 2
+ 780 008c D7F83C31 		ldr	r3, [r7, #316]
+ 781 0090 0133     		adds	r3, r3, #1
+ 782 0092 C7F83C31 		str	r3, [r7, #316]
+ 783              	.L31:
+ 104:./Hardware/Src/Matrix.c **** 	{
+ 784              		.loc 1 104 16 discriminator 1
+ 785 0096 D7F83C21 		ldr	r2, [r7, #316]
+ 786 009a D7F83431 		ldr	r3, [r7, #308]
+ 787 009e 9A42     		cmp	r2, r3
+ 788 00a0 C4DB     		blt	.L34
+ 108:./Hardware/Src/Matrix.c ****         }
+ 109:./Hardware/Src/Matrix.c **** 	}
+ 110:./Hardware/Src/Matrix.c **** 	float a = 1.0 / (cal_Det(tmp, n));
+ 789              		.loc 1 110 19
+ 790 00a2 07F19C03 		add	r3, r7, #156
+ARM GAS  /tmp/ccWoyaXE.s 			page 17
+
+
+ 791 00a6 D7F83411 		ldr	r1, [r7, #308]
+ 792 00aa 1846     		mov	r0, r3
+ 793 00ac FFF7FEFF 		bl	cal_Det
+ 794 00b0 10EE103A 		vmov	r3, s0
+ 795 00b4 1846     		mov	r0, r3	@ float
+ 796 00b6 FFF7FEFF 		bl	__aeabi_f2d
+ 797 00ba 0246     		mov	r2, r0
+ 798 00bc 0B46     		mov	r3, r1
+ 799              		.loc 1 110 16
+ 800 00be 4FF00000 		mov	r0, #0
+ 801 00c2 4949     		ldr	r1, .L39+8
+ 802 00c4 FFF7FEFF 		bl	__aeabi_ddiv
+ 803 00c8 0246     		mov	r2, r0
+ 804 00ca 0B46     		mov	r3, r1
+ 805              		.loc 1 110 8
+ 806 00cc 1046     		mov	r0, r2
+ 807 00ce 1946     		mov	r1, r3
+ 808 00d0 FFF7FEFF 		bl	__aeabi_d2f
+ 809 00d4 0346     		mov	r3, r0	@ float
+ 810 00d6 C7F83031 		str	r3, [r7, #304]	@ float
+ 111:./Hardware/Src/Matrix.c **** 	for (i = 0; i < n; i++)
+ 811              		.loc 1 111 9
+ 812 00da 0023     		movs	r3, #0
+ 813 00dc C7F83C31 		str	r3, [r7, #316]
+ 814              		.loc 1 111 2
+ 815 00e0 72E0     		b	.L35
+ 816              	.L38:
+ 112:./Hardware/Src/Matrix.c **** 	{
+ 113:./Hardware/Src/Matrix.c **** 		for (j = 0; j < n; j++)
+ 817              		.loc 1 113 10
+ 818 00e2 0023     		movs	r3, #0
+ 819 00e4 C7F83831 		str	r3, [r7, #312]
+ 820              		.loc 1 113 3
+ 821 00e8 63E0     		b	.L36
+ 822              	.L37:
+ 823              	.LBB2:
+ 114:./Hardware/Src/Matrix.c **** 		{
+ 115:./Hardware/Src/Matrix.c **** 			float tmp2[MarNum][MarNum] = { 0 };
+ 824              		.loc 1 115 10 discriminator 3
+ 825 00ea 07F5A073 		add	r3, r7, #320
+ 826 00ee A3F59A73 		sub	r3, r3, #308
+ 827 00f2 1846     		mov	r0, r3
+ 828 00f4 9023     		movs	r3, #144
+ 829 00f6 1A46     		mov	r2, r3
+ 830 00f8 0021     		movs	r1, #0
+ 831 00fa FFF7FEFF 		bl	memset
+ 116:./Hardware/Src/Matrix.c **** 			FindCof(tmp, tmp2, j, i, n);//求转置后的伴随
+ 832              		.loc 1 116 4 discriminator 3
+ 833 00fe 07F10C01 		add	r1, r7, #12
+ 834 0102 07F19C00 		add	r0, r7, #156
+ 835 0106 D7F83431 		ldr	r3, [r7, #308]
+ 836 010a 0093     		str	r3, [sp]
+ 837 010c D7F83C31 		ldr	r3, [r7, #316]
+ 838 0110 D7F83821 		ldr	r2, [r7, #312]
+ 839 0114 FFF7FEFF 		bl	FindCof
+ 117:./Hardware/Src/Matrix.c **** 			float b = pow(-1, i + j) * cal_Det(tmp2, n - 1);
+ 840              		.loc 1 117 24 discriminator 3
+ARM GAS  /tmp/ccWoyaXE.s 			page 18
+
+
+ 841 0118 D7F83C21 		ldr	r2, [r7, #316]
+ 842 011c D7F83831 		ldr	r3, [r7, #312]
+ 843 0120 1344     		add	r3, r3, r2
+ 844              		.loc 1 117 14 discriminator 3
+ 845 0122 1846     		mov	r0, r3
+ 846 0124 FFF7FEFF 		bl	__aeabi_i2d
+ 847 0128 0246     		mov	r2, r0
+ 848 012a 0B46     		mov	r3, r1
+ 849 012c 43EC112B 		vmov	d1, r2, r3
+ 850 0130 9FED2B0B 		vldr.64	d0, .L39
+ 851 0134 FFF7FEFF 		bl	pow
+ 852 0138 55EC104B 		vmov	r4, r5, d0
+ 853              		.loc 1 117 31 discriminator 3
+ 854 013c D7F83431 		ldr	r3, [r7, #308]
+ 855 0140 5A1E     		subs	r2, r3, #1
+ 856 0142 07F10C03 		add	r3, r7, #12
+ 857 0146 1146     		mov	r1, r2
+ 858 0148 1846     		mov	r0, r3
+ 859 014a FFF7FEFF 		bl	cal_Det
+ 860 014e 10EE103A 		vmov	r3, s0
+ 861 0152 1846     		mov	r0, r3	@ float
+ 862 0154 FFF7FEFF 		bl	__aeabi_f2d
+ 863 0158 0246     		mov	r2, r0
+ 864 015a 0B46     		mov	r3, r1
+ 865              		.loc 1 117 29 discriminator 3
+ 866 015c 2046     		mov	r0, r4
+ 867 015e 2946     		mov	r1, r5
+ 868 0160 FFF7FEFF 		bl	__aeabi_dmul
+ 869 0164 0246     		mov	r2, r0
+ 870 0166 0B46     		mov	r3, r1
+ 871              		.loc 1 117 10 discriminator 3
+ 872 0168 1046     		mov	r0, r2
+ 873 016a 1946     		mov	r1, r3
+ 874 016c FFF7FEFF 		bl	__aeabi_d2f
+ 875 0170 0346     		mov	r3, r0	@ float
+ 876 0172 C7F82C31 		str	r3, [r7, #300]	@ float
+ 118:./Hardware/Src/Matrix.c **** 			arr[i][j] = a * b;
+ 877              		.loc 1 118 7 discriminator 3
+ 878 0176 D7F83C21 		ldr	r2, [r7, #316]
+ 879 017a 1346     		mov	r3, r2
+ 880 017c 5B00     		lsls	r3, r3, #1
+ 881 017e 1344     		add	r3, r3, r2
+ 882 0180 DB00     		lsls	r3, r3, #3
+ 883 0182 1A46     		mov	r2, r3
+ 884 0184 07F5A073 		add	r3, r7, #320
+ 885 0188 A3F59E73 		sub	r3, r3, #316
+ 886 018c 1B68     		ldr	r3, [r3]
+ 887 018e 1A44     		add	r2, r2, r3
+ 888              		.loc 1 118 18 discriminator 3
+ 889 0190 97ED4C7A 		vldr.32	s14, [r7, #304]
+ 890 0194 D7ED4B7A 		vldr.32	s15, [r7, #300]
+ 891 0198 67EE277A 		vmul.f32	s15, s14, s15
+ 892              		.loc 1 118 14 discriminator 3
+ 893 019c D7F83831 		ldr	r3, [r7, #312]
+ 894 01a0 9B00     		lsls	r3, r3, #2
+ 895 01a2 1344     		add	r3, r3, r2
+ 896 01a4 C3ED007A 		vstr.32	s15, [r3]
+ARM GAS  /tmp/ccWoyaXE.s 			page 19
+
+
+ 897              	.LBE2:
+ 113:./Hardware/Src/Matrix.c **** 		{
+ 898              		.loc 1 113 23 discriminator 3
+ 899 01a8 D7F83831 		ldr	r3, [r7, #312]
+ 900 01ac 0133     		adds	r3, r3, #1
+ 901 01ae C7F83831 		str	r3, [r7, #312]
+ 902              	.L36:
+ 113:./Hardware/Src/Matrix.c **** 		{
+ 903              		.loc 1 113 17 discriminator 1
+ 904 01b2 D7F83821 		ldr	r2, [r7, #312]
+ 905 01b6 D7F83431 		ldr	r3, [r7, #308]
+ 906 01ba 9A42     		cmp	r2, r3
+ 907 01bc 95DB     		blt	.L37
+ 111:./Hardware/Src/Matrix.c **** 	{
+ 908              		.loc 1 111 22 discriminator 2
+ 909 01be D7F83C31 		ldr	r3, [r7, #316]
+ 910 01c2 0133     		adds	r3, r3, #1
+ 911 01c4 C7F83C31 		str	r3, [r7, #316]
+ 912              	.L35:
+ 111:./Hardware/Src/Matrix.c **** 	{
+ 913              		.loc 1 111 16 discriminator 1
+ 914 01c8 D7F83C21 		ldr	r2, [r7, #316]
+ 915 01cc D7F83431 		ldr	r3, [r7, #308]
+ 916 01d0 9A42     		cmp	r2, r3
+ 917 01d2 86DB     		blt	.L38
+ 119:./Hardware/Src/Matrix.c **** 		}
+ 120:./Hardware/Src/Matrix.c **** 	}
+ 121:./Hardware/Src/Matrix.c **** }
+ 918              		.loc 1 121 1
+ 919 01d4 00BF     		nop
+ 920 01d6 00BF     		nop
+ 921 01d8 07F5A077 		add	r7, r7, #320
+ 922              		.cfi_def_cfa_offset 16
+ 923 01dc BD46     		mov	sp, r7
+ 924              		.cfi_def_cfa_register 13
+ 925              		@ sp needed
+ 926 01de B0BD     		pop	{r4, r5, r7, pc}
+ 927              	.L40:
+ 928              		.align	3
+ 929              	.L39:
+ 930 01e0 00000000 		.word	0
+ 931 01e4 0000F0BF 		.word	-1074790400
+ 932 01e8 0000F03F 		.word	1072693248
+ 933              		.cfi_endproc
+ 934              	.LFE3:
+ 936              		.section	.text.inv,"ax",%progbits
+ 937              		.align	1
+ 938              		.global	inv
+ 939              		.syntax unified
+ 940              		.thumb
+ 941              		.thumb_func
+ 943              	inv:
+ 944              	.LFB4:
+ 122:./Hardware/Src/Matrix.c **** int inv(float A[], int row){
+ 945              		.loc 1 122 28
+ 946              		.cfi_startproc
+ 947              		@ args = 0, pretend = 0, frame = 40
+ARM GAS  /tmp/ccWoyaXE.s 			page 20
+
+
+ 948              		@ frame_needed = 1, uses_anonymous_args = 0
+ 949 0000 80B5     		push	{r7, lr}
+ 950              		.cfi_def_cfa_offset 8
+ 951              		.cfi_offset 7, -8
+ 952              		.cfi_offset 14, -4
+ 953 0002 8CB0     		sub	sp, sp, #48
+ 954              		.cfi_def_cfa_offset 56
+ 955 0004 02AF     		add	r7, sp, #8
+ 956              		.cfi_def_cfa 7, 48
+ 957 0006 7860     		str	r0, [r7, #4]
+ 958 0008 3960     		str	r1, [r7]
+ 123:./Hardware/Src/Matrix.c **** 	/* Create iA matrix */
+ 124:./Hardware/Src/Matrix.c **** 	float *iA = (float*)malloc(row * row * sizeof(float));
+ 959              		.loc 1 124 33
+ 960 000a 3B68     		ldr	r3, [r7]
+ 961 000c 03FB03F3 		mul	r3, r3, r3
+ 962              		.loc 1 124 22
+ 963 0010 9B00     		lsls	r3, r3, #2
+ 964 0012 1846     		mov	r0, r3
+ 965 0014 FFF7FEFF 		bl	malloc
+ 966 0018 0346     		mov	r3, r0
+ 967 001a 7B62     		str	r3, [r7, #36]
+ 125:./Hardware/Src/Matrix.c **** 	float *A0 = iA; 
+ 968              		.loc 1 125 9
+ 969 001c 7B6A     		ldr	r3, [r7, #36]
+ 970 001e BB61     		str	r3, [r7, #24]
+ 126:./Hardware/Src/Matrix.c **** 
+ 127:./Hardware/Src/Matrix.c **** 	/* Create temporary matrix */
+ 128:./Hardware/Src/Matrix.c **** 	float *tmpvec = (float*)malloc(row * sizeof(float));
+ 971              		.loc 1 128 26
+ 972 0020 3B68     		ldr	r3, [r7]
+ 973 0022 9B00     		lsls	r3, r3, #2
+ 974 0024 1846     		mov	r0, r3
+ 975 0026 FFF7FEFF 		bl	malloc
+ 976 002a 0346     		mov	r3, r0
+ 977 002c 7B61     		str	r3, [r7, #20]
+ 129:./Hardware/Src/Matrix.c **** 	memset(tmpvec, 0, row*sizeof(float));
+ 978              		.loc 1 129 2
+ 979 002e 3B68     		ldr	r3, [r7]
+ 980 0030 9B00     		lsls	r3, r3, #2
+ 981 0032 1A46     		mov	r2, r3
+ 982 0034 0021     		movs	r1, #0
+ 983 0036 7869     		ldr	r0, [r7, #20]
+ 984 0038 FFF7FEFF 		bl	memset
+ 130:./Hardware/Src/Matrix.c **** 
+ 131:./Hardware/Src/Matrix.c **** 	/* Check if the determinant is 0 */
+ 132:./Hardware/Src/Matrix.c **** 	float* LU = (float*)malloc(row * row * sizeof(float));
+ 985              		.loc 1 132 33
+ 986 003c 3B68     		ldr	r3, [r7]
+ 987 003e 03FB03F3 		mul	r3, r3, r3
+ 988              		.loc 1 132 22
+ 989 0042 9B00     		lsls	r3, r3, #2
+ 990 0044 1846     		mov	r0, r3
+ 991 0046 FFF7FEFF 		bl	malloc
+ 992 004a 0346     		mov	r3, r0
+ 993 004c 3B61     		str	r3, [r7, #16]
+ 133:./Hardware/Src/Matrix.c **** 	int* P = (int*)malloc(row * sizeof(int));
+ARM GAS  /tmp/ccWoyaXE.s 			page 21
+
+
+ 994              		.loc 1 133 17
+ 995 004e 3B68     		ldr	r3, [r7]
+ 996 0050 9B00     		lsls	r3, r3, #2
+ 997 0052 1846     		mov	r0, r3
+ 998 0054 FFF7FEFF 		bl	malloc
+ 999 0058 0346     		mov	r3, r0
+ 1000 005a FB60     		str	r3, [r7, #12]
+ 134:./Hardware/Src/Matrix.c **** 	int ok = lup(A, LU, P, row);
+ 1001              		.loc 1 134 11
+ 1002 005c 3B68     		ldr	r3, [r7]
+ 1003 005e FA68     		ldr	r2, [r7, #12]
+ 1004 0060 3969     		ldr	r1, [r7, #16]
+ 1005 0062 7868     		ldr	r0, [r7, #4]
+ 1006 0064 FFF7FEFF 		bl	lup
+ 1007 0068 3862     		str	r0, [r7, #32]
+ 135:./Hardware/Src/Matrix.c ****     if (ok) {
+ 1008              		.loc 1 135 8
+ 1009 006a 3B6A     		ldr	r3, [r7, #32]
+ 1010 006c 002B     		cmp	r3, #0
+ 1011 006e 3DD0     		beq	.L42
+ 1012              	.LBB3:
+ 136:./Hardware/Src/Matrix.c ****         /* Create the inverse */
+ 137:./Hardware/Src/Matrix.c ****         int i;
+ 138:./Hardware/Src/Matrix.c ****         for (i = 0; i < row; i++) {
+ 1013              		.loc 1 138 16
+ 1014 0070 0023     		movs	r3, #0
+ 1015 0072 FB61     		str	r3, [r7, #28]
+ 1016              		.loc 1 138 9
+ 1017 0074 23E0     		b	.L43
+ 1018              	.L46:
+ 139:./Hardware/Src/Matrix.c ****             tmpvec[i] = 1.0f;
+ 1019              		.loc 1 139 19
+ 1020 0076 FB69     		ldr	r3, [r7, #28]
+ 1021 0078 9B00     		lsls	r3, r3, #2
+ 1022 007a 7A69     		ldr	r2, [r7, #20]
+ 1023 007c 1344     		add	r3, r3, r2
+ 1024              		.loc 1 139 23
+ 1025 007e 4FF07E52 		mov	r2, #1065353216
+ 1026 0082 1A60     		str	r2, [r3]	@ float
+ 140:./Hardware/Src/Matrix.c ****             if (!solve(iA, tmpvec, P, LU, row)) {
+ 1027              		.loc 1 140 18
+ 1028 0084 3B68     		ldr	r3, [r7]
+ 1029 0086 0093     		str	r3, [sp]
+ 1030 0088 3B69     		ldr	r3, [r7, #16]
+ 1031 008a FA68     		ldr	r2, [r7, #12]
+ 1032 008c 7969     		ldr	r1, [r7, #20]
+ 1033 008e 786A     		ldr	r0, [r7, #36]
+ 1034 0090 FFF7FEFF 		bl	solve
+ 1035 0094 0346     		mov	r3, r0
+ 1036              		.loc 1 140 16
+ 1037 0096 002B     		cmp	r3, #0
+ 1038 0098 02D1     		bne	.L44
+ 141:./Hardware/Src/Matrix.c ****                 ok = 0;
+ 1039              		.loc 1 141 20
+ 1040 009a 0023     		movs	r3, #0
+ 1041 009c 3B62     		str	r3, [r7, #32]
+ 142:./Hardware/Src/Matrix.c ****                 break;
+ARM GAS  /tmp/ccWoyaXE.s 			page 22
+
+
+ 1042              		.loc 1 142 17
+ 1043 009e 12E0     		b	.L45
+ 1044              	.L44:
+ 143:./Hardware/Src/Matrix.c ****             }
+ 144:./Hardware/Src/Matrix.c ****             tmpvec[i] = 0.0f;
+ 1045              		.loc 1 144 19 discriminator 2
+ 1046 00a0 FB69     		ldr	r3, [r7, #28]
+ 1047 00a2 9B00     		lsls	r3, r3, #2
+ 1048 00a4 7A69     		ldr	r2, [r7, #20]
+ 1049 00a6 1344     		add	r3, r3, r2
+ 1050              		.loc 1 144 23 discriminator 2
+ 1051 00a8 4FF00002 		mov	r2, #0
+ 1052 00ac 1A60     		str	r2, [r3]	@ float
+ 145:./Hardware/Src/Matrix.c **** 			iA += row;
+ 1053              		.loc 1 145 7 discriminator 2
+ 1054 00ae 3B68     		ldr	r3, [r7]
+ 1055 00b0 9B00     		lsls	r3, r3, #2
+ 1056 00b2 7A6A     		ldr	r2, [r7, #36]
+ 1057 00b4 1344     		add	r3, r3, r2
+ 1058 00b6 7B62     		str	r3, [r7, #36]
+ 138:./Hardware/Src/Matrix.c ****             tmpvec[i] = 1.0f;
+ 1059              		.loc 1 138 31 discriminator 2
+ 1060 00b8 FB69     		ldr	r3, [r7, #28]
+ 1061 00ba 0133     		adds	r3, r3, #1
+ 1062 00bc FB61     		str	r3, [r7, #28]
+ 1063              	.L43:
+ 138:./Hardware/Src/Matrix.c ****             tmpvec[i] = 1.0f;
+ 1064              		.loc 1 138 23 discriminator 1
+ 1065 00be FA69     		ldr	r2, [r7, #28]
+ 1066 00c0 3B68     		ldr	r3, [r7]
+ 1067 00c2 9A42     		cmp	r2, r3
+ 1068 00c4 D7DB     		blt	.L46
+ 1069              	.L45:
+ 146:./Hardware/Src/Matrix.c ****         }
+ 147:./Hardware/Src/Matrix.c ****         if (ok) {
+ 1070              		.loc 1 147 12
+ 1071 00c6 3B6A     		ldr	r3, [r7, #32]
+ 1072 00c8 002B     		cmp	r3, #0
+ 1073 00ca 0FD0     		beq	.L42
+ 148:./Hardware/Src/Matrix.c ****             /* Transpose of iA */
+ 149:./Hardware/Src/Matrix.c **** 			iA = A0; /* Reset position */
+ 1074              		.loc 1 149 7
+ 1075 00cc BB69     		ldr	r3, [r7, #24]
+ 1076 00ce 7B62     		str	r3, [r7, #36]
+ 150:./Hardware/Src/Matrix.c ****             tran(iA, row, row);
+ 1077              		.loc 1 150 13
+ 1078 00d0 3A68     		ldr	r2, [r7]
+ 1079 00d2 3968     		ldr	r1, [r7]
+ 1080 00d4 786A     		ldr	r0, [r7, #36]
+ 1081 00d6 FFF7FEFF 		bl	tran
+ 151:./Hardware/Src/Matrix.c **** 
+ 152:./Hardware/Src/Matrix.c ****             /* Copy over iA -> A */
+ 153:./Hardware/Src/Matrix.c ****             memcpy(A, iA, row * row * sizeof(float));
+ 1082              		.loc 1 153 31
+ 1083 00da 3B68     		ldr	r3, [r7]
+ 1084 00dc 03FB03F3 		mul	r3, r3, r3
+ 1085              		.loc 1 153 13
+ARM GAS  /tmp/ccWoyaXE.s 			page 23
+
+
+ 1086 00e0 9B00     		lsls	r3, r3, #2
+ 1087 00e2 1A46     		mov	r2, r3
+ 1088 00e4 796A     		ldr	r1, [r7, #36]
+ 1089 00e6 7868     		ldr	r0, [r7, #4]
+ 1090 00e8 FFF7FEFF 		bl	memcpy
+ 1091              	.L42:
+ 1092              	.LBE3:
+ 154:./Hardware/Src/Matrix.c ****         }
+ 155:./Hardware/Src/Matrix.c ****     }
+ 156:./Hardware/Src/Matrix.c **** 	/* Free */
+ 157:./Hardware/Src/Matrix.c ****     free(tmpvec);
+ 1093              		.loc 1 157 5
+ 1094 00ec 7869     		ldr	r0, [r7, #20]
+ 1095 00ee FFF7FEFF 		bl	free
+ 158:./Hardware/Src/Matrix.c **** 	free(iA);
+ 1096              		.loc 1 158 2
+ 1097 00f2 786A     		ldr	r0, [r7, #36]
+ 1098 00f4 FFF7FEFF 		bl	free
+ 159:./Hardware/Src/Matrix.c **** 	free(LU);
+ 1099              		.loc 1 159 2
+ 1100 00f8 3869     		ldr	r0, [r7, #16]
+ 1101 00fa FFF7FEFF 		bl	free
+ 160:./Hardware/Src/Matrix.c **** 	free(P);
+ 1102              		.loc 1 160 2
+ 1103 00fe F868     		ldr	r0, [r7, #12]
+ 1104 0100 FFF7FEFF 		bl	free
+ 161:./Hardware/Src/Matrix.c **** 
+ 162:./Hardware/Src/Matrix.c **** 	return ok;	
+ 1105              		.loc 1 162 9
+ 1106 0104 3B6A     		ldr	r3, [r7, #32]
+ 163:./Hardware/Src/Matrix.c **** }
+ 1107              		.loc 1 163 1
+ 1108 0106 1846     		mov	r0, r3
+ 1109 0108 2837     		adds	r7, r7, #40
+ 1110              		.cfi_def_cfa_offset 8
+ 1111 010a BD46     		mov	sp, r7
+ 1112              		.cfi_def_cfa_register 13
+ 1113              		@ sp needed
+ 1114 010c 80BD     		pop	{r7, pc}
+ 1115              		.cfi_endproc
+ 1116              	.LFE4:
+ 1118              		.section	.text.solve,"ax",%progbits
+ 1119              		.align	1
+ 1120              		.global	solve
+ 1121              		.syntax unified
+ 1122              		.thumb
+ 1123              		.thumb_func
+ 1125              	solve:
+ 1126              	.LFB5:
+ 164:./Hardware/Src/Matrix.c **** 
+ 165:./Hardware/Src/Matrix.c ****  int solve(float x[], float b[], int P[], float LU[], int row){
+ 1127              		.loc 1 165 63
+ 1128              		.cfi_startproc
+ 1129              		@ args = 4, pretend = 0, frame = 24
+ 1130              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1131              		@ link register save eliminated.
+ 1132 0000 80B4     		push	{r7}
+ARM GAS  /tmp/ccWoyaXE.s 			page 24
+
+
+ 1133              		.cfi_def_cfa_offset 4
+ 1134              		.cfi_offset 7, -4
+ 1135 0002 87B0     		sub	sp, sp, #28
+ 1136              		.cfi_def_cfa_offset 32
+ 1137 0004 00AF     		add	r7, sp, #0
+ 1138              		.cfi_def_cfa_register 7
+ 1139 0006 F860     		str	r0, [r7, #12]
+ 1140 0008 B960     		str	r1, [r7, #8]
+ 1141 000a 7A60     		str	r2, [r7, #4]
+ 1142 000c 3B60     		str	r3, [r7]
+ 166:./Hardware/Src/Matrix.c **** 	/* forward substitution with pivoting */
+ 167:./Hardware/Src/Matrix.c **** 	int32_t i, j;
+ 168:./Hardware/Src/Matrix.c **** 	for (i = 0; i < row; ++i) {
+ 1143              		.loc 1 168 9
+ 1144 000e 0023     		movs	r3, #0
+ 1145 0010 7B61     		str	r3, [r7, #20]
+ 1146              		.loc 1 168 2
+ 1147 0012 3FE0     		b	.L49
+ 1148              	.L52:
+ 169:./Hardware/Src/Matrix.c **** 		x[i] = b[P[i]];
+ 1149              		.loc 1 169 13
+ 1150 0014 7B69     		ldr	r3, [r7, #20]
+ 1151 0016 9B00     		lsls	r3, r3, #2
+ 1152 0018 7A68     		ldr	r2, [r7, #4]
+ 1153 001a 1344     		add	r3, r3, r2
+ 1154 001c 1B68     		ldr	r3, [r3]
+ 1155              		.loc 1 169 11
+ 1156 001e 9B00     		lsls	r3, r3, #2
+ 1157 0020 BA68     		ldr	r2, [r7, #8]
+ 1158 0022 1A44     		add	r2, r2, r3
+ 1159              		.loc 1 169 4
+ 1160 0024 7B69     		ldr	r3, [r7, #20]
+ 1161 0026 9B00     		lsls	r3, r3, #2
+ 1162 0028 F968     		ldr	r1, [r7, #12]
+ 1163 002a 0B44     		add	r3, r3, r1
+ 1164              		.loc 1 169 11
+ 1165 002c 1268     		ldr	r2, [r2]	@ float
+ 1166              		.loc 1 169 8
+ 1167 002e 1A60     		str	r2, [r3]	@ float
+ 170:./Hardware/Src/Matrix.c **** 		for (j = 0; j < i; ++j) {
+ 1168              		.loc 1 170 10
+ 1169 0030 0023     		movs	r3, #0
+ 1170 0032 3B61     		str	r3, [r7, #16]
+ 1171              		.loc 1 170 3
+ 1172 0034 27E0     		b	.L50
+ 1173              	.L51:
+ 171:./Hardware/Src/Matrix.c **** 			x[i] = x[i] - LU[row * P[i] + j] * x[j];
+ 1174              		.loc 1 171 12 discriminator 3
+ 1175 0036 7B69     		ldr	r3, [r7, #20]
+ 1176 0038 9B00     		lsls	r3, r3, #2
+ 1177 003a FA68     		ldr	r2, [r7, #12]
+ 1178 003c 1344     		add	r3, r3, r2
+ 1179 003e 93ED007A 		vldr.32	s14, [r3]
+ 1180              		.loc 1 171 28 discriminator 3
+ 1181 0042 7B69     		ldr	r3, [r7, #20]
+ 1182 0044 9B00     		lsls	r3, r3, #2
+ 1183 0046 7A68     		ldr	r2, [r7, #4]
+ARM GAS  /tmp/ccWoyaXE.s 			page 25
+
+
+ 1184 0048 1344     		add	r3, r3, r2
+ 1185 004a 1B68     		ldr	r3, [r3]
+ 1186              		.loc 1 171 25 discriminator 3
+ 1187 004c 3A6A     		ldr	r2, [r7, #32]
+ 1188 004e 03FB02F2 		mul	r2, r3, r2
+ 1189              		.loc 1 171 32 discriminator 3
+ 1190 0052 3B69     		ldr	r3, [r7, #16]
+ 1191 0054 1344     		add	r3, r3, r2
+ 1192              		.loc 1 171 20 discriminator 3
+ 1193 0056 9B00     		lsls	r3, r3, #2
+ 1194 0058 3A68     		ldr	r2, [r7]
+ 1195 005a 1344     		add	r3, r3, r2
+ 1196 005c D3ED006A 		vldr.32	s13, [r3]
+ 1197              		.loc 1 171 40 discriminator 3
+ 1198 0060 3B69     		ldr	r3, [r7, #16]
+ 1199 0062 9B00     		lsls	r3, r3, #2
+ 1200 0064 FA68     		ldr	r2, [r7, #12]
+ 1201 0066 1344     		add	r3, r3, r2
+ 1202 0068 D3ED007A 		vldr.32	s15, [r3]
+ 1203              		.loc 1 171 37 discriminator 3
+ 1204 006c 66EEA77A 		vmul.f32	s15, s13, s15
+ 1205              		.loc 1 171 5 discriminator 3
+ 1206 0070 7B69     		ldr	r3, [r7, #20]
+ 1207 0072 9B00     		lsls	r3, r3, #2
+ 1208 0074 FA68     		ldr	r2, [r7, #12]
+ 1209 0076 1344     		add	r3, r3, r2
+ 1210              		.loc 1 171 16 discriminator 3
+ 1211 0078 77EE677A 		vsub.f32	s15, s14, s15
+ 1212              		.loc 1 171 9 discriminator 3
+ 1213 007c C3ED007A 		vstr.32	s15, [r3]
+ 170:./Hardware/Src/Matrix.c **** 		for (j = 0; j < i; ++j) {
+ 1214              		.loc 1 170 22 discriminator 3
+ 1215 0080 3B69     		ldr	r3, [r7, #16]
+ 1216 0082 0133     		adds	r3, r3, #1
+ 1217 0084 3B61     		str	r3, [r7, #16]
+ 1218              	.L50:
+ 170:./Hardware/Src/Matrix.c **** 		for (j = 0; j < i; ++j) {
+ 1219              		.loc 1 170 17 discriminator 1
+ 1220 0086 3A69     		ldr	r2, [r7, #16]
+ 1221 0088 7B69     		ldr	r3, [r7, #20]
+ 1222 008a 9A42     		cmp	r2, r3
+ 1223 008c D3DB     		blt	.L51
+ 168:./Hardware/Src/Matrix.c **** 		x[i] = b[P[i]];
+ 1224              		.loc 1 168 23 discriminator 2
+ 1225 008e 7B69     		ldr	r3, [r7, #20]
+ 1226 0090 0133     		adds	r3, r3, #1
+ 1227 0092 7B61     		str	r3, [r7, #20]
+ 1228              	.L49:
+ 168:./Hardware/Src/Matrix.c **** 		x[i] = b[P[i]];
+ 1229              		.loc 1 168 16 discriminator 1
+ 1230 0094 7A69     		ldr	r2, [r7, #20]
+ 1231 0096 3B6A     		ldr	r3, [r7, #32]
+ 1232 0098 9A42     		cmp	r2, r3
+ 1233 009a BBDB     		blt	.L52
+ 172:./Hardware/Src/Matrix.c **** 		}
+ 173:./Hardware/Src/Matrix.c **** 	}
+ 174:./Hardware/Src/Matrix.c **** 
+ARM GAS  /tmp/ccWoyaXE.s 			page 26
+
+
+ 175:./Hardware/Src/Matrix.c **** 	/* backward substitution with pivoting */
+ 176:./Hardware/Src/Matrix.c **** 	for (i = row - 1; i >= 0; --i) {
+ 1234              		.loc 1 176 9
+ 1235 009c 3B6A     		ldr	r3, [r7, #32]
+ 1236 009e 013B     		subs	r3, r3, #1
+ 1237 00a0 7B61     		str	r3, [r7, #20]
+ 1238              		.loc 1 176 2
+ 1239 00a2 6AE0     		b	.L53
+ 1240              	.L60:
+ 177:./Hardware/Src/Matrix.c **** 		for (j = i + 1; j < row; ++j)
+ 1241              		.loc 1 177 10
+ 1242 00a4 7B69     		ldr	r3, [r7, #20]
+ 1243 00a6 0133     		adds	r3, r3, #1
+ 1244 00a8 3B61     		str	r3, [r7, #16]
+ 1245              		.loc 1 177 3
+ 1246 00aa 27E0     		b	.L54
+ 1247              	.L55:
+ 178:./Hardware/Src/Matrix.c **** 			x[i] = x[i] - LU[row * P[i] + j] * x[j];
+ 1248              		.loc 1 178 12 discriminator 3
+ 1249 00ac 7B69     		ldr	r3, [r7, #20]
+ 1250 00ae 9B00     		lsls	r3, r3, #2
+ 1251 00b0 FA68     		ldr	r2, [r7, #12]
+ 1252 00b2 1344     		add	r3, r3, r2
+ 1253 00b4 93ED007A 		vldr.32	s14, [r3]
+ 1254              		.loc 1 178 28 discriminator 3
+ 1255 00b8 7B69     		ldr	r3, [r7, #20]
+ 1256 00ba 9B00     		lsls	r3, r3, #2
+ 1257 00bc 7A68     		ldr	r2, [r7, #4]
+ 1258 00be 1344     		add	r3, r3, r2
+ 1259 00c0 1B68     		ldr	r3, [r3]
+ 1260              		.loc 1 178 25 discriminator 3
+ 1261 00c2 3A6A     		ldr	r2, [r7, #32]
+ 1262 00c4 03FB02F2 		mul	r2, r3, r2
+ 1263              		.loc 1 178 32 discriminator 3
+ 1264 00c8 3B69     		ldr	r3, [r7, #16]
+ 1265 00ca 1344     		add	r3, r3, r2
+ 1266              		.loc 1 178 20 discriminator 3
+ 1267 00cc 9B00     		lsls	r3, r3, #2
+ 1268 00ce 3A68     		ldr	r2, [r7]
+ 1269 00d0 1344     		add	r3, r3, r2
+ 1270 00d2 D3ED006A 		vldr.32	s13, [r3]
+ 1271              		.loc 1 178 40 discriminator 3
+ 1272 00d6 3B69     		ldr	r3, [r7, #16]
+ 1273 00d8 9B00     		lsls	r3, r3, #2
+ 1274 00da FA68     		ldr	r2, [r7, #12]
+ 1275 00dc 1344     		add	r3, r3, r2
+ 1276 00de D3ED007A 		vldr.32	s15, [r3]
+ 1277              		.loc 1 178 37 discriminator 3
+ 1278 00e2 66EEA77A 		vmul.f32	s15, s13, s15
+ 1279              		.loc 1 178 5 discriminator 3
+ 1280 00e6 7B69     		ldr	r3, [r7, #20]
+ 1281 00e8 9B00     		lsls	r3, r3, #2
+ 1282 00ea FA68     		ldr	r2, [r7, #12]
+ 1283 00ec 1344     		add	r3, r3, r2
+ 1284              		.loc 1 178 16 discriminator 3
+ 1285 00ee 77EE677A 		vsub.f32	s15, s14, s15
+ 1286              		.loc 1 178 9 discriminator 3
+ARM GAS  /tmp/ccWoyaXE.s 			page 27
+
+
+ 1287 00f2 C3ED007A 		vstr.32	s15, [r3]
+ 177:./Hardware/Src/Matrix.c **** 		for (j = i + 1; j < row; ++j)
+ 1288              		.loc 1 177 28 discriminator 3
+ 1289 00f6 3B69     		ldr	r3, [r7, #16]
+ 1290 00f8 0133     		adds	r3, r3, #1
+ 1291 00fa 3B61     		str	r3, [r7, #16]
+ 1292              	.L54:
+ 177:./Hardware/Src/Matrix.c **** 		for (j = i + 1; j < row; ++j)
+ 1293              		.loc 1 177 21 discriminator 1
+ 1294 00fc 3A69     		ldr	r2, [r7, #16]
+ 1295 00fe 3B6A     		ldr	r3, [r7, #32]
+ 1296 0100 9A42     		cmp	r2, r3
+ 1297 0102 D3DB     		blt	.L55
+ 179:./Hardware/Src/Matrix.c **** 		
+ 180:./Hardware/Src/Matrix.c **** 		/* Just in case if we divide with zero */
+ 181:./Hardware/Src/Matrix.c **** 		if (fabsf(LU[row * P[i] + i]) > MIN_VALUE) {
+ 1298              		.loc 1 181 23
+ 1299 0104 7B69     		ldr	r3, [r7, #20]
+ 1300 0106 9B00     		lsls	r3, r3, #2
+ 1301 0108 7A68     		ldr	r2, [r7, #4]
+ 1302 010a 1344     		add	r3, r3, r2
+ 1303 010c 1B68     		ldr	r3, [r3]
+ 1304              		.loc 1 181 20
+ 1305 010e 3A6A     		ldr	r2, [r7, #32]
+ 1306 0110 03FB02F2 		mul	r2, r3, r2
+ 1307              		.loc 1 181 27
+ 1308 0114 7B69     		ldr	r3, [r7, #20]
+ 1309 0116 1344     		add	r3, r3, r2
+ 1310              		.loc 1 181 15
+ 1311 0118 9B00     		lsls	r3, r3, #2
+ 1312 011a 3A68     		ldr	r2, [r7]
+ 1313 011c 1344     		add	r3, r3, r2
+ 1314 011e D3ED007A 		vldr.32	s15, [r3]
+ 1315              		.loc 1 181 7
+ 1316 0122 F0EEE77A 		vabs.f32	s15, s15
+ 1317              		.loc 1 181 6
+ 1318 0126 9FED1A7A 		vldr.32	s14, .L64
+ 1319 012a F4EEC77A 		vcmpe.f32	s15, s14
+ 1320 012e F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 1321 0132 1DDD     		ble	.L62
+ 182:./Hardware/Src/Matrix.c **** 			x[i] = x[i] / LU[row * P[i] + i];
+ 1322              		.loc 1 182 12
+ 1323 0134 7B69     		ldr	r3, [r7, #20]
+ 1324 0136 9B00     		lsls	r3, r3, #2
+ 1325 0138 FA68     		ldr	r2, [r7, #12]
+ 1326 013a 1344     		add	r3, r3, r2
+ 1327 013c D3ED006A 		vldr.32	s13, [r3]
+ 1328              		.loc 1 182 28
+ 1329 0140 7B69     		ldr	r3, [r7, #20]
+ 1330 0142 9B00     		lsls	r3, r3, #2
+ 1331 0144 7A68     		ldr	r2, [r7, #4]
+ 1332 0146 1344     		add	r3, r3, r2
+ 1333 0148 1B68     		ldr	r3, [r3]
+ 1334              		.loc 1 182 25
+ 1335 014a 3A6A     		ldr	r2, [r7, #32]
+ 1336 014c 03FB02F2 		mul	r2, r3, r2
+ 1337              		.loc 1 182 32
+ARM GAS  /tmp/ccWoyaXE.s 			page 28
+
+
+ 1338 0150 7B69     		ldr	r3, [r7, #20]
+ 1339 0152 1344     		add	r3, r3, r2
+ 1340              		.loc 1 182 20
+ 1341 0154 9B00     		lsls	r3, r3, #2
+ 1342 0156 3A68     		ldr	r2, [r7]
+ 1343 0158 1344     		add	r3, r3, r2
+ 1344 015a 93ED007A 		vldr.32	s14, [r3]
+ 1345              		.loc 1 182 5
+ 1346 015e 7B69     		ldr	r3, [r7, #20]
+ 1347 0160 9B00     		lsls	r3, r3, #2
+ 1348 0162 FA68     		ldr	r2, [r7, #12]
+ 1349 0164 1344     		add	r3, r3, r2
+ 1350              		.loc 1 182 16
+ 1351 0166 C6EE877A 		vdiv.f32	s15, s13, s14
+ 1352              		.loc 1 182 9
+ 1353 016a C3ED007A 		vstr.32	s15, [r3]
+ 1354 016e 01E0     		b	.L63
+ 1355              	.L62:
+ 183:./Hardware/Src/Matrix.c **** 		}
+ 184:./Hardware/Src/Matrix.c **** 		else {
+ 185:./Hardware/Src/Matrix.c **** 			return 0;
+ 1356              		.loc 1 185 11
+ 1357 0170 0023     		movs	r3, #0
+ 1358 0172 06E0     		b	.L59
+ 1359              	.L63:
+ 176:./Hardware/Src/Matrix.c **** 		for (j = i + 1; j < row; ++j)
+ 1360              		.loc 1 176 28 discriminator 2
+ 1361 0174 7B69     		ldr	r3, [r7, #20]
+ 1362 0176 013B     		subs	r3, r3, #1
+ 1363 0178 7B61     		str	r3, [r7, #20]
+ 1364              	.L53:
+ 176:./Hardware/Src/Matrix.c **** 		for (j = i + 1; j < row; ++j)
+ 1365              		.loc 1 176 22 discriminator 1
+ 1366 017a 7B69     		ldr	r3, [r7, #20]
+ 1367 017c 002B     		cmp	r3, #0
+ 1368 017e 91DA     		bge	.L60
+ 186:./Hardware/Src/Matrix.c **** 		}
+ 187:./Hardware/Src/Matrix.c **** 	}
+ 188:./Hardware/Src/Matrix.c **** 	
+ 189:./Hardware/Src/Matrix.c **** 	return 1; /* No problems */
+ 1369              		.loc 1 189 9
+ 1370 0180 0123     		movs	r3, #1
+ 1371              	.L59:
+ 190:./Hardware/Src/Matrix.c **** }
+ 1372              		.loc 1 190 1
+ 1373 0182 1846     		mov	r0, r3
+ 1374 0184 1C37     		adds	r7, r7, #28
+ 1375              		.cfi_def_cfa_offset 4
+ 1376 0186 BD46     		mov	sp, r7
+ 1377              		.cfi_def_cfa_register 13
+ 1378              		@ sp needed
+ 1379 0188 5DF8047B 		ldr	r7, [sp], #4
+ 1380              		.cfi_restore 7
+ 1381              		.cfi_def_cfa_offset 0
+ 1382 018c 7047     		bx	lr
+ 1383              	.L65:
+ 1384 018e 00BF     		.align	2
+ARM GAS  /tmp/ccWoyaXE.s 			page 29
+
+
+ 1385              	.L64:
+ 1386 0190 FFEB2F2D 		.word	758115327
+ 1387              		.cfi_endproc
+ 1388              	.LFE5:
+ 1390              		.section	.text.lup,"ax",%progbits
+ 1391              		.align	1
+ 1392              		.global	lup
+ 1393              		.syntax unified
+ 1394              		.thumb
+ 1395              		.thumb_func
+ 1397              	lup:
+ 1398              	.LFB6:
+ 191:./Hardware/Src/Matrix.c **** int lup(float A[], float LU[], int P[], int row) {
+ 1399              		.loc 1 191 50
+ 1400              		.cfi_startproc
+ 1401              		@ args = 0, pretend = 0, frame = 40
+ 1402              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1403 0000 80B5     		push	{r7, lr}
+ 1404              		.cfi_def_cfa_offset 8
+ 1405              		.cfi_offset 7, -8
+ 1406              		.cfi_offset 14, -4
+ 1407 0002 8AB0     		sub	sp, sp, #40
+ 1408              		.cfi_def_cfa_offset 48
+ 1409 0004 00AF     		add	r7, sp, #0
+ 1410              		.cfi_def_cfa_register 7
+ 1411 0006 F860     		str	r0, [r7, #12]
+ 1412 0008 B960     		str	r1, [r7, #8]
+ 1413 000a 7A60     		str	r2, [r7, #4]
+ 1414 000c 3B60     		str	r3, [r7]
+ 192:./Hardware/Src/Matrix.c **** #ifdef CLAPACK_USED
+ 193:./Hardware/Src/Matrix.c **** 	integer m = row, lda = row, n = row, info;
+ 194:./Hardware/Src/Matrix.c **** 	memcpy(LU, A, row * row * sizeof(float));
+ 195:./Hardware/Src/Matrix.c **** 	sgetrf_(&m, &n, LU, &lda, P, &info);
+ 196:./Hardware/Src/Matrix.c **** 	return info == 0;
+ 197:./Hardware/Src/Matrix.c **** #elif defined(MKL_LAPACK_USED)
+ 198:./Hardware/Src/Matrix.c **** 	memcpy(LU, A, row * row * sizeof(float));
+ 199:./Hardware/Src/Matrix.c **** 	int status = LAPACKE_sgetrf(LAPACK_COL_MAJOR, row, row, LU, row, P) == 0;
+ 200:./Hardware/Src/Matrix.c **** 	/* Return status */
+ 201:./Hardware/Src/Matrix.c **** 	return status;
+ 202:./Hardware/Src/Matrix.c **** #else
+ 203:./Hardware/Src/Matrix.c **** 	/* Variables */
+ 204:./Hardware/Src/Matrix.c **** 	int ind_max, tmp_int;
+ 205:./Hardware/Src/Matrix.c **** 
+ 206:./Hardware/Src/Matrix.c **** 	/* If not the same */
+ 207:./Hardware/Src/Matrix.c **** 	if (A != LU) {
+ 1415              		.loc 1 207 5
+ 1416 000e FA68     		ldr	r2, [r7, #12]
+ 1417 0010 BB68     		ldr	r3, [r7, #8]
+ 1418 0012 9A42     		cmp	r2, r3
+ 1419 0014 08D0     		beq	.L67
+ 208:./Hardware/Src/Matrix.c **** 		memcpy(LU, A, row * row * sizeof(float));
+ 1420              		.loc 1 208 21
+ 1421 0016 3B68     		ldr	r3, [r7]
+ 1422 0018 03FB03F3 		mul	r3, r3, r3
+ 1423              		.loc 1 208 3
+ 1424 001c 9B00     		lsls	r3, r3, #2
+ 1425 001e 1A46     		mov	r2, r3
+ARM GAS  /tmp/ccWoyaXE.s 			page 30
+
+
+ 1426 0020 F968     		ldr	r1, [r7, #12]
+ 1427 0022 B868     		ldr	r0, [r7, #8]
+ 1428 0024 FFF7FEFF 		bl	memcpy
+ 1429              	.L67:
+ 209:./Hardware/Src/Matrix.c **** 	}
+ 210:./Hardware/Src/Matrix.c **** 
+ 211:./Hardware/Src/Matrix.c **** 	/* Create the pivot vector */
+ 212:./Hardware/Src/Matrix.c **** 	int i, j, k;
+ 213:./Hardware/Src/Matrix.c **** 	for (i = 0; i < row; ++i) {
+ 1430              		.loc 1 213 9
+ 1431 0028 0023     		movs	r3, #0
+ 1432 002a 3B62     		str	r3, [r7, #32]
+ 1433              		.loc 1 213 2
+ 1434 002c 08E0     		b	.L68
+ 1435              	.L69:
+ 214:./Hardware/Src/Matrix.c **** 		P[i] = i;
+ 1436              		.loc 1 214 4 discriminator 3
+ 1437 002e 3B6A     		ldr	r3, [r7, #32]
+ 1438 0030 9B00     		lsls	r3, r3, #2
+ 1439 0032 7A68     		ldr	r2, [r7, #4]
+ 1440 0034 1344     		add	r3, r3, r2
+ 1441              		.loc 1 214 8 discriminator 3
+ 1442 0036 3A6A     		ldr	r2, [r7, #32]
+ 1443 0038 1A60     		str	r2, [r3]
+ 213:./Hardware/Src/Matrix.c **** 		P[i] = i;
+ 1444              		.loc 1 213 23 discriminator 3
+ 1445 003a 3B6A     		ldr	r3, [r7, #32]
+ 1446 003c 0133     		adds	r3, r3, #1
+ 1447 003e 3B62     		str	r3, [r7, #32]
+ 1448              	.L68:
+ 213:./Hardware/Src/Matrix.c **** 		P[i] = i;
+ 1449              		.loc 1 213 16 discriminator 1
+ 1450 0040 3A6A     		ldr	r2, [r7, #32]
+ 1451 0042 3B68     		ldr	r3, [r7]
+ 1452 0044 9A42     		cmp	r2, r3
+ 1453 0046 F2DB     		blt	.L69
+ 215:./Hardware/Src/Matrix.c **** 	}
+ 216:./Hardware/Src/Matrix.c **** 
+ 217:./Hardware/Src/Matrix.c **** 	for (i = 0; i < row - 1; ++i) {
+ 1454              		.loc 1 217 9
+ 1455 0048 0023     		movs	r3, #0
+ 1456 004a 3B62     		str	r3, [r7, #32]
+ 1457              		.loc 1 217 2
+ 1458 004c D4E0     		b	.L70
+ 1459              	.L79:
+ 218:./Hardware/Src/Matrix.c **** 		ind_max = i;
+ 1460              		.loc 1 218 11
+ 1461 004e 3B6A     		ldr	r3, [r7, #32]
+ 1462 0050 7B62     		str	r3, [r7, #36]
+ 219:./Hardware/Src/Matrix.c **** 		for (j = i + 1; j < row; ++j) {
+ 1463              		.loc 1 219 10
+ 1464 0052 3B6A     		ldr	r3, [r7, #32]
+ 1465 0054 0133     		adds	r3, r3, #1
+ 1466 0056 FB61     		str	r3, [r7, #28]
+ 1467              		.loc 1 219 3
+ 1468 0058 2BE0     		b	.L71
+ 1469              	.L74:
+ARM GAS  /tmp/ccWoyaXE.s 			page 31
+
+
+ 220:./Hardware/Src/Matrix.c **** 			if (fabsf(LU[row * P[j] + i]) > fabsf(LU[row * P[ind_max] + i])) {
+ 1470              		.loc 1 220 24
+ 1471 005a FB69     		ldr	r3, [r7, #28]
+ 1472 005c 9B00     		lsls	r3, r3, #2
+ 1473 005e 7A68     		ldr	r2, [r7, #4]
+ 1474 0060 1344     		add	r3, r3, r2
+ 1475 0062 1B68     		ldr	r3, [r3]
+ 1476              		.loc 1 220 21
+ 1477 0064 3A68     		ldr	r2, [r7]
+ 1478 0066 03FB02F2 		mul	r2, r3, r2
+ 1479              		.loc 1 220 28
+ 1480 006a 3B6A     		ldr	r3, [r7, #32]
+ 1481 006c 1344     		add	r3, r3, r2
+ 1482              		.loc 1 220 16
+ 1483 006e 9B00     		lsls	r3, r3, #2
+ 1484 0070 BA68     		ldr	r2, [r7, #8]
+ 1485 0072 1344     		add	r3, r3, r2
+ 1486 0074 D3ED007A 		vldr.32	s15, [r3]
+ 1487              		.loc 1 220 8
+ 1488 0078 B0EEE77A 		vabs.f32	s14, s15
+ 1489              		.loc 1 220 52
+ 1490 007c 7B6A     		ldr	r3, [r7, #36]
+ 1491 007e 9B00     		lsls	r3, r3, #2
+ 1492 0080 7A68     		ldr	r2, [r7, #4]
+ 1493 0082 1344     		add	r3, r3, r2
+ 1494 0084 1B68     		ldr	r3, [r3]
+ 1495              		.loc 1 220 49
+ 1496 0086 3A68     		ldr	r2, [r7]
+ 1497 0088 03FB02F2 		mul	r2, r3, r2
+ 1498              		.loc 1 220 62
+ 1499 008c 3B6A     		ldr	r3, [r7, #32]
+ 1500 008e 1344     		add	r3, r3, r2
+ 1501              		.loc 1 220 44
+ 1502 0090 9B00     		lsls	r3, r3, #2
+ 1503 0092 BA68     		ldr	r2, [r7, #8]
+ 1504 0094 1344     		add	r3, r3, r2
+ 1505 0096 D3ED007A 		vldr.32	s15, [r3]
+ 1506              		.loc 1 220 36
+ 1507 009a F0EEE77A 		vabs.f32	s15, s15
+ 1508              		.loc 1 220 7
+ 1509 009e B4EEE77A 		vcmpe.f32	s14, s15
+ 1510 00a2 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 1511 00a6 01DD     		ble	.L72
+ 221:./Hardware/Src/Matrix.c **** 				ind_max = j;
+ 1512              		.loc 1 221 13
+ 1513 00a8 FB69     		ldr	r3, [r7, #28]
+ 1514 00aa 7B62     		str	r3, [r7, #36]
+ 1515              	.L72:
+ 219:./Hardware/Src/Matrix.c **** 		for (j = i + 1; j < row; ++j) {
+ 1516              		.loc 1 219 28 discriminator 2
+ 1517 00ac FB69     		ldr	r3, [r7, #28]
+ 1518 00ae 0133     		adds	r3, r3, #1
+ 1519 00b0 FB61     		str	r3, [r7, #28]
+ 1520              	.L71:
+ 219:./Hardware/Src/Matrix.c **** 		for (j = i + 1; j < row; ++j) {
+ 1521              		.loc 1 219 21 discriminator 1
+ 1522 00b2 FA69     		ldr	r2, [r7, #28]
+ARM GAS  /tmp/ccWoyaXE.s 			page 32
+
+
+ 1523 00b4 3B68     		ldr	r3, [r7]
+ 1524 00b6 9A42     		cmp	r2, r3
+ 1525 00b8 CFDB     		blt	.L74
+ 222:./Hardware/Src/Matrix.c **** 			}
+ 223:./Hardware/Src/Matrix.c **** 		}
+ 224:./Hardware/Src/Matrix.c **** 
+ 225:./Hardware/Src/Matrix.c **** 		tmp_int = P[i];
+ 1526              		.loc 1 225 14
+ 1527 00ba 3B6A     		ldr	r3, [r7, #32]
+ 1528 00bc 9B00     		lsls	r3, r3, #2
+ 1529 00be 7A68     		ldr	r2, [r7, #4]
+ 1530 00c0 1344     		add	r3, r3, r2
+ 1531              		.loc 1 225 11
+ 1532 00c2 1B68     		ldr	r3, [r3]
+ 1533 00c4 7B61     		str	r3, [r7, #20]
+ 226:./Hardware/Src/Matrix.c **** 		P[i] = P[ind_max];
+ 1534              		.loc 1 226 11
+ 1535 00c6 7B6A     		ldr	r3, [r7, #36]
+ 1536 00c8 9B00     		lsls	r3, r3, #2
+ 1537 00ca 7A68     		ldr	r2, [r7, #4]
+ 1538 00cc 1A44     		add	r2, r2, r3
+ 1539              		.loc 1 226 4
+ 1540 00ce 3B6A     		ldr	r3, [r7, #32]
+ 1541 00d0 9B00     		lsls	r3, r3, #2
+ 1542 00d2 7968     		ldr	r1, [r7, #4]
+ 1543 00d4 0B44     		add	r3, r3, r1
+ 1544              		.loc 1 226 11
+ 1545 00d6 1268     		ldr	r2, [r2]
+ 1546              		.loc 1 226 8
+ 1547 00d8 1A60     		str	r2, [r3]
+ 227:./Hardware/Src/Matrix.c **** 		P[ind_max] = tmp_int;
+ 1548              		.loc 1 227 4
+ 1549 00da 7B6A     		ldr	r3, [r7, #36]
+ 1550 00dc 9B00     		lsls	r3, r3, #2
+ 1551 00de 7A68     		ldr	r2, [r7, #4]
+ 1552 00e0 1344     		add	r3, r3, r2
+ 1553              		.loc 1 227 14
+ 1554 00e2 7A69     		ldr	r2, [r7, #20]
+ 1555 00e4 1A60     		str	r2, [r3]
+ 228:./Hardware/Src/Matrix.c **** 
+ 229:./Hardware/Src/Matrix.c **** 		// if (fabsf(LU[row * P[i] + i]) < MIN_VALUE) {
+ 230:./Hardware/Src/Matrix.c **** 		// 	return 0; /* matrix is singular (up to tolerance) */
+ 231:./Hardware/Src/Matrix.c **** 		// }
+ 232:./Hardware/Src/Matrix.c **** 
+ 233:./Hardware/Src/Matrix.c **** 		for (j = i + 1; j < row; ++j) {
+ 1556              		.loc 1 233 10
+ 1557 00e6 3B6A     		ldr	r3, [r7, #32]
+ 1558 00e8 0133     		adds	r3, r3, #1
+ 1559 00ea FB61     		str	r3, [r7, #28]
+ 1560              		.loc 1 233 3
+ 1561 00ec 7CE0     		b	.L75
+ 1562              	.L78:
+ 234:./Hardware/Src/Matrix.c **** 			LU[row * P[j] + i] = LU[row * P[j] + i] / LU[row * P[i] + i];
+ 1563              		.loc 1 234 35
+ 1564 00ee FB69     		ldr	r3, [r7, #28]
+ 1565 00f0 9B00     		lsls	r3, r3, #2
+ 1566 00f2 7A68     		ldr	r2, [r7, #4]
+ARM GAS  /tmp/ccWoyaXE.s 			page 33
+
+
+ 1567 00f4 1344     		add	r3, r3, r2
+ 1568 00f6 1B68     		ldr	r3, [r3]
+ 1569              		.loc 1 234 32
+ 1570 00f8 3A68     		ldr	r2, [r7]
+ 1571 00fa 03FB02F2 		mul	r2, r3, r2
+ 1572              		.loc 1 234 39
+ 1573 00fe 3B6A     		ldr	r3, [r7, #32]
+ 1574 0100 1344     		add	r3, r3, r2
+ 1575              		.loc 1 234 27
+ 1576 0102 9B00     		lsls	r3, r3, #2
+ 1577 0104 BA68     		ldr	r2, [r7, #8]
+ 1578 0106 1344     		add	r3, r3, r2
+ 1579 0108 D3ED006A 		vldr.32	s13, [r3]
+ 1580              		.loc 1 234 56
+ 1581 010c 3B6A     		ldr	r3, [r7, #32]
+ 1582 010e 9B00     		lsls	r3, r3, #2
+ 1583 0110 7A68     		ldr	r2, [r7, #4]
+ 1584 0112 1344     		add	r3, r3, r2
+ 1585 0114 1B68     		ldr	r3, [r3]
+ 1586              		.loc 1 234 53
+ 1587 0116 3A68     		ldr	r2, [r7]
+ 1588 0118 03FB02F2 		mul	r2, r3, r2
+ 1589              		.loc 1 234 60
+ 1590 011c 3B6A     		ldr	r3, [r7, #32]
+ 1591 011e 1344     		add	r3, r3, r2
+ 1592              		.loc 1 234 48
+ 1593 0120 9B00     		lsls	r3, r3, #2
+ 1594 0122 BA68     		ldr	r2, [r7, #8]
+ 1595 0124 1344     		add	r3, r3, r2
+ 1596 0126 93ED007A 		vldr.32	s14, [r3]
+ 1597              		.loc 1 234 14
+ 1598 012a FB69     		ldr	r3, [r7, #28]
+ 1599 012c 9B00     		lsls	r3, r3, #2
+ 1600 012e 7A68     		ldr	r2, [r7, #4]
+ 1601 0130 1344     		add	r3, r3, r2
+ 1602 0132 1B68     		ldr	r3, [r3]
+ 1603              		.loc 1 234 11
+ 1604 0134 3A68     		ldr	r2, [r7]
+ 1605 0136 03FB02F2 		mul	r2, r3, r2
+ 1606              		.loc 1 234 18
+ 1607 013a 3B6A     		ldr	r3, [r7, #32]
+ 1608 013c 1344     		add	r3, r3, r2
+ 1609              		.loc 1 234 6
+ 1610 013e 9B00     		lsls	r3, r3, #2
+ 1611 0140 BA68     		ldr	r2, [r7, #8]
+ 1612 0142 1344     		add	r3, r3, r2
+ 1613              		.loc 1 234 44
+ 1614 0144 C6EE877A 		vdiv.f32	s15, s13, s14
+ 1615              		.loc 1 234 23
+ 1616 0148 C3ED007A 		vstr.32	s15, [r3]
+ 235:./Hardware/Src/Matrix.c **** 
+ 236:./Hardware/Src/Matrix.c **** 			for (k = i + 1; k < row; ++k) {
+ 1617              		.loc 1 236 11
+ 1618 014c 3B6A     		ldr	r3, [r7, #32]
+ 1619 014e 0133     		adds	r3, r3, #1
+ 1620 0150 BB61     		str	r3, [r7, #24]
+ 1621              		.loc 1 236 4
+ARM GAS  /tmp/ccWoyaXE.s 			page 34
+
+
+ 1622 0152 42E0     		b	.L76
+ 1623              	.L77:
+ 237:./Hardware/Src/Matrix.c **** 				LU[row * P[j] + k] = LU[row * P[j] + k] - LU[row * P[i] + k] * LU[row * P[j] + i];
+ 1624              		.loc 1 237 36 discriminator 3
+ 1625 0154 FB69     		ldr	r3, [r7, #28]
+ 1626 0156 9B00     		lsls	r3, r3, #2
+ 1627 0158 7A68     		ldr	r2, [r7, #4]
+ 1628 015a 1344     		add	r3, r3, r2
+ 1629 015c 1B68     		ldr	r3, [r3]
+ 1630              		.loc 1 237 33 discriminator 3
+ 1631 015e 3A68     		ldr	r2, [r7]
+ 1632 0160 03FB02F2 		mul	r2, r3, r2
+ 1633              		.loc 1 237 40 discriminator 3
+ 1634 0164 BB69     		ldr	r3, [r7, #24]
+ 1635 0166 1344     		add	r3, r3, r2
+ 1636              		.loc 1 237 28 discriminator 3
+ 1637 0168 9B00     		lsls	r3, r3, #2
+ 1638 016a BA68     		ldr	r2, [r7, #8]
+ 1639 016c 1344     		add	r3, r3, r2
+ 1640 016e 93ED007A 		vldr.32	s14, [r3]
+ 1641              		.loc 1 237 57 discriminator 3
+ 1642 0172 3B6A     		ldr	r3, [r7, #32]
+ 1643 0174 9B00     		lsls	r3, r3, #2
+ 1644 0176 7A68     		ldr	r2, [r7, #4]
+ 1645 0178 1344     		add	r3, r3, r2
+ 1646 017a 1B68     		ldr	r3, [r3]
+ 1647              		.loc 1 237 54 discriminator 3
+ 1648 017c 3A68     		ldr	r2, [r7]
+ 1649 017e 03FB02F2 		mul	r2, r3, r2
+ 1650              		.loc 1 237 61 discriminator 3
+ 1651 0182 BB69     		ldr	r3, [r7, #24]
+ 1652 0184 1344     		add	r3, r3, r2
+ 1653              		.loc 1 237 49 discriminator 3
+ 1654 0186 9B00     		lsls	r3, r3, #2
+ 1655 0188 BA68     		ldr	r2, [r7, #8]
+ 1656 018a 1344     		add	r3, r3, r2
+ 1657 018c D3ED006A 		vldr.32	s13, [r3]
+ 1658              		.loc 1 237 78 discriminator 3
+ 1659 0190 FB69     		ldr	r3, [r7, #28]
+ 1660 0192 9B00     		lsls	r3, r3, #2
+ 1661 0194 7A68     		ldr	r2, [r7, #4]
+ 1662 0196 1344     		add	r3, r3, r2
+ 1663 0198 1B68     		ldr	r3, [r3]
+ 1664              		.loc 1 237 75 discriminator 3
+ 1665 019a 3A68     		ldr	r2, [r7]
+ 1666 019c 03FB02F2 		mul	r2, r3, r2
+ 1667              		.loc 1 237 82 discriminator 3
+ 1668 01a0 3B6A     		ldr	r3, [r7, #32]
+ 1669 01a2 1344     		add	r3, r3, r2
+ 1670              		.loc 1 237 70 discriminator 3
+ 1671 01a4 9B00     		lsls	r3, r3, #2
+ 1672 01a6 BA68     		ldr	r2, [r7, #8]
+ 1673 01a8 1344     		add	r3, r3, r2
+ 1674 01aa D3ED007A 		vldr.32	s15, [r3]
+ 1675              		.loc 1 237 66 discriminator 3
+ 1676 01ae 66EEA77A 		vmul.f32	s15, s13, s15
+ 1677              		.loc 1 237 15 discriminator 3
+ARM GAS  /tmp/ccWoyaXE.s 			page 35
+
+
+ 1678 01b2 FB69     		ldr	r3, [r7, #28]
+ 1679 01b4 9B00     		lsls	r3, r3, #2
+ 1680 01b6 7A68     		ldr	r2, [r7, #4]
+ 1681 01b8 1344     		add	r3, r3, r2
+ 1682 01ba 1B68     		ldr	r3, [r3]
+ 1683              		.loc 1 237 12 discriminator 3
+ 1684 01bc 3A68     		ldr	r2, [r7]
+ 1685 01be 03FB02F2 		mul	r2, r3, r2
+ 1686              		.loc 1 237 19 discriminator 3
+ 1687 01c2 BB69     		ldr	r3, [r7, #24]
+ 1688 01c4 1344     		add	r3, r3, r2
+ 1689              		.loc 1 237 7 discriminator 3
+ 1690 01c6 9B00     		lsls	r3, r3, #2
+ 1691 01c8 BA68     		ldr	r2, [r7, #8]
+ 1692 01ca 1344     		add	r3, r3, r2
+ 1693              		.loc 1 237 45 discriminator 3
+ 1694 01cc 77EE677A 		vsub.f32	s15, s14, s15
+ 1695              		.loc 1 237 24 discriminator 3
+ 1696 01d0 C3ED007A 		vstr.32	s15, [r3]
+ 236:./Hardware/Src/Matrix.c **** 				LU[row * P[j] + k] = LU[row * P[j] + k] - LU[row * P[i] + k] * LU[row * P[j] + i];
+ 1697              		.loc 1 236 29 discriminator 3
+ 1698 01d4 BB69     		ldr	r3, [r7, #24]
+ 1699 01d6 0133     		adds	r3, r3, #1
+ 1700 01d8 BB61     		str	r3, [r7, #24]
+ 1701              	.L76:
+ 236:./Hardware/Src/Matrix.c **** 				LU[row * P[j] + k] = LU[row * P[j] + k] - LU[row * P[i] + k] * LU[row * P[j] + i];
+ 1702              		.loc 1 236 22 discriminator 1
+ 1703 01da BA69     		ldr	r2, [r7, #24]
+ 1704 01dc 3B68     		ldr	r3, [r7]
+ 1705 01de 9A42     		cmp	r2, r3
+ 1706 01e0 B8DB     		blt	.L77
+ 233:./Hardware/Src/Matrix.c **** 			LU[row * P[j] + i] = LU[row * P[j] + i] / LU[row * P[i] + i];
+ 1707              		.loc 1 233 28 discriminator 2
+ 1708 01e2 FB69     		ldr	r3, [r7, #28]
+ 1709 01e4 0133     		adds	r3, r3, #1
+ 1710 01e6 FB61     		str	r3, [r7, #28]
+ 1711              	.L75:
+ 233:./Hardware/Src/Matrix.c **** 			LU[row * P[j] + i] = LU[row * P[j] + i] / LU[row * P[i] + i];
+ 1712              		.loc 1 233 21 discriminator 1
+ 1713 01e8 FA69     		ldr	r2, [r7, #28]
+ 1714 01ea 3B68     		ldr	r3, [r7]
+ 1715 01ec 9A42     		cmp	r2, r3
+ 1716 01ee FFF67EAF 		blt	.L78
+ 217:./Hardware/Src/Matrix.c **** 		ind_max = i;
+ 1717              		.loc 1 217 27 discriminator 2
+ 1718 01f2 3B6A     		ldr	r3, [r7, #32]
+ 1719 01f4 0133     		adds	r3, r3, #1
+ 1720 01f6 3B62     		str	r3, [r7, #32]
+ 1721              	.L70:
+ 217:./Hardware/Src/Matrix.c **** 		ind_max = i;
+ 1722              		.loc 1 217 22 discriminator 1
+ 1723 01f8 3B68     		ldr	r3, [r7]
+ 1724 01fa 013B     		subs	r3, r3, #1
+ 217:./Hardware/Src/Matrix.c **** 		ind_max = i;
+ 1725              		.loc 1 217 16 discriminator 1
+ 1726 01fc 3A6A     		ldr	r2, [r7, #32]
+ 1727 01fe 9A42     		cmp	r2, r3
+ARM GAS  /tmp/ccWoyaXE.s 			page 36
+
+
+ 1728 0200 FFF625AF 		blt	.L79
+ 238:./Hardware/Src/Matrix.c **** 			}
+ 239:./Hardware/Src/Matrix.c **** 		}
+ 240:./Hardware/Src/Matrix.c **** 	}
+ 241:./Hardware/Src/Matrix.c **** 	return 1; /* Solved */
+ 1729              		.loc 1 241 9
+ 1730 0204 0123     		movs	r3, #1
+ 242:./Hardware/Src/Matrix.c **** #endif
+ 243:./Hardware/Src/Matrix.c **** }
+ 1731              		.loc 1 243 1
+ 1732 0206 1846     		mov	r0, r3
+ 1733 0208 2837     		adds	r7, r7, #40
+ 1734              		.cfi_def_cfa_offset 8
+ 1735 020a BD46     		mov	sp, r7
+ 1736              		.cfi_def_cfa_register 13
+ 1737              		@ sp needed
+ 1738 020c 80BD     		pop	{r7, pc}
+ 1739              		.cfi_endproc
+ 1740              	.LFE6:
+ 1742              		.section	.text.tran,"ax",%progbits
+ 1743              		.align	1
+ 1744              		.global	tran
+ 1745              		.syntax unified
+ 1746              		.thumb
+ 1747              		.thumb_func
+ 1749              	tran:
+ 1750              	.LFB7:
+ 244:./Hardware/Src/Matrix.c **** void tran(float A[], int row, int column) {
+ 1751              		.loc 1 244 43
+ 1752              		.cfi_startproc
+ 1753              		@ args = 0, pretend = 0, frame = 40
+ 1754              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1755 0000 80B5     		push	{r7, lr}
+ 1756              		.cfi_def_cfa_offset 8
+ 1757              		.cfi_offset 7, -8
+ 1758              		.cfi_offset 14, -4
+ 1759 0002 8AB0     		sub	sp, sp, #40
+ 1760              		.cfi_def_cfa_offset 48
+ 1761 0004 00AF     		add	r7, sp, #0
+ 1762              		.cfi_def_cfa_register 7
+ 1763 0006 F860     		str	r0, [r7, #12]
+ 1764 0008 B960     		str	r1, [r7, #8]
+ 1765 000a 7A60     		str	r2, [r7, #4]
+ 245:./Hardware/Src/Matrix.c **** 	/* Decleration */
+ 246:./Hardware/Src/Matrix.c **** 	float *B = (float*)malloc(row * column * sizeof(float));
+ 1766              		.loc 1 246 32
+ 1767 000c BB68     		ldr	r3, [r7, #8]
+ 1768 000e 7A68     		ldr	r2, [r7, #4]
+ 1769 0010 02FB03F3 		mul	r3, r2, r3
+ 1770              		.loc 1 246 21
+ 1771 0014 9B00     		lsls	r3, r3, #2
+ 1772 0016 1846     		mov	r0, r3
+ 1773 0018 FFF7FEFF 		bl	malloc
+ 1774 001c 0346     		mov	r3, r0
+ 1775 001e 7B61     		str	r3, [r7, #20]
+ 247:./Hardware/Src/Matrix.c **** 	float* transpose = NULL;
+ 1776              		.loc 1 247 9
+ARM GAS  /tmp/ccWoyaXE.s 			page 37
+
+
+ 1777 0020 0023     		movs	r3, #0
+ 1778 0022 7B62     		str	r3, [r7, #36]
+ 248:./Hardware/Src/Matrix.c **** 	float *ptr_A = A;
+ 1779              		.loc 1 248 9
+ 1780 0024 FB68     		ldr	r3, [r7, #12]
+ 1781 0026 3B62     		str	r3, [r7, #32]
+ 249:./Hardware/Src/Matrix.c **** 	int i, j;
+ 250:./Hardware/Src/Matrix.c **** 
+ 251:./Hardware/Src/Matrix.c **** 	for (i = 0; i < row; i++) {
+ 1782              		.loc 1 251 9
+ 1783 0028 0023     		movs	r3, #0
+ 1784 002a FB61     		str	r3, [r7, #28]
+ 1785              		.loc 1 251 2
+ 1786 002c 1DE0     		b	.L83
+ 1787              	.L86:
+ 252:./Hardware/Src/Matrix.c **** 		transpose = &B[i];
+ 1788              		.loc 1 252 17
+ 1789 002e FB69     		ldr	r3, [r7, #28]
+ 1790 0030 9B00     		lsls	r3, r3, #2
+ 1791              		.loc 1 252 13
+ 1792 0032 7A69     		ldr	r2, [r7, #20]
+ 1793 0034 1344     		add	r3, r3, r2
+ 1794 0036 7B62     		str	r3, [r7, #36]
+ 253:./Hardware/Src/Matrix.c **** 		for (j = 0; j < column; j++) {
+ 1795              		.loc 1 253 10
+ 1796 0038 0023     		movs	r3, #0
+ 1797 003a BB61     		str	r3, [r7, #24]
+ 1798              		.loc 1 253 3
+ 1799 003c 0EE0     		b	.L84
+ 1800              	.L85:
+ 254:./Hardware/Src/Matrix.c **** 			*transpose = *ptr_A;
+ 1801              		.loc 1 254 17 discriminator 3
+ 1802 003e 3B6A     		ldr	r3, [r7, #32]
+ 1803 0040 1A68     		ldr	r2, [r3]	@ float
+ 1804              		.loc 1 254 15 discriminator 3
+ 1805 0042 7B6A     		ldr	r3, [r7, #36]
+ 1806 0044 1A60     		str	r2, [r3]	@ float
+ 255:./Hardware/Src/Matrix.c **** 			ptr_A++;
+ 1807              		.loc 1 255 9 discriminator 3
+ 1808 0046 3B6A     		ldr	r3, [r7, #32]
+ 1809 0048 0433     		adds	r3, r3, #4
+ 1810 004a 3B62     		str	r3, [r7, #32]
+ 256:./Hardware/Src/Matrix.c **** 			transpose += row;
+ 1811              		.loc 1 256 14 discriminator 3
+ 1812 004c BB68     		ldr	r3, [r7, #8]
+ 1813 004e 9B00     		lsls	r3, r3, #2
+ 1814 0050 7A6A     		ldr	r2, [r7, #36]
+ 1815 0052 1344     		add	r3, r3, r2
+ 1816 0054 7B62     		str	r3, [r7, #36]
+ 253:./Hardware/Src/Matrix.c **** 			*transpose = *ptr_A;
+ 1817              		.loc 1 253 28 discriminator 3
+ 1818 0056 BB69     		ldr	r3, [r7, #24]
+ 1819 0058 0133     		adds	r3, r3, #1
+ 1820 005a BB61     		str	r3, [r7, #24]
+ 1821              	.L84:
+ 253:./Hardware/Src/Matrix.c **** 			*transpose = *ptr_A;
+ 1822              		.loc 1 253 17 discriminator 1
+ARM GAS  /tmp/ccWoyaXE.s 			page 38
+
+
+ 1823 005c BA69     		ldr	r2, [r7, #24]
+ 1824 005e 7B68     		ldr	r3, [r7, #4]
+ 1825 0060 9A42     		cmp	r2, r3
+ 1826 0062 ECDB     		blt	.L85
+ 251:./Hardware/Src/Matrix.c **** 		transpose = &B[i];
+ 1827              		.loc 1 251 24 discriminator 2
+ 1828 0064 FB69     		ldr	r3, [r7, #28]
+ 1829 0066 0133     		adds	r3, r3, #1
+ 1830 0068 FB61     		str	r3, [r7, #28]
+ 1831              	.L83:
+ 251:./Hardware/Src/Matrix.c **** 		transpose = &B[i];
+ 1832              		.loc 1 251 16 discriminator 1
+ 1833 006a FA69     		ldr	r2, [r7, #28]
+ 1834 006c BB68     		ldr	r3, [r7, #8]
+ 1835 006e 9A42     		cmp	r2, r3
+ 1836 0070 DDDB     		blt	.L86
+ 257:./Hardware/Src/Matrix.c **** 		}
+ 258:./Hardware/Src/Matrix.c **** 	}
+ 259:./Hardware/Src/Matrix.c **** 
+ 260:./Hardware/Src/Matrix.c **** 	/* Copy! */
+ 261:./Hardware/Src/Matrix.c **** 	memcpy(A, B, row*column*sizeof(float));
+ 1837              		.loc 1 261 18
+ 1838 0072 BB68     		ldr	r3, [r7, #8]
+ 1839 0074 7A68     		ldr	r2, [r7, #4]
+ 1840 0076 02FB03F3 		mul	r3, r2, r3
+ 1841              		.loc 1 261 2
+ 1842 007a 9B00     		lsls	r3, r3, #2
+ 1843 007c 1A46     		mov	r2, r3
+ 1844 007e 7969     		ldr	r1, [r7, #20]
+ 1845 0080 F868     		ldr	r0, [r7, #12]
+ 1846 0082 FFF7FEFF 		bl	memcpy
+ 262:./Hardware/Src/Matrix.c **** 
+ 263:./Hardware/Src/Matrix.c **** 	/* Free */
+ 264:./Hardware/Src/Matrix.c **** 	free(B);
+ 1847              		.loc 1 264 2
+ 1848 0086 7869     		ldr	r0, [r7, #20]
+ 1849 0088 FFF7FEFF 		bl	free
+ 265:./Hardware/Src/Matrix.c **** }
+ 1850              		.loc 1 265 1
+ 1851 008c 00BF     		nop
+ 1852 008e 2837     		adds	r7, r7, #40
+ 1853              		.cfi_def_cfa_offset 8
+ 1854 0090 BD46     		mov	sp, r7
+ 1855              		.cfi_def_cfa_register 13
+ 1856              		@ sp needed
+ 1857 0092 80BD     		pop	{r7, pc}
+ 1858              		.cfi_endproc
+ 1859              	.LFE7:
+ 1861              		.text
+ 1862              	.Letext0:
+ 1863              		.file 2 "/usr/lib/gcc/arm-none-eabi/12.2.1/include/stddef.h"
+ 1864              		.file 3 "/usr/lib/gcc/arm-none-eabi/12.2.1/include/stdint.h"
+ 1865              		.file 4 "/usr/include/newlib/string.h"
+ 1866              		.file 5 "/usr/include/newlib/stdlib.h"
+ 1867              		.file 6 "/usr/include/newlib/math.h"
+ARM GAS  /tmp/ccWoyaXE.s 			page 39
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 Matrix.c
+     /tmp/ccWoyaXE.s:21     .text.cal_Cof:0000000000000000 $t
+     /tmp/ccWoyaXE.s:27     .text.cal_Cof:0000000000000000 cal_Cof
+     /tmp/ccWoyaXE.s:186    .text.cal_Det:0000000000000000 cal_Det
+     /tmp/ccWoyaXE.s:180    .text.cal_Det:0000000000000000 $t
+     /tmp/ccWoyaXE.s:459    .text.cal_Det:00000000000001d8 $d
+     /tmp/ccWoyaXE.s:466    .text.FindCof:0000000000000000 $t
+     /tmp/ccWoyaXE.s:472    .text.FindCof:0000000000000000 FindCof
+     /tmp/ccWoyaXE.s:694    .text.matrix_inver:0000000000000000 $t
+     /tmp/ccWoyaXE.s:700    .text.matrix_inver:0000000000000000 matrix_inver
+     /tmp/ccWoyaXE.s:930    .text.matrix_inver:00000000000001e0 $d
+     /tmp/ccWoyaXE.s:937    .text.inv:0000000000000000 $t
+     /tmp/ccWoyaXE.s:943    .text.inv:0000000000000000 inv
+     /tmp/ccWoyaXE.s:1397   .text.lup:0000000000000000 lup
+     /tmp/ccWoyaXE.s:1125   .text.solve:0000000000000000 solve
+     /tmp/ccWoyaXE.s:1749   .text.tran:0000000000000000 tran
+     /tmp/ccWoyaXE.s:1119   .text.solve:0000000000000000 $t
+     /tmp/ccWoyaXE.s:1386   .text.solve:0000000000000190 $d
+     /tmp/ccWoyaXE.s:1391   .text.lup:0000000000000000 $t
+     /tmp/ccWoyaXE.s:1743   .text.tran:0000000000000000 $t
+
+UNDEFINED SYMBOLS
+memset
+__aeabi_i2d
+__aeabi_d2iz
+pow
+__aeabi_f2d
+__aeabi_ddiv
+__aeabi_d2f
+__aeabi_dmul
+malloc
+memcpy
+free
