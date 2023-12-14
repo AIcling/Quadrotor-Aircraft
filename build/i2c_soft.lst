@@ -1,0 +1,1169 @@
+ARM GAS  /tmp/cctXkXle.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 6
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"i2c_soft.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "./Tools/Src/i2c_soft.c"
+  20              		.section	.text.SDA_Input_Mode,"ax",%progbits
+  21              		.align	1
+  22              		.global	SDA_Input_Mode
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	SDA_Input_Mode:
+  28              	.LFB123:
+   1:./Tools/Src/i2c_soft.c **** #include "i2c_soft.h"
+   2:./Tools/Src/i2c_soft.c **** #include "stm32f4xx_gpio.h"
+   3:./Tools/Src/i2c_soft.c **** 
+   4:./Tools/Src/i2c_soft.c **** #define DELAY_TIME	20
+   5:./Tools/Src/i2c_soft.c **** 
+   6:./Tools/Src/i2c_soft.c **** 
+   7:./Tools/Src/i2c_soft.c **** void SDA_Input_Mode()
+   8:./Tools/Src/i2c_soft.c **** {
+  29              		.loc 1 8 1
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 8
+  32              		@ frame_needed = 1, uses_anonymous_args = 0
+  33 0000 80B5     		push	{r7, lr}
+  34              		.cfi_def_cfa_offset 8
+  35              		.cfi_offset 7, -8
+  36              		.cfi_offset 14, -4
+  37 0002 82B0     		sub	sp, sp, #8
+  38              		.cfi_def_cfa_offset 16
+  39 0004 00AF     		add	r7, sp, #0
+  40              		.cfi_def_cfa_register 7
+   9:./Tools/Src/i2c_soft.c ****     GPIO_InitTypeDef GPIO_InitStructure;
+  10:./Tools/Src/i2c_soft.c **** 
+  11:./Tools/Src/i2c_soft.c ****     GPIO_InitStructure.GPIO_Pin = I2C_SDA;
+  41              		.loc 1 11 33
+  42 0006 4FF40073 		mov	r3, #512
+  43 000a 3B60     		str	r3, [r7]
+  12:./Tools/Src/i2c_soft.c ****     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN ;
+  44              		.loc 1 12 34
+  45 000c 0023     		movs	r3, #0
+  46 000e 3B71     		strb	r3, [r7, #4]
+ARM GAS  /tmp/cctXkXle.s 			page 2
+
+
+  13:./Tools/Src/i2c_soft.c ****      GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+  47              		.loc 1 13 35
+  48 0010 0123     		movs	r3, #1
+  49 0012 FB71     		strb	r3, [r7, #7]
+  14:./Tools/Src/i2c_soft.c ****     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+  50              		.loc 1 14 35
+  51 0014 0323     		movs	r3, #3
+  52 0016 7B71     		strb	r3, [r7, #5]
+  15:./Tools/Src/i2c_soft.c ****     GPIO_Init(I2CPORT, &GPIO_InitStructure);
+  53              		.loc 1 15 5
+  54 0018 3B46     		mov	r3, r7
+  55 001a 1946     		mov	r1, r3
+  56 001c 0348     		ldr	r0, .L2
+  57 001e FFF7FEFF 		bl	GPIO_Init
+  16:./Tools/Src/i2c_soft.c **** }
+  58              		.loc 1 16 1
+  59 0022 00BF     		nop
+  60 0024 0837     		adds	r7, r7, #8
+  61              		.cfi_def_cfa_offset 8
+  62 0026 BD46     		mov	sp, r7
+  63              		.cfi_def_cfa_register 13
+  64              		@ sp needed
+  65 0028 80BD     		pop	{r7, pc}
+  66              	.L3:
+  67 002a 00BF     		.align	2
+  68              	.L2:
+  69 002c 00040240 		.word	1073873920
+  70              		.cfi_endproc
+  71              	.LFE123:
+  73              		.section	.text.SDA_Output_Mode,"ax",%progbits
+  74              		.align	1
+  75              		.global	SDA_Output_Mode
+  76              		.syntax unified
+  77              		.thumb
+  78              		.thumb_func
+  80              	SDA_Output_Mode:
+  81              	.LFB124:
+  17:./Tools/Src/i2c_soft.c **** 
+  18:./Tools/Src/i2c_soft.c **** 
+  19:./Tools/Src/i2c_soft.c **** void SDA_Output_Mode()
+  20:./Tools/Src/i2c_soft.c **** {
+  82              		.loc 1 20 1
+  83              		.cfi_startproc
+  84              		@ args = 0, pretend = 0, frame = 8
+  85              		@ frame_needed = 1, uses_anonymous_args = 0
+  86 0000 80B5     		push	{r7, lr}
+  87              		.cfi_def_cfa_offset 8
+  88              		.cfi_offset 7, -8
+  89              		.cfi_offset 14, -4
+  90 0002 82B0     		sub	sp, sp, #8
+  91              		.cfi_def_cfa_offset 16
+  92 0004 00AF     		add	r7, sp, #0
+  93              		.cfi_def_cfa_register 7
+  21:./Tools/Src/i2c_soft.c ****     GPIO_InitTypeDef GPIO_InitStructure = {0};
+  94              		.loc 1 21 22
+  95 0006 3B46     		mov	r3, r7
+  96 0008 0022     		movs	r2, #0
+ARM GAS  /tmp/cctXkXle.s 			page 3
+
+
+  97 000a 1A60     		str	r2, [r3]
+  98 000c 5A60     		str	r2, [r3, #4]
+  22:./Tools/Src/i2c_soft.c **** 
+  23:./Tools/Src/i2c_soft.c ****     GPIO_InitStructure.GPIO_Pin = I2C_SDA;
+  99              		.loc 1 23 33
+ 100 000e 4FF40073 		mov	r3, #512
+ 101 0012 3B60     		str	r3, [r7]
+  24:./Tools/Src/i2c_soft.c ****     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT ;
+ 102              		.loc 1 24 34
+ 103 0014 0123     		movs	r3, #1
+ 104 0016 3B71     		strb	r3, [r7, #4]
+  25:./Tools/Src/i2c_soft.c ****     GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
+ 105              		.loc 1 25 35
+ 106 0018 0123     		movs	r3, #1
+ 107 001a BB71     		strb	r3, [r7, #6]
+  26:./Tools/Src/i2c_soft.c ****     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+ 108              		.loc 1 26 35
+ 109 001c 0323     		movs	r3, #3
+ 110 001e 7B71     		strb	r3, [r7, #5]
+  27:./Tools/Src/i2c_soft.c ****     // GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+  28:./Tools/Src/i2c_soft.c ****     GPIO_Init(I2CPORT, &GPIO_InitStructure);
+ 111              		.loc 1 28 5
+ 112 0020 3B46     		mov	r3, r7
+ 113 0022 1946     		mov	r1, r3
+ 114 0024 0348     		ldr	r0, .L5
+ 115 0026 FFF7FEFF 		bl	GPIO_Init
+  29:./Tools/Src/i2c_soft.c **** }
+ 116              		.loc 1 29 1
+ 117 002a 00BF     		nop
+ 118 002c 0837     		adds	r7, r7, #8
+ 119              		.cfi_def_cfa_offset 8
+ 120 002e BD46     		mov	sp, r7
+ 121              		.cfi_def_cfa_register 13
+ 122              		@ sp needed
+ 123 0030 80BD     		pop	{r7, pc}
+ 124              	.L6:
+ 125 0032 00BF     		.align	2
+ 126              	.L5:
+ 127 0034 00040240 		.word	1073873920
+ 128              		.cfi_endproc
+ 129              	.LFE124:
+ 131              		.section	.text.SDA_Output,"ax",%progbits
+ 132              		.align	1
+ 133              		.global	SDA_Output
+ 134              		.syntax unified
+ 135              		.thumb
+ 136              		.thumb_func
+ 138              	SDA_Output:
+ 139              	.LFB125:
+  30:./Tools/Src/i2c_soft.c **** 
+  31:./Tools/Src/i2c_soft.c **** 
+  32:./Tools/Src/i2c_soft.c **** void SDA_Output( uint16_t val )
+  33:./Tools/Src/i2c_soft.c **** {
+ 140              		.loc 1 33 1
+ 141              		.cfi_startproc
+ 142              		@ args = 0, pretend = 0, frame = 8
+ 143              		@ frame_needed = 1, uses_anonymous_args = 0
+ARM GAS  /tmp/cctXkXle.s 			page 4
+
+
+ 144              		@ link register save eliminated.
+ 145 0000 80B4     		push	{r7}
+ 146              		.cfi_def_cfa_offset 4
+ 147              		.cfi_offset 7, -4
+ 148 0002 83B0     		sub	sp, sp, #12
+ 149              		.cfi_def_cfa_offset 16
+ 150 0004 00AF     		add	r7, sp, #0
+ 151              		.cfi_def_cfa_register 7
+ 152 0006 0346     		mov	r3, r0
+ 153 0008 FB80     		strh	r3, [r7, #6]	@ movhi
+  34:./Tools/Src/i2c_soft.c ****     if ( val )
+ 154              		.loc 1 34 8
+ 155 000a FB88     		ldrh	r3, [r7, #6]
+ 156 000c 002B     		cmp	r3, #0
+ 157 000e 06D0     		beq	.L8
+  35:./Tools/Src/i2c_soft.c ****     {
+  36:./Tools/Src/i2c_soft.c ****         I2CPORT->BSRR |= I2C_SDA;
+ 158              		.loc 1 36 16
+ 159 0010 094B     		ldr	r3, .L11
+ 160 0012 9B69     		ldr	r3, [r3, #24]
+ 161 0014 084A     		ldr	r2, .L11
+ 162              		.loc 1 36 23
+ 163 0016 43F40073 		orr	r3, r3, #512
+ 164 001a 9361     		str	r3, [r2, #24]
+  37:./Tools/Src/i2c_soft.c ****     }
+  38:./Tools/Src/i2c_soft.c ****     else
+  39:./Tools/Src/i2c_soft.c ****     {
+  40:./Tools/Src/i2c_soft.c ****         I2CPORT->BSRR |= I2C_SDA<<16;
+  41:./Tools/Src/i2c_soft.c ****     }
+  42:./Tools/Src/i2c_soft.c **** }
+ 165              		.loc 1 42 1
+ 166 001c 05E0     		b	.L10
+ 167              	.L8:
+  40:./Tools/Src/i2c_soft.c ****     }
+ 168              		.loc 1 40 16
+ 169 001e 064B     		ldr	r3, .L11
+ 170 0020 9B69     		ldr	r3, [r3, #24]
+ 171 0022 054A     		ldr	r2, .L11
+  40:./Tools/Src/i2c_soft.c ****     }
+ 172              		.loc 1 40 23
+ 173 0024 43F00073 		orr	r3, r3, #33554432
+ 174 0028 9361     		str	r3, [r2, #24]
+ 175              	.L10:
+ 176              		.loc 1 42 1
+ 177 002a 00BF     		nop
+ 178 002c 0C37     		adds	r7, r7, #12
+ 179              		.cfi_def_cfa_offset 4
+ 180 002e BD46     		mov	sp, r7
+ 181              		.cfi_def_cfa_register 13
+ 182              		@ sp needed
+ 183 0030 5DF8047B 		ldr	r7, [sp], #4
+ 184              		.cfi_restore 7
+ 185              		.cfi_def_cfa_offset 0
+ 186 0034 7047     		bx	lr
+ 187              	.L12:
+ 188 0036 00BF     		.align	2
+ 189              	.L11:
+ARM GAS  /tmp/cctXkXle.s 			page 5
+
+
+ 190 0038 00040240 		.word	1073873920
+ 191              		.cfi_endproc
+ 192              	.LFE125:
+ 194              		.section	.text.SCL_Output,"ax",%progbits
+ 195              		.align	1
+ 196              		.global	SCL_Output
+ 197              		.syntax unified
+ 198              		.thumb
+ 199              		.thumb_func
+ 201              	SCL_Output:
+ 202              	.LFB126:
+  43:./Tools/Src/i2c_soft.c **** 
+  44:./Tools/Src/i2c_soft.c **** 
+  45:./Tools/Src/i2c_soft.c **** void SCL_Output( uint16_t val )
+  46:./Tools/Src/i2c_soft.c **** {
+ 203              		.loc 1 46 1
+ 204              		.cfi_startproc
+ 205              		@ args = 0, pretend = 0, frame = 8
+ 206              		@ frame_needed = 1, uses_anonymous_args = 0
+ 207              		@ link register save eliminated.
+ 208 0000 80B4     		push	{r7}
+ 209              		.cfi_def_cfa_offset 4
+ 210              		.cfi_offset 7, -4
+ 211 0002 83B0     		sub	sp, sp, #12
+ 212              		.cfi_def_cfa_offset 16
+ 213 0004 00AF     		add	r7, sp, #0
+ 214              		.cfi_def_cfa_register 7
+ 215 0006 0346     		mov	r3, r0
+ 216 0008 FB80     		strh	r3, [r7, #6]	@ movhi
+  47:./Tools/Src/i2c_soft.c ****     if ( val )
+ 217              		.loc 1 47 8
+ 218 000a FB88     		ldrh	r3, [r7, #6]
+ 219 000c 002B     		cmp	r3, #0
+ 220 000e 06D0     		beq	.L14
+  48:./Tools/Src/i2c_soft.c ****     {
+  49:./Tools/Src/i2c_soft.c ****         I2CPORT->BSRR |= I2C_SCL;
+ 221              		.loc 1 49 16
+ 222 0010 094B     		ldr	r3, .L17
+ 223 0012 9B69     		ldr	r3, [r3, #24]
+ 224 0014 084A     		ldr	r2, .L17
+ 225              		.loc 1 49 23
+ 226 0016 43F48073 		orr	r3, r3, #256
+ 227 001a 9361     		str	r3, [r2, #24]
+  50:./Tools/Src/i2c_soft.c ****     }
+  51:./Tools/Src/i2c_soft.c ****     else
+  52:./Tools/Src/i2c_soft.c ****     {
+  53:./Tools/Src/i2c_soft.c ****         I2CPORT->BSRR|= I2C_SCL<<16;
+  54:./Tools/Src/i2c_soft.c ****     }
+  55:./Tools/Src/i2c_soft.c **** }
+ 228              		.loc 1 55 1
+ 229 001c 05E0     		b	.L16
+ 230              	.L14:
+  53:./Tools/Src/i2c_soft.c ****     }
+ 231              		.loc 1 53 16
+ 232 001e 064B     		ldr	r3, .L17
+ 233 0020 9B69     		ldr	r3, [r3, #24]
+ 234 0022 054A     		ldr	r2, .L17
+ARM GAS  /tmp/cctXkXle.s 			page 6
+
+
+  53:./Tools/Src/i2c_soft.c ****     }
+ 235              		.loc 1 53 22
+ 236 0024 43F08073 		orr	r3, r3, #16777216
+ 237 0028 9361     		str	r3, [r2, #24]
+ 238              	.L16:
+ 239              		.loc 1 55 1
+ 240 002a 00BF     		nop
+ 241 002c 0C37     		adds	r7, r7, #12
+ 242              		.cfi_def_cfa_offset 4
+ 243 002e BD46     		mov	sp, r7
+ 244              		.cfi_def_cfa_register 13
+ 245              		@ sp needed
+ 246 0030 5DF8047B 		ldr	r7, [sp], #4
+ 247              		.cfi_restore 7
+ 248              		.cfi_def_cfa_offset 0
+ 249 0034 7047     		bx	lr
+ 250              	.L18:
+ 251 0036 00BF     		.align	2
+ 252              	.L17:
+ 253 0038 00040240 		.word	1073873920
+ 254              		.cfi_endproc
+ 255              	.LFE126:
+ 257              		.section	.text.SDA_Input,"ax",%progbits
+ 258              		.align	1
+ 259              		.global	SDA_Input
+ 260              		.syntax unified
+ 261              		.thumb
+ 262              		.thumb_func
+ 264              	SDA_Input:
+ 265              	.LFB127:
+  56:./Tools/Src/i2c_soft.c **** 
+  57:./Tools/Src/i2c_soft.c **** 
+  58:./Tools/Src/i2c_soft.c **** uint8_t SDA_Input(void)
+  59:./Tools/Src/i2c_soft.c **** {
+ 266              		.loc 1 59 1
+ 267              		.cfi_startproc
+ 268              		@ args = 0, pretend = 0, frame = 0
+ 269              		@ frame_needed = 1, uses_anonymous_args = 0
+ 270 0000 80B5     		push	{r7, lr}
+ 271              		.cfi_def_cfa_offset 8
+ 272              		.cfi_offset 7, -8
+ 273              		.cfi_offset 14, -4
+ 274 0002 00AF     		add	r7, sp, #0
+ 275              		.cfi_def_cfa_register 7
+  60:./Tools/Src/i2c_soft.c **** 	if(GPIO_ReadInputDataBit(I2CPORT, I2C_SDA) == Bit_SET){
+ 276              		.loc 1 60 5
+ 277 0004 4FF40071 		mov	r1, #512
+ 278 0008 0548     		ldr	r0, .L22
+ 279 000a FFF7FEFF 		bl	GPIO_ReadInputDataBit
+ 280 000e 0346     		mov	r3, r0
+ 281              		.loc 1 60 4
+ 282 0010 012B     		cmp	r3, #1
+ 283 0012 01D1     		bne	.L20
+  61:./Tools/Src/i2c_soft.c **** 		return 1;
+ 284              		.loc 1 61 10
+ 285 0014 0123     		movs	r3, #1
+ 286 0016 00E0     		b	.L21
+ARM GAS  /tmp/cctXkXle.s 			page 7
+
+
+ 287              	.L20:
+  62:./Tools/Src/i2c_soft.c **** 	}else{
+  63:./Tools/Src/i2c_soft.c **** 		return 0;
+ 288              		.loc 1 63 10
+ 289 0018 0023     		movs	r3, #0
+ 290              	.L21:
+  64:./Tools/Src/i2c_soft.c **** 	}
+  65:./Tools/Src/i2c_soft.c **** }
+ 291              		.loc 1 65 1
+ 292 001a 1846     		mov	r0, r3
+ 293 001c 80BD     		pop	{r7, pc}
+ 294              	.L23:
+ 295 001e 00BF     		.align	2
+ 296              	.L22:
+ 297 0020 00040240 		.word	1073873920
+ 298              		.cfi_endproc
+ 299              	.LFE127:
+ 301              		.section	.text.delay1,"ax",%progbits
+ 302              		.align	1
+ 303              		.syntax unified
+ 304              		.thumb
+ 305              		.thumb_func
+ 307              	delay1:
+ 308              	.LFB128:
+  66:./Tools/Src/i2c_soft.c **** 
+  67:./Tools/Src/i2c_soft.c **** 
+  68:./Tools/Src/i2c_soft.c **** 
+  69:./Tools/Src/i2c_soft.c **** static void delay1(unsigned int n)
+  70:./Tools/Src/i2c_soft.c **** {
+ 309              		.loc 1 70 1
+ 310              		.cfi_startproc
+ 311              		@ args = 0, pretend = 0, frame = 16
+ 312              		@ frame_needed = 1, uses_anonymous_args = 0
+ 313              		@ link register save eliminated.
+ 314 0000 80B4     		push	{r7}
+ 315              		.cfi_def_cfa_offset 4
+ 316              		.cfi_offset 7, -4
+ 317 0002 85B0     		sub	sp, sp, #20
+ 318              		.cfi_def_cfa_offset 24
+ 319 0004 00AF     		add	r7, sp, #0
+ 320              		.cfi_def_cfa_register 7
+ 321 0006 7860     		str	r0, [r7, #4]
+  71:./Tools/Src/i2c_soft.c ****     uint32_t i;
+  72:./Tools/Src/i2c_soft.c ****     for ( i = 0; i < n; ++i);
+ 322              		.loc 1 72 13
+ 323 0008 0023     		movs	r3, #0
+ 324 000a FB60     		str	r3, [r7, #12]
+ 325              		.loc 1 72 5
+ 326 000c 02E0     		b	.L25
+ 327              	.L26:
+ 328              		.loc 1 72 25 discriminator 3
+ 329 000e FB68     		ldr	r3, [r7, #12]
+ 330 0010 0133     		adds	r3, r3, #1
+ 331 0012 FB60     		str	r3, [r7, #12]
+ 332              	.L25:
+ 333              		.loc 1 72 20 discriminator 1
+ 334 0014 FA68     		ldr	r2, [r7, #12]
+ARM GAS  /tmp/cctXkXle.s 			page 8
+
+
+ 335 0016 7B68     		ldr	r3, [r7, #4]
+ 336 0018 9A42     		cmp	r2, r3
+ 337 001a F8D3     		bcc	.L26
+  73:./Tools/Src/i2c_soft.c **** }
+ 338              		.loc 1 73 1
+ 339 001c 00BF     		nop
+ 340 001e 00BF     		nop
+ 341 0020 1437     		adds	r7, r7, #20
+ 342              		.cfi_def_cfa_offset 4
+ 343 0022 BD46     		mov	sp, r7
+ 344              		.cfi_def_cfa_register 13
+ 345              		@ sp needed
+ 346 0024 5DF8047B 		ldr	r7, [sp], #4
+ 347              		.cfi_restore 7
+ 348              		.cfi_def_cfa_offset 0
+ 349 0028 7047     		bx	lr
+ 350              		.cfi_endproc
+ 351              	.LFE128:
+ 353              		.section	.text.I2CStart,"ax",%progbits
+ 354              		.align	1
+ 355              		.global	I2CStart
+ 356              		.syntax unified
+ 357              		.thumb
+ 358              		.thumb_func
+ 360              	I2CStart:
+ 361              	.LFB129:
+  74:./Tools/Src/i2c_soft.c **** 
+  75:./Tools/Src/i2c_soft.c **** 
+  76:./Tools/Src/i2c_soft.c **** void I2CStart(void)
+  77:./Tools/Src/i2c_soft.c **** {
+ 362              		.loc 1 77 1
+ 363              		.cfi_startproc
+ 364              		@ args = 0, pretend = 0, frame = 0
+ 365              		@ frame_needed = 1, uses_anonymous_args = 0
+ 366 0000 80B5     		push	{r7, lr}
+ 367              		.cfi_def_cfa_offset 8
+ 368              		.cfi_offset 7, -8
+ 369              		.cfi_offset 14, -4
+ 370 0002 00AF     		add	r7, sp, #0
+ 371              		.cfi_def_cfa_register 7
+  78:./Tools/Src/i2c_soft.c ****     SDA_Output_Mode();
+ 372              		.loc 1 78 5
+ 373 0004 FFF7FEFF 		bl	SDA_Output_Mode
+  79:./Tools/Src/i2c_soft.c ****     SDA_Output(1);
+ 374              		.loc 1 79 5
+ 375 0008 0120     		movs	r0, #1
+ 376 000a FFF7FEFF 		bl	SDA_Output
+  80:./Tools/Src/i2c_soft.c ****     delay1(DELAY_TIME);
+ 377              		.loc 1 80 5
+ 378 000e 1420     		movs	r0, #20
+ 379 0010 FFF7FEFF 		bl	delay1
+  81:./Tools/Src/i2c_soft.c ****     SCL_Output(1);
+ 380              		.loc 1 81 5
+ 381 0014 0120     		movs	r0, #1
+ 382 0016 FFF7FEFF 		bl	SCL_Output
+  82:./Tools/Src/i2c_soft.c ****     delay1(DELAY_TIME);
+ 383              		.loc 1 82 5
+ARM GAS  /tmp/cctXkXle.s 			page 9
+
+
+ 384 001a 1420     		movs	r0, #20
+ 385 001c FFF7FEFF 		bl	delay1
+  83:./Tools/Src/i2c_soft.c ****     SDA_Output(0);
+ 386              		.loc 1 83 5
+ 387 0020 0020     		movs	r0, #0
+ 388 0022 FFF7FEFF 		bl	SDA_Output
+  84:./Tools/Src/i2c_soft.c ****     delay1(DELAY_TIME);
+ 389              		.loc 1 84 5
+ 390 0026 1420     		movs	r0, #20
+ 391 0028 FFF7FEFF 		bl	delay1
+  85:./Tools/Src/i2c_soft.c ****     SCL_Output(0);
+ 392              		.loc 1 85 5
+ 393 002c 0020     		movs	r0, #0
+ 394 002e FFF7FEFF 		bl	SCL_Output
+  86:./Tools/Src/i2c_soft.c ****     delay1(DELAY_TIME);
+ 395              		.loc 1 86 5
+ 396 0032 1420     		movs	r0, #20
+ 397 0034 FFF7FEFF 		bl	delay1
+  87:./Tools/Src/i2c_soft.c **** }
+ 398              		.loc 1 87 1
+ 399 0038 00BF     		nop
+ 400 003a 80BD     		pop	{r7, pc}
+ 401              		.cfi_endproc
+ 402              	.LFE129:
+ 404              		.section	.text.I2CStop,"ax",%progbits
+ 405              		.align	1
+ 406              		.global	I2CStop
+ 407              		.syntax unified
+ 408              		.thumb
+ 409              		.thumb_func
+ 411              	I2CStop:
+ 412              	.LFB130:
+  88:./Tools/Src/i2c_soft.c **** 
+  89:./Tools/Src/i2c_soft.c **** 
+  90:./Tools/Src/i2c_soft.c **** void I2CStop(void)
+  91:./Tools/Src/i2c_soft.c **** {
+ 413              		.loc 1 91 1
+ 414              		.cfi_startproc
+ 415              		@ args = 0, pretend = 0, frame = 0
+ 416              		@ frame_needed = 1, uses_anonymous_args = 0
+ 417 0000 80B5     		push	{r7, lr}
+ 418              		.cfi_def_cfa_offset 8
+ 419              		.cfi_offset 7, -8
+ 420              		.cfi_offset 14, -4
+ 421 0002 00AF     		add	r7, sp, #0
+ 422              		.cfi_def_cfa_register 7
+  92:./Tools/Src/i2c_soft.c ****     SDA_Output_Mode();
+ 423              		.loc 1 92 5
+ 424 0004 FFF7FEFF 		bl	SDA_Output_Mode
+  93:./Tools/Src/i2c_soft.c ****     SCL_Output(0);
+ 425              		.loc 1 93 5
+ 426 0008 0020     		movs	r0, #0
+ 427 000a FFF7FEFF 		bl	SCL_Output
+  94:./Tools/Src/i2c_soft.c ****     delay1(DELAY_TIME);
+ 428              		.loc 1 94 5
+ 429 000e 1420     		movs	r0, #20
+ 430 0010 FFF7FEFF 		bl	delay1
+ARM GAS  /tmp/cctXkXle.s 			page 10
+
+
+  95:./Tools/Src/i2c_soft.c ****     SDA_Output(0);
+ 431              		.loc 1 95 5
+ 432 0014 0020     		movs	r0, #0
+ 433 0016 FFF7FEFF 		bl	SDA_Output
+  96:./Tools/Src/i2c_soft.c ****     delay1(DELAY_TIME);
+ 434              		.loc 1 96 5
+ 435 001a 1420     		movs	r0, #20
+ 436 001c FFF7FEFF 		bl	delay1
+  97:./Tools/Src/i2c_soft.c ****     SCL_Output(1);
+ 437              		.loc 1 97 5
+ 438 0020 0120     		movs	r0, #1
+ 439 0022 FFF7FEFF 		bl	SCL_Output
+  98:./Tools/Src/i2c_soft.c ****     delay1(DELAY_TIME);
+ 440              		.loc 1 98 5
+ 441 0026 1420     		movs	r0, #20
+ 442 0028 FFF7FEFF 		bl	delay1
+  99:./Tools/Src/i2c_soft.c ****     SDA_Output(1);
+ 443              		.loc 1 99 5
+ 444 002c 0120     		movs	r0, #1
+ 445 002e FFF7FEFF 		bl	SDA_Output
+ 100:./Tools/Src/i2c_soft.c ****     delay1(DELAY_TIME);
+ 446              		.loc 1 100 5
+ 447 0032 1420     		movs	r0, #20
+ 448 0034 FFF7FEFF 		bl	delay1
+ 101:./Tools/Src/i2c_soft.c **** 
+ 102:./Tools/Src/i2c_soft.c **** }
+ 449              		.loc 1 102 1
+ 450 0038 00BF     		nop
+ 451 003a 80BD     		pop	{r7, pc}
+ 452              		.cfi_endproc
+ 453              	.LFE130:
+ 455              		.section	.text.I2CWaitAck,"ax",%progbits
+ 456              		.align	1
+ 457              		.global	I2CWaitAck
+ 458              		.syntax unified
+ 459              		.thumb
+ 460              		.thumb_func
+ 462              	I2CWaitAck:
+ 463              	.LFB131:
+ 103:./Tools/Src/i2c_soft.c **** 
+ 104:./Tools/Src/i2c_soft.c **** 
+ 105:./Tools/Src/i2c_soft.c **** unsigned char I2CWaitAck(void)
+ 106:./Tools/Src/i2c_soft.c **** {
+ 464              		.loc 1 106 1
+ 465              		.cfi_startproc
+ 466              		@ args = 0, pretend = 0, frame = 8
+ 467              		@ frame_needed = 1, uses_anonymous_args = 0
+ 468 0000 80B5     		push	{r7, lr}
+ 469              		.cfi_def_cfa_offset 8
+ 470              		.cfi_offset 7, -8
+ 471              		.cfi_offset 14, -4
+ 472 0002 82B0     		sub	sp, sp, #8
+ 473              		.cfi_def_cfa_offset 16
+ 474 0004 00AF     		add	r7, sp, #0
+ 475              		.cfi_def_cfa_register 7
+ 107:./Tools/Src/i2c_soft.c ****     unsigned short cErrTime = 5;
+ 476              		.loc 1 107 20
+ARM GAS  /tmp/cctXkXle.s 			page 11
+
+
+ 477 0006 0523     		movs	r3, #5
+ 478 0008 FB80     		strh	r3, [r7, #6]	@ movhi
+ 108:./Tools/Src/i2c_soft.c ****     SDA_Input_Mode();
+ 479              		.loc 1 108 5
+ 480 000a FFF7FEFF 		bl	SDA_Input_Mode
+ 109:./Tools/Src/i2c_soft.c ****     delay1(DELAY_TIME);
+ 481              		.loc 1 109 5
+ 482 000e 1420     		movs	r0, #20
+ 483 0010 FFF7FEFF 		bl	delay1
+ 110:./Tools/Src/i2c_soft.c ****     SCL_Output(1);
+ 484              		.loc 1 110 5
+ 485 0014 0120     		movs	r0, #1
+ 486 0016 FFF7FEFF 		bl	SCL_Output
+ 111:./Tools/Src/i2c_soft.c ****     delay1(DELAY_TIME);
+ 487              		.loc 1 111 5
+ 488 001a 1420     		movs	r0, #20
+ 489 001c FFF7FEFF 		bl	delay1
+ 112:./Tools/Src/i2c_soft.c ****     while(SDA_Input())
+ 490              		.loc 1 112 10
+ 491 0020 0EE0     		b	.L30
+ 492              	.L32:
+ 113:./Tools/Src/i2c_soft.c ****     {
+ 114:./Tools/Src/i2c_soft.c ****         cErrTime--;
+ 493              		.loc 1 114 17
+ 494 0022 FB88     		ldrh	r3, [r7, #6]
+ 495 0024 013B     		subs	r3, r3, #1
+ 496 0026 FB80     		strh	r3, [r7, #6]	@ movhi
+ 115:./Tools/Src/i2c_soft.c ****         delay1(DELAY_TIME);
+ 497              		.loc 1 115 9
+ 498 0028 1420     		movs	r0, #20
+ 499 002a FFF7FEFF 		bl	delay1
+ 116:./Tools/Src/i2c_soft.c ****         if (0 == cErrTime)
+ 500              		.loc 1 116 12
+ 501 002e FB88     		ldrh	r3, [r7, #6]
+ 502 0030 002B     		cmp	r3, #0
+ 503 0032 05D1     		bne	.L30
+ 117:./Tools/Src/i2c_soft.c ****         {
+ 118:./Tools/Src/i2c_soft.c ****             SDA_Output_Mode();
+ 504              		.loc 1 118 13
+ 505 0034 FFF7FEFF 		bl	SDA_Output_Mode
+ 119:./Tools/Src/i2c_soft.c ****             I2CStop();
+ 506              		.loc 1 119 13
+ 507 0038 FFF7FEFF 		bl	I2CStop
+ 120:./Tools/Src/i2c_soft.c ****             return ERROR;
+ 508              		.loc 1 120 20
+ 509 003c 0023     		movs	r3, #0
+ 510 003e 0BE0     		b	.L31
+ 511              	.L30:
+ 112:./Tools/Src/i2c_soft.c ****     {
+ 512              		.loc 1 112 11
+ 513 0040 FFF7FEFF 		bl	SDA_Input
+ 514 0044 0346     		mov	r3, r0
+ 515 0046 002B     		cmp	r3, #0
+ 516 0048 EBD1     		bne	.L32
+ 121:./Tools/Src/i2c_soft.c ****         }
+ 122:./Tools/Src/i2c_soft.c ****     }
+ 123:./Tools/Src/i2c_soft.c ****     SCL_Output(0);
+ARM GAS  /tmp/cctXkXle.s 			page 12
+
+
+ 517              		.loc 1 123 5
+ 518 004a 0020     		movs	r0, #0
+ 519 004c FFF7FEFF 		bl	SCL_Output
+ 124:./Tools/Src/i2c_soft.c ****     //  SDA_Output_Mode();
+ 125:./Tools/Src/i2c_soft.c ****     delay1(DELAY_TIME);
+ 520              		.loc 1 125 5
+ 521 0050 1420     		movs	r0, #20
+ 522 0052 FFF7FEFF 		bl	delay1
+ 126:./Tools/Src/i2c_soft.c ****     return SUCCESS;
+ 523              		.loc 1 126 12
+ 524 0056 0123     		movs	r3, #1
+ 525              	.L31:
+ 127:./Tools/Src/i2c_soft.c **** }
+ 526              		.loc 1 127 1
+ 527 0058 1846     		mov	r0, r3
+ 528 005a 0837     		adds	r7, r7, #8
+ 529              		.cfi_def_cfa_offset 8
+ 530 005c BD46     		mov	sp, r7
+ 531              		.cfi_def_cfa_register 13
+ 532              		@ sp needed
+ 533 005e 80BD     		pop	{r7, pc}
+ 534              		.cfi_endproc
+ 535              	.LFE131:
+ 537              		.section	.text.I2CSendAck,"ax",%progbits
+ 538              		.align	1
+ 539              		.global	I2CSendAck
+ 540              		.syntax unified
+ 541              		.thumb
+ 542              		.thumb_func
+ 544              	I2CSendAck:
+ 545              	.LFB132:
+ 128:./Tools/Src/i2c_soft.c **** 
+ 129:./Tools/Src/i2c_soft.c **** 
+ 130:./Tools/Src/i2c_soft.c **** void I2CSendAck(void)
+ 131:./Tools/Src/i2c_soft.c **** {
+ 546              		.loc 1 131 1
+ 547              		.cfi_startproc
+ 548              		@ args = 0, pretend = 0, frame = 0
+ 549              		@ frame_needed = 1, uses_anonymous_args = 0
+ 550 0000 80B5     		push	{r7, lr}
+ 551              		.cfi_def_cfa_offset 8
+ 552              		.cfi_offset 7, -8
+ 553              		.cfi_offset 14, -4
+ 554 0002 00AF     		add	r7, sp, #0
+ 555              		.cfi_def_cfa_register 7
+ 132:./Tools/Src/i2c_soft.c ****     SDA_Output_Mode();
+ 556              		.loc 1 132 5
+ 557 0004 FFF7FEFF 		bl	SDA_Output_Mode
+ 133:./Tools/Src/i2c_soft.c ****     SDA_Output(0);
+ 558              		.loc 1 133 5
+ 559 0008 0020     		movs	r0, #0
+ 560 000a FFF7FEFF 		bl	SDA_Output
+ 134:./Tools/Src/i2c_soft.c ****     delay1(DELAY_TIME);
+ 561              		.loc 1 134 5
+ 562 000e 1420     		movs	r0, #20
+ 563 0010 FFF7FEFF 		bl	delay1
+ 135:./Tools/Src/i2c_soft.c ****     delay1(DELAY_TIME);
+ARM GAS  /tmp/cctXkXle.s 			page 13
+
+
+ 564              		.loc 1 135 5
+ 565 0014 1420     		movs	r0, #20
+ 566 0016 FFF7FEFF 		bl	delay1
+ 136:./Tools/Src/i2c_soft.c ****     SCL_Output(1);
+ 567              		.loc 1 136 5
+ 568 001a 0120     		movs	r0, #1
+ 569 001c FFF7FEFF 		bl	SCL_Output
+ 137:./Tools/Src/i2c_soft.c ****     delay1(DELAY_TIME);
+ 570              		.loc 1 137 5
+ 571 0020 1420     		movs	r0, #20
+ 572 0022 FFF7FEFF 		bl	delay1
+ 138:./Tools/Src/i2c_soft.c ****     SCL_Output(0);
+ 573              		.loc 1 138 5
+ 574 0026 0020     		movs	r0, #0
+ 575 0028 FFF7FEFF 		bl	SCL_Output
+ 139:./Tools/Src/i2c_soft.c ****     delay1(DELAY_TIME);
+ 576              		.loc 1 139 5
+ 577 002c 1420     		movs	r0, #20
+ 578 002e FFF7FEFF 		bl	delay1
+ 140:./Tools/Src/i2c_soft.c ****     SDA_Output(1);
+ 579              		.loc 1 140 5
+ 580 0032 0120     		movs	r0, #1
+ 581 0034 FFF7FEFF 		bl	SDA_Output
+ 141:./Tools/Src/i2c_soft.c **** 
+ 142:./Tools/Src/i2c_soft.c **** }
+ 582              		.loc 1 142 1
+ 583 0038 00BF     		nop
+ 584 003a 80BD     		pop	{r7, pc}
+ 585              		.cfi_endproc
+ 586              	.LFE132:
+ 588              		.section	.text.I2CSendNotAck,"ax",%progbits
+ 589              		.align	1
+ 590              		.global	I2CSendNotAck
+ 591              		.syntax unified
+ 592              		.thumb
+ 593              		.thumb_func
+ 595              	I2CSendNotAck:
+ 596              	.LFB133:
+ 143:./Tools/Src/i2c_soft.c **** 
+ 144:./Tools/Src/i2c_soft.c **** 
+ 145:./Tools/Src/i2c_soft.c **** void I2CSendNotAck(void)
+ 146:./Tools/Src/i2c_soft.c **** {
+ 597              		.loc 1 146 1
+ 598              		.cfi_startproc
+ 599              		@ args = 0, pretend = 0, frame = 0
+ 600              		@ frame_needed = 1, uses_anonymous_args = 0
+ 601 0000 80B5     		push	{r7, lr}
+ 602              		.cfi_def_cfa_offset 8
+ 603              		.cfi_offset 7, -8
+ 604              		.cfi_offset 14, -4
+ 605 0002 00AF     		add	r7, sp, #0
+ 606              		.cfi_def_cfa_register 7
+ 147:./Tools/Src/i2c_soft.c ****     // SDA_Output_Mode();
+ 148:./Tools/Src/i2c_soft.c ****     SDA_Output(1);
+ 607              		.loc 1 148 5
+ 608 0004 0120     		movs	r0, #1
+ 609 0006 FFF7FEFF 		bl	SDA_Output
+ARM GAS  /tmp/cctXkXle.s 			page 14
+
+
+ 149:./Tools/Src/i2c_soft.c ****     delay1(DELAY_TIME);
+ 610              		.loc 1 149 5
+ 611 000a 1420     		movs	r0, #20
+ 612 000c FFF7FEFF 		bl	delay1
+ 150:./Tools/Src/i2c_soft.c ****     delay1(DELAY_TIME);
+ 613              		.loc 1 150 5
+ 614 0010 1420     		movs	r0, #20
+ 615 0012 FFF7FEFF 		bl	delay1
+ 151:./Tools/Src/i2c_soft.c ****     SCL_Output(1);
+ 616              		.loc 1 151 5
+ 617 0016 0120     		movs	r0, #1
+ 618 0018 FFF7FEFF 		bl	SCL_Output
+ 152:./Tools/Src/i2c_soft.c ****     delay1(DELAY_TIME);
+ 619              		.loc 1 152 5
+ 620 001c 1420     		movs	r0, #20
+ 621 001e FFF7FEFF 		bl	delay1
+ 153:./Tools/Src/i2c_soft.c ****     SCL_Output(0);
+ 622              		.loc 1 153 5
+ 623 0022 0020     		movs	r0, #0
+ 624 0024 FFF7FEFF 		bl	SCL_Output
+ 154:./Tools/Src/i2c_soft.c ****     delay1(DELAY_TIME);
+ 625              		.loc 1 154 5
+ 626 0028 1420     		movs	r0, #20
+ 627 002a FFF7FEFF 		bl	delay1
+ 155:./Tools/Src/i2c_soft.c **** 
+ 156:./Tools/Src/i2c_soft.c **** }
+ 628              		.loc 1 156 1
+ 629 002e 00BF     		nop
+ 630 0030 80BD     		pop	{r7, pc}
+ 631              		.cfi_endproc
+ 632              	.LFE133:
+ 634              		.section	.text.I2CSendByte,"ax",%progbits
+ 635              		.align	1
+ 636              		.global	I2CSendByte
+ 637              		.syntax unified
+ 638              		.thumb
+ 639              		.thumb_func
+ 641              	I2CSendByte:
+ 642              	.LFB134:
+ 157:./Tools/Src/i2c_soft.c **** 
+ 158:./Tools/Src/i2c_soft.c **** 
+ 159:./Tools/Src/i2c_soft.c **** void I2CSendByte(unsigned char cSendByte)
+ 160:./Tools/Src/i2c_soft.c **** {
+ 643              		.loc 1 160 1
+ 644              		.cfi_startproc
+ 645              		@ args = 0, pretend = 0, frame = 16
+ 646              		@ frame_needed = 1, uses_anonymous_args = 0
+ 647 0000 80B5     		push	{r7, lr}
+ 648              		.cfi_def_cfa_offset 8
+ 649              		.cfi_offset 7, -8
+ 650              		.cfi_offset 14, -4
+ 651 0002 84B0     		sub	sp, sp, #16
+ 652              		.cfi_def_cfa_offset 24
+ 653 0004 00AF     		add	r7, sp, #0
+ 654              		.cfi_def_cfa_register 7
+ 655 0006 0346     		mov	r3, r0
+ 656 0008 FB71     		strb	r3, [r7, #7]
+ARM GAS  /tmp/cctXkXle.s 			page 15
+
+
+ 161:./Tools/Src/i2c_soft.c ****     SDA_Output_Mode();
+ 657              		.loc 1 161 5
+ 658 000a FFF7FEFF 		bl	SDA_Output_Mode
+ 162:./Tools/Src/i2c_soft.c ****     unsigned char  i = 8;
+ 659              		.loc 1 162 20
+ 660 000e 0823     		movs	r3, #8
+ 661 0010 FB73     		strb	r3, [r7, #15]
+ 163:./Tools/Src/i2c_soft.c ****     while (i--)
+ 662              		.loc 1 163 11
+ 663 0012 1CE0     		b	.L36
+ 664              	.L37:
+ 164:./Tools/Src/i2c_soft.c ****     {
+ 165:./Tools/Src/i2c_soft.c ****         SCL_Output(0);
+ 665              		.loc 1 165 9
+ 666 0014 0020     		movs	r0, #0
+ 667 0016 FFF7FEFF 		bl	SCL_Output
+ 166:./Tools/Src/i2c_soft.c ****         delay1(DELAY_TIME);
+ 668              		.loc 1 166 9
+ 669 001a 1420     		movs	r0, #20
+ 670 001c FFF7FEFF 		bl	delay1
+ 167:./Tools/Src/i2c_soft.c ****         SDA_Output(cSendByte & 0x80);
+ 671              		.loc 1 167 30
+ 672 0020 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 673 0022 9BB2     		uxth	r3, r3
+ 674              		.loc 1 167 9
+ 675 0024 03F08003 		and	r3, r3, #128
+ 676 0028 9BB2     		uxth	r3, r3
+ 677 002a 1846     		mov	r0, r3
+ 678 002c FFF7FEFF 		bl	SDA_Output
+ 168:./Tools/Src/i2c_soft.c ****         delay1(DELAY_TIME);
+ 679              		.loc 1 168 9
+ 680 0030 1420     		movs	r0, #20
+ 681 0032 FFF7FEFF 		bl	delay1
+ 169:./Tools/Src/i2c_soft.c ****         cSendByte += cSendByte;
+ 682              		.loc 1 169 19
+ 683 0036 FB79     		ldrb	r3, [r7, #7]
+ 684 0038 5B00     		lsls	r3, r3, #1
+ 685 003a FB71     		strb	r3, [r7, #7]
+ 170:./Tools/Src/i2c_soft.c ****         delay1(DELAY_TIME);
+ 686              		.loc 1 170 9
+ 687 003c 1420     		movs	r0, #20
+ 688 003e FFF7FEFF 		bl	delay1
+ 171:./Tools/Src/i2c_soft.c ****         SCL_Output(1);
+ 689              		.loc 1 171 9
+ 690 0042 0120     		movs	r0, #1
+ 691 0044 FFF7FEFF 		bl	SCL_Output
+ 172:./Tools/Src/i2c_soft.c ****         delay1(DELAY_TIME);
+ 692              		.loc 1 172 9
+ 693 0048 1420     		movs	r0, #20
+ 694 004a FFF7FEFF 		bl	delay1
+ 695              	.L36:
+ 163:./Tools/Src/i2c_soft.c ****     {
+ 696              		.loc 1 163 13
+ 697 004e FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 698 0050 5A1E     		subs	r2, r3, #1
+ 699 0052 FA73     		strb	r2, [r7, #15]
+ 163:./Tools/Src/i2c_soft.c ****     {
+ARM GAS  /tmp/cctXkXle.s 			page 16
+
+
+ 700              		.loc 1 163 12
+ 701 0054 002B     		cmp	r3, #0
+ 702 0056 DDD1     		bne	.L37
+ 173:./Tools/Src/i2c_soft.c ****     }
+ 174:./Tools/Src/i2c_soft.c ****     SCL_Output(0);
+ 703              		.loc 1 174 5
+ 704 0058 0020     		movs	r0, #0
+ 705 005a FFF7FEFF 		bl	SCL_Output
+ 175:./Tools/Src/i2c_soft.c ****     delay1(DELAY_TIME);
+ 706              		.loc 1 175 5
+ 707 005e 1420     		movs	r0, #20
+ 708 0060 FFF7FEFF 		bl	delay1
+ 176:./Tools/Src/i2c_soft.c **** }
+ 709              		.loc 1 176 1
+ 710 0064 00BF     		nop
+ 711 0066 1037     		adds	r7, r7, #16
+ 712              		.cfi_def_cfa_offset 8
+ 713 0068 BD46     		mov	sp, r7
+ 714              		.cfi_def_cfa_register 13
+ 715              		@ sp needed
+ 716 006a 80BD     		pop	{r7, pc}
+ 717              		.cfi_endproc
+ 718              	.LFE134:
+ 720              		.section	.text.I2CReceiveByte,"ax",%progbits
+ 721              		.align	1
+ 722              		.global	I2CReceiveByte
+ 723              		.syntax unified
+ 724              		.thumb
+ 725              		.thumb_func
+ 727              	I2CReceiveByte:
+ 728              	.LFB135:
+ 177:./Tools/Src/i2c_soft.c **** 
+ 178:./Tools/Src/i2c_soft.c **** 
+ 179:./Tools/Src/i2c_soft.c **** unsigned char I2CReceiveByte(void)
+ 180:./Tools/Src/i2c_soft.c **** {
+ 729              		.loc 1 180 1
+ 730              		.cfi_startproc
+ 731              		@ args = 0, pretend = 0, frame = 8
+ 732              		@ frame_needed = 1, uses_anonymous_args = 0
+ 733 0000 80B5     		push	{r7, lr}
+ 734              		.cfi_def_cfa_offset 8
+ 735              		.cfi_offset 7, -8
+ 736              		.cfi_offset 14, -4
+ 737 0002 82B0     		sub	sp, sp, #8
+ 738              		.cfi_def_cfa_offset 16
+ 739 0004 00AF     		add	r7, sp, #0
+ 740              		.cfi_def_cfa_register 7
+ 181:./Tools/Src/i2c_soft.c ****     unsigned char i = 8;
+ 741              		.loc 1 181 19
+ 742 0006 0823     		movs	r3, #8
+ 743 0008 FB71     		strb	r3, [r7, #7]
+ 182:./Tools/Src/i2c_soft.c ****     unsigned char cR_Byte = 0;
+ 744              		.loc 1 182 19
+ 745 000a 0023     		movs	r3, #0
+ 746 000c BB71     		strb	r3, [r7, #6]
+ 183:./Tools/Src/i2c_soft.c ****      SDA_Input_Mode();
+ 747              		.loc 1 183 6
+ARM GAS  /tmp/cctXkXle.s 			page 17
+
+
+ 748 000e FFF7FEFF 		bl	SDA_Input_Mode
+ 184:./Tools/Src/i2c_soft.c ****     while (i--)
+ 749              		.loc 1 184 11
+ 750 0012 18E0     		b	.L39
+ 751              	.L40:
+ 185:./Tools/Src/i2c_soft.c ****     {
+ 186:./Tools/Src/i2c_soft.c ****         cR_Byte += cR_Byte;
+ 752              		.loc 1 186 17
+ 753 0014 BB79     		ldrb	r3, [r7, #6]
+ 754 0016 5B00     		lsls	r3, r3, #1
+ 755 0018 BB71     		strb	r3, [r7, #6]
+ 187:./Tools/Src/i2c_soft.c ****         SCL_Output(0);
+ 756              		.loc 1 187 9
+ 757 001a 0020     		movs	r0, #0
+ 758 001c FFF7FEFF 		bl	SCL_Output
+ 188:./Tools/Src/i2c_soft.c ****         delay1(DELAY_TIME);
+ 759              		.loc 1 188 9
+ 760 0020 1420     		movs	r0, #20
+ 761 0022 FFF7FEFF 		bl	delay1
+ 189:./Tools/Src/i2c_soft.c ****         delay1(DELAY_TIME);
+ 762              		.loc 1 189 9
+ 763 0026 1420     		movs	r0, #20
+ 764 0028 FFF7FEFF 		bl	delay1
+ 190:./Tools/Src/i2c_soft.c ****         SCL_Output(1);
+ 765              		.loc 1 190 9
+ 766 002c 0120     		movs	r0, #1
+ 767 002e FFF7FEFF 		bl	SCL_Output
+ 191:./Tools/Src/i2c_soft.c ****         delay1(DELAY_TIME);
+ 768              		.loc 1 191 9
+ 769 0032 1420     		movs	r0, #20
+ 770 0034 FFF7FEFF 		bl	delay1
+ 192:./Tools/Src/i2c_soft.c ****         cR_Byte |=  SDA_Input();
+ 771              		.loc 1 192 21
+ 772 0038 FFF7FEFF 		bl	SDA_Input
+ 773 003c 0346     		mov	r3, r0
+ 774 003e 1A46     		mov	r2, r3
+ 775              		.loc 1 192 17
+ 776 0040 BB79     		ldrb	r3, [r7, #6]
+ 777 0042 1343     		orrs	r3, r3, r2
+ 778 0044 BB71     		strb	r3, [r7, #6]
+ 779              	.L39:
+ 184:./Tools/Src/i2c_soft.c ****     {
+ 780              		.loc 1 184 13
+ 781 0046 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 782 0048 5A1E     		subs	r2, r3, #1
+ 783 004a FA71     		strb	r2, [r7, #7]
+ 184:./Tools/Src/i2c_soft.c ****     {
+ 784              		.loc 1 184 12
+ 785 004c 002B     		cmp	r3, #0
+ 786 004e E1D1     		bne	.L40
+ 193:./Tools/Src/i2c_soft.c ****     }
+ 194:./Tools/Src/i2c_soft.c ****     SCL_Output(0);
+ 787              		.loc 1 194 5
+ 788 0050 0020     		movs	r0, #0
+ 789 0052 FFF7FEFF 		bl	SCL_Output
+ 195:./Tools/Src/i2c_soft.c ****     delay1(DELAY_TIME);
+ 790              		.loc 1 195 5
+ARM GAS  /tmp/cctXkXle.s 			page 18
+
+
+ 791 0056 1420     		movs	r0, #20
+ 792 0058 FFF7FEFF 		bl	delay1
+ 196:./Tools/Src/i2c_soft.c ****      SDA_Output_Mode();
+ 793              		.loc 1 196 6
+ 794 005c FFF7FEFF 		bl	SDA_Output_Mode
+ 197:./Tools/Src/i2c_soft.c ****     return cR_Byte;
+ 795              		.loc 1 197 12
+ 796 0060 BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 198:./Tools/Src/i2c_soft.c **** }
+ 797              		.loc 1 198 1
+ 798 0062 1846     		mov	r0, r3
+ 799 0064 0837     		adds	r7, r7, #8
+ 800              		.cfi_def_cfa_offset 8
+ 801 0066 BD46     		mov	sp, r7
+ 802              		.cfi_def_cfa_register 13
+ 803              		@ sp needed
+ 804 0068 80BD     		pop	{r7, pc}
+ 805              		.cfi_endproc
+ 806              	.LFE135:
+ 808              		.section	.text.I2CInit,"ax",%progbits
+ 809              		.align	1
+ 810              		.global	I2CInit
+ 811              		.syntax unified
+ 812              		.thumb
+ 813              		.thumb_func
+ 815              	I2CInit:
+ 816              	.LFB136:
+ 199:./Tools/Src/i2c_soft.c **** 
+ 200:./Tools/Src/i2c_soft.c **** //
+ 201:./Tools/Src/i2c_soft.c **** void I2CInit(void)
+ 202:./Tools/Src/i2c_soft.c **** {
+ 817              		.loc 1 202 1
+ 818              		.cfi_startproc
+ 819              		@ args = 0, pretend = 0, frame = 8
+ 820              		@ frame_needed = 1, uses_anonymous_args = 0
+ 821 0000 80B5     		push	{r7, lr}
+ 822              		.cfi_def_cfa_offset 8
+ 823              		.cfi_offset 7, -8
+ 824              		.cfi_offset 14, -4
+ 825 0002 82B0     		sub	sp, sp, #8
+ 826              		.cfi_def_cfa_offset 16
+ 827 0004 00AF     		add	r7, sp, #0
+ 828              		.cfi_def_cfa_register 7
+ 203:./Tools/Src/i2c_soft.c ****     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB,ENABLE);
+ 829              		.loc 1 203 5
+ 830 0006 0121     		movs	r1, #1
+ 831 0008 0220     		movs	r0, #2
+ 832 000a FFF7FEFF 		bl	RCC_AHB1PeriphClockCmd
+ 204:./Tools/Src/i2c_soft.c ****     GPIO_InitTypeDef GPIO_InitStructure = {0};
+ 833              		.loc 1 204 22
+ 834 000e 3B46     		mov	r3, r7
+ 835 0010 0022     		movs	r2, #0
+ 836 0012 1A60     		str	r2, [r3]
+ 837 0014 5A60     		str	r2, [r3, #4]
+ 205:./Tools/Src/i2c_soft.c **** 
+ 206:./Tools/Src/i2c_soft.c ****     GPIO_InitStructure.GPIO_Pin = I2C_SCL | I2C_SDA;
+ 838              		.loc 1 206 33
+ARM GAS  /tmp/cctXkXle.s 			page 19
+
+
+ 839 0016 4FF44073 		mov	r3, #768
+ 840 001a 3B60     		str	r3, [r7]
+ 207:./Tools/Src/i2c_soft.c ****     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+ 841              		.loc 1 207 34
+ 842 001c 0123     		movs	r3, #1
+ 843 001e 3B71     		strb	r3, [r7, #4]
+ 208:./Tools/Src/i2c_soft.c ****     GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
+ 844              		.loc 1 208 35
+ 845 0020 0123     		movs	r3, #1
+ 846 0022 BB71     		strb	r3, [r7, #6]
+ 209:./Tools/Src/i2c_soft.c ****     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+ 847              		.loc 1 209 35
+ 848 0024 0323     		movs	r3, #3
+ 849 0026 7B71     		strb	r3, [r7, #5]
+ 210:./Tools/Src/i2c_soft.c ****     // GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+ 211:./Tools/Src/i2c_soft.c ****     GPIO_Init(I2CPORT, &GPIO_InitStructure);
+ 850              		.loc 1 211 5
+ 851 0028 3B46     		mov	r3, r7
+ 852 002a 1946     		mov	r1, r3
+ 853 002c 0348     		ldr	r0, .L43
+ 854 002e FFF7FEFF 		bl	GPIO_Init
+ 212:./Tools/Src/i2c_soft.c **** }
+ 855              		.loc 1 212 1
+ 856 0032 00BF     		nop
+ 857 0034 0837     		adds	r7, r7, #8
+ 858              		.cfi_def_cfa_offset 8
+ 859 0036 BD46     		mov	sp, r7
+ 860              		.cfi_def_cfa_register 13
+ 861              		@ sp needed
+ 862 0038 80BD     		pop	{r7, pc}
+ 863              	.L44:
+ 864 003a 00BF     		.align	2
+ 865              	.L43:
+ 866 003c 00040240 		.word	1073873920
+ 867              		.cfi_endproc
+ 868              	.LFE136:
+ 870              		.text
+ 871              	.Letext0:
+ 872              		.file 2 "/usr/lib/gcc/arm-none-eabi/12.2.1/include/stdint.h"
+ 873              		.file 3 "./Start/stm32f4xx.h"
+ 874              		.file 4 "./Lib/inc/stm32f4xx_gpio.h"
+ 875              		.file 5 "./Lib/inc/stm32f4xx_rcc.h"
+ARM GAS  /tmp/cctXkXle.s 			page 20
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 i2c_soft.c
+     /tmp/cctXkXle.s:21     .text.SDA_Input_Mode:0000000000000000 $t
+     /tmp/cctXkXle.s:27     .text.SDA_Input_Mode:0000000000000000 SDA_Input_Mode
+     /tmp/cctXkXle.s:69     .text.SDA_Input_Mode:000000000000002c $d
+     /tmp/cctXkXle.s:74     .text.SDA_Output_Mode:0000000000000000 $t
+     /tmp/cctXkXle.s:80     .text.SDA_Output_Mode:0000000000000000 SDA_Output_Mode
+     /tmp/cctXkXle.s:127    .text.SDA_Output_Mode:0000000000000034 $d
+     /tmp/cctXkXle.s:132    .text.SDA_Output:0000000000000000 $t
+     /tmp/cctXkXle.s:138    .text.SDA_Output:0000000000000000 SDA_Output
+     /tmp/cctXkXle.s:190    .text.SDA_Output:0000000000000038 $d
+     /tmp/cctXkXle.s:195    .text.SCL_Output:0000000000000000 $t
+     /tmp/cctXkXle.s:201    .text.SCL_Output:0000000000000000 SCL_Output
+     /tmp/cctXkXle.s:253    .text.SCL_Output:0000000000000038 $d
+     /tmp/cctXkXle.s:258    .text.SDA_Input:0000000000000000 $t
+     /tmp/cctXkXle.s:264    .text.SDA_Input:0000000000000000 SDA_Input
+     /tmp/cctXkXle.s:297    .text.SDA_Input:0000000000000020 $d
+     /tmp/cctXkXle.s:302    .text.delay1:0000000000000000 $t
+     /tmp/cctXkXle.s:307    .text.delay1:0000000000000000 delay1
+     /tmp/cctXkXle.s:354    .text.I2CStart:0000000000000000 $t
+     /tmp/cctXkXle.s:360    .text.I2CStart:0000000000000000 I2CStart
+     /tmp/cctXkXle.s:405    .text.I2CStop:0000000000000000 $t
+     /tmp/cctXkXle.s:411    .text.I2CStop:0000000000000000 I2CStop
+     /tmp/cctXkXle.s:456    .text.I2CWaitAck:0000000000000000 $t
+     /tmp/cctXkXle.s:462    .text.I2CWaitAck:0000000000000000 I2CWaitAck
+     /tmp/cctXkXle.s:538    .text.I2CSendAck:0000000000000000 $t
+     /tmp/cctXkXle.s:544    .text.I2CSendAck:0000000000000000 I2CSendAck
+     /tmp/cctXkXle.s:589    .text.I2CSendNotAck:0000000000000000 $t
+     /tmp/cctXkXle.s:595    .text.I2CSendNotAck:0000000000000000 I2CSendNotAck
+     /tmp/cctXkXle.s:635    .text.I2CSendByte:0000000000000000 $t
+     /tmp/cctXkXle.s:641    .text.I2CSendByte:0000000000000000 I2CSendByte
+     /tmp/cctXkXle.s:721    .text.I2CReceiveByte:0000000000000000 $t
+     /tmp/cctXkXle.s:727    .text.I2CReceiveByte:0000000000000000 I2CReceiveByte
+     /tmp/cctXkXle.s:809    .text.I2CInit:0000000000000000 $t
+     /tmp/cctXkXle.s:815    .text.I2CInit:0000000000000000 I2CInit
+     /tmp/cctXkXle.s:866    .text.I2CInit:000000000000003c $d
+
+UNDEFINED SYMBOLS
+GPIO_Init
+GPIO_ReadInputDataBit
+RCC_AHB1PeriphClockCmd

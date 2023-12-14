@@ -1,0 +1,2844 @@
+ARM GAS  /tmp/ccbnG7lh.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 6
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"AHRS.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "./Hardware/Src/AHRS.c"
+  20              		.global	Pic
+  21              		.section	.rodata.Pic,"a"
+  22              		.align	2
+  25              	Pic:
+  26 0000 D02E6542 		.word	1113927376
+  27              		.global	K
+  28              		.section	.rodata.K,"a"
+  29              		.align	2
+  32              	K:
+  33 0000 FA007A3D 		.word	1031405818
+  34              		.global	Kg
+  35              		.section	.rodata.Kg,"a"
+  36              		.align	2
+  39              	Kg:
+  40 0000 80008038 		.word	947912832
+  41              		.global	Gyro
+  42              		.section	.bss.Gyro,"aw",%nobits
+  43              		.align	2
+  46              	Gyro:
+  47 0000 00000000 		.space	12
+  47      00000000 
+  47      00000000 
+  48              		.global	QNum
+  49              		.section	.data.QNum,"aw"
+  50              		.align	2
+  53              	QNum:
+  54 0000 0000803F 		.word	1065353216
+  55 0004 00000000 		.word	0
+  56 0008 00000000 		.word	0
+  57 000c 00000000 		.word	0
+  58              		.global	angle
+  59              		.section	.bss.angle,"aw",%nobits
+  60              		.align	2
+  63              	angle:
+  64 0000 00000000 		.space	12
+  64      00000000 
+  64      00000000 
+  65              		.global	e0
+ARM GAS  /tmp/ccbnG7lh.s 			page 2
+
+
+  66              		.section	.bss.e0,"aw",%nobits
+  67              		.align	2
+  70              	e0:
+  71 0000 00000000 		.space	4
+  72              		.global	e1
+  73              		.section	.bss.e1,"aw",%nobits
+  74              		.align	2
+  77              	e1:
+  78 0000 00000000 		.space	4
+  79              		.global	e2
+  80              		.section	.bss.e2,"aw",%nobits
+  81              		.align	2
+  84              	e2:
+  85 0000 00000000 		.space	4
+  86              		.global	e3
+  87              		.section	.bss.e3,"aw",%nobits
+  88              		.align	2
+  91              	e3:
+  92 0000 00000000 		.space	4
+  93              		.global	Gyro_Xerr
+  94              		.section	.bss.Gyro_Xerr,"aw",%nobits
+  95              		.align	2
+  98              	Gyro_Xerr:
+  99 0000 00000000 		.space	4
+ 100              		.global	Gyro_Yerr
+ 101              		.section	.bss.Gyro_Yerr,"aw",%nobits
+ 102              		.align	2
+ 105              	Gyro_Yerr:
+ 106 0000 00000000 		.space	4
+ 107              		.global	Gyro_Zerr
+ 108              		.section	.bss.Gyro_Zerr,"aw",%nobits
+ 109              		.align	2
+ 112              	Gyro_Zerr:
+ 113 0000 00000000 		.space	4
+ 114              		.global	Acc_Xerr
+ 115              		.section	.bss.Acc_Xerr,"aw",%nobits
+ 116              		.align	2
+ 119              	Acc_Xerr:
+ 120 0000 00000000 		.space	4
+ 121              		.global	Acc_Yerr
+ 122              		.section	.bss.Acc_Yerr,"aw",%nobits
+ 123              		.align	2
+ 126              	Acc_Yerr:
+ 127 0000 00000000 		.space	4
+ 128              		.global	Wx
+ 129              		.section	.bss.Wx,"aw",%nobits
+ 130              		.align	2
+ 133              	Wx:
+ 134 0000 00000000 		.space	4
+ 135              		.global	Wy
+ 136              		.section	.bss.Wy,"aw",%nobits
+ 137              		.align	2
+ 140              	Wy:
+ 141 0000 00000000 		.space	4
+ 142              		.global	Wz
+ 143              		.section	.bss.Wz,"aw",%nobits
+ 144              		.align	2
+ARM GAS  /tmp/ccbnG7lh.s 			page 3
+
+
+ 147              	Wz:
+ 148 0000 00000000 		.space	4
+ 149              		.global	__aeabi_f2d
+ 150              		.global	__aeabi_dadd
+ 151              		.global	__aeabi_d2f
+ 152              		.global	__aeabi_dmul
+ 153              		.global	__aeabi_dsub
+ 154              		.global	__aeabi_ddiv
+ 155              		.section	.text.CalAngle,"ax",%progbits
+ 156              		.align	1
+ 157              		.global	CalAngle
+ 158              		.syntax unified
+ 159              		.thumb
+ 160              		.thumb_func
+ 162              	CalAngle:
+ 163              	.LFB123:
+   1:./Hardware/Src/AHRS.c **** #include "IMU.h"
+   2:./Hardware/Src/AHRS.c **** #include "HMC5883L.h"
+   3:./Hardware/Src/AHRS.c **** #include "MPU6050.h"
+   4:./Hardware/Src/AHRS.c **** #include <math.h>
+   5:./Hardware/Src/AHRS.c **** #include "delay.h"
+   6:./Hardware/Src/AHRS.c **** #include "Matrix.h"
+   7:./Hardware/Src/AHRS.c **** const float Pic = 180.0/3.14159624;
+   8:./Hardware/Src/AHRS.c **** const float K = 4000.0/65535;
+   9:./Hardware/Src/AHRS.c **** const float Kg = 4.0/65535;
+  10:./Hardware/Src/AHRS.c **** // const float Alpha = 0.2f;
+  11:./Hardware/Src/AHRS.c **** 
+  12:./Hardware/Src/AHRS.c **** extern u32 betime, aftime;
+  13:./Hardware/Src/AHRS.c **** 
+  14:./Hardware/Src/AHRS.c **** struct {
+  15:./Hardware/Src/AHRS.c ****     float x;
+  16:./Hardware/Src/AHRS.c ****     float y;
+  17:./Hardware/Src/AHRS.c ****     float z;
+  18:./Hardware/Src/AHRS.c **** } Gyro;
+  19:./Hardware/Src/AHRS.c **** 
+  20:./Hardware/Src/AHRS.c **** struct Qfour QNum = {1,0,0,0};
+  21:./Hardware/Src/AHRS.c **** struct Angle angle = {0,0,0};
+  22:./Hardware/Src/AHRS.c **** float e0,e1,e2,e3 ;
+  23:./Hardware/Src/AHRS.c **** float Gyro_Xerr,Gyro_Yerr,Gyro_Zerr = 0.0f;
+  24:./Hardware/Src/AHRS.c **** float Acc_Xerr,Acc_Yerr,Acc_Yerr = 0.0f;
+  25:./Hardware/Src/AHRS.c **** float Wx,Wy,Wz=0.0f;
+  26:./Hardware/Src/AHRS.c **** 
+  27:./Hardware/Src/AHRS.c **** #ifdef Use_Mag
+  28:./Hardware/Src/AHRS.c **** void CalAngle(struct Angle *angle, float time){
+ 164              		.loc 1 28 47
+ 165              		.cfi_startproc
+ 166              		@ args = 0, pretend = 0, frame = 152
+ 167              		@ frame_needed = 1, uses_anonymous_args = 0
+ 168 0000 2DE9B043 		push	{r4, r5, r7, r8, r9, lr}
+ 169              		.cfi_def_cfa_offset 24
+ 170              		.cfi_offset 4, -24
+ 171              		.cfi_offset 5, -20
+ 172              		.cfi_offset 7, -16
+ 173              		.cfi_offset 8, -12
+ 174              		.cfi_offset 9, -8
+ 175              		.cfi_offset 14, -4
+ 176 0004 A6B0     		sub	sp, sp, #152
+ARM GAS  /tmp/ccbnG7lh.s 			page 4
+
+
+ 177              		.cfi_def_cfa_offset 176
+ 178 0006 00AF     		add	r7, sp, #0
+ 179              		.cfi_def_cfa_register 7
+ 180 0008 7860     		str	r0, [r7, #4]
+ 181 000a 87ED000A 		vstr.32	s0, [r7]
+  29:./Hardware/Src/AHRS.c ****   float Mx = (HMC5883L_data[0]-Ox)/Rx/1090;
+ 182              		.loc 1 29 28
+ 183 000e E44B     		ldr	r3, .L4+8
+ 184 0010 B3F90030 		ldrsh	r3, [r3]
+ 185              		.loc 1 29 31
+ 186 0014 07EE903A 		vmov	s15, r3	@ int
+ 187 0018 B8EEE77A 		vcvt.f32.s32	s14, s15
+ 188 001c E14B     		ldr	r3, .L4+12
+ 189 001e D3ED007A 		vldr.32	s15, [r3]
+ 190 0022 77EE676A 		vsub.f32	s13, s14, s15
+ 191              		.loc 1 29 35
+ 192 0026 E04B     		ldr	r3, .L4+16
+ 193 0028 D3ED007A 		vldr.32	s15, [r3]
+ 194 002c 86EEA77A 		vdiv.f32	s14, s13, s15
+ 195              		.loc 1 29 9
+ 196 0030 DFEDDE6A 		vldr.32	s13, .L4+20
+ 197 0034 C7EE267A 		vdiv.f32	s15, s14, s13
+ 198 0038 C7ED257A 		vstr.32	s15, [r7, #148]
+  30:./Hardware/Src/AHRS.c ****   float My = (HMC5883L_data[1]-Oy)/Ry/1090;
+ 199              		.loc 1 30 28
+ 200 003c D84B     		ldr	r3, .L4+8
+ 201 003e B3F90230 		ldrsh	r3, [r3, #2]
+ 202              		.loc 1 30 31
+ 203 0042 07EE903A 		vmov	s15, r3	@ int
+ 204 0046 B8EEE77A 		vcvt.f32.s32	s14, s15
+ 205 004a D94B     		ldr	r3, .L4+24
+ 206 004c D3ED007A 		vldr.32	s15, [r3]
+ 207 0050 77EE676A 		vsub.f32	s13, s14, s15
+ 208              		.loc 1 30 35
+ 209 0054 D74B     		ldr	r3, .L4+28
+ 210 0056 D3ED007A 		vldr.32	s15, [r3]
+ 211 005a 86EEA77A 		vdiv.f32	s14, s13, s15
+ 212              		.loc 1 30 9
+ 213 005e DFEDD36A 		vldr.32	s13, .L4+20
+ 214 0062 C7EE267A 		vdiv.f32	s15, s14, s13
+ 215 0066 C7ED247A 		vstr.32	s15, [r7, #144]
+  31:./Hardware/Src/AHRS.c ****   float Mz = (HMC5883L_data[2]-Oz)/Rz/1090;
+ 216              		.loc 1 31 28
+ 217 006a CD4B     		ldr	r3, .L4+8
+ 218 006c B3F90430 		ldrsh	r3, [r3, #4]
+ 219              		.loc 1 31 31
+ 220 0070 07EE903A 		vmov	s15, r3	@ int
+ 221 0074 B8EEE77A 		vcvt.f32.s32	s14, s15
+ 222 0078 CF4B     		ldr	r3, .L4+32
+ 223 007a D3ED007A 		vldr.32	s15, [r3]
+ 224 007e 77EE676A 		vsub.f32	s13, s14, s15
+ 225              		.loc 1 31 35
+ 226 0082 CE4B     		ldr	r3, .L4+36
+ 227 0084 D3ED007A 		vldr.32	s15, [r3]
+ 228 0088 86EEA77A 		vdiv.f32	s14, s13, s15
+ 229              		.loc 1 31 9
+ 230 008c DFEDC76A 		vldr.32	s13, .L4+20
+ARM GAS  /tmp/ccbnG7lh.s 			page 5
+
+
+ 231 0090 C7EE267A 		vdiv.f32	s15, s14, s13
+ 232 0094 C7ED237A 		vstr.32	s15, [r7, #140]
+  32:./Hardware/Src/AHRS.c ****    Wx = (MPU6050_data[4]*K/Pic);
+ 233              		.loc 1 32 22
+ 234 0098 C94B     		ldr	r3, .L4+40
+ 235 009a B3F90830 		ldrsh	r3, [r3, #8]
+ 236              		.loc 1 32 25
+ 237 009e 07EE903A 		vmov	s15, r3	@ int
+ 238 00a2 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 239 00a6 9FEDC77A 		vldr.32	s14, .L4+44
+ 240 00aa 27EE877A 		vmul.f32	s14, s15, s14
+ 241              		.loc 1 32 27
+ 242 00ae DFEDC66A 		vldr.32	s13, .L4+48
+ 243 00b2 C7EE267A 		vdiv.f32	s15, s14, s13
+ 244              		.loc 1 32 7
+ 245 00b6 C54B     		ldr	r3, .L4+52
+ 246 00b8 C3ED007A 		vstr.32	s15, [r3]
+  33:./Hardware/Src/AHRS.c ****    Wy = (MPU6050_data[5]*K/Pic);
+ 247              		.loc 1 33 22
+ 248 00bc C04B     		ldr	r3, .L4+40
+ 249 00be B3F90A30 		ldrsh	r3, [r3, #10]
+ 250              		.loc 1 33 25
+ 251 00c2 07EE903A 		vmov	s15, r3	@ int
+ 252 00c6 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 253 00ca 9FEDBE7A 		vldr.32	s14, .L4+44
+ 254 00ce 27EE877A 		vmul.f32	s14, s15, s14
+ 255              		.loc 1 33 27
+ 256 00d2 DFEDBD6A 		vldr.32	s13, .L4+48
+ 257 00d6 C7EE267A 		vdiv.f32	s15, s14, s13
+ 258              		.loc 1 33 7
+ 259 00da BD4B     		ldr	r3, .L4+56
+ 260 00dc C3ED007A 		vstr.32	s15, [r3]
+  34:./Hardware/Src/AHRS.c ****    Wz = (MPU6050_data[6]*K/Pic);
+ 261              		.loc 1 34 22
+ 262 00e0 B74B     		ldr	r3, .L4+40
+ 263 00e2 B3F90C30 		ldrsh	r3, [r3, #12]
+ 264              		.loc 1 34 25
+ 265 00e6 07EE903A 		vmov	s15, r3	@ int
+ 266 00ea F8EEE77A 		vcvt.f32.s32	s15, s15
+ 267 00ee 9FEDB57A 		vldr.32	s14, .L4+44
+ 268 00f2 27EE877A 		vmul.f32	s14, s15, s14
+ 269              		.loc 1 34 27
+ 270 00f6 DFEDB46A 		vldr.32	s13, .L4+48
+ 271 00fa C7EE267A 		vdiv.f32	s15, s14, s13
+ 272              		.loc 1 34 7
+ 273 00fe B54B     		ldr	r3, .L4+60
+ 274 0100 C3ED007A 		vstr.32	s15, [r3]
+  35:./Hardware/Src/AHRS.c ****   float Ax = MPU6050_data[0] * Kg;
+ 275              		.loc 1 35 26
+ 276 0104 AE4B     		ldr	r3, .L4+40
+ 277 0106 B3F90030 		ldrsh	r3, [r3]
+ 278              		.loc 1 35 30
+ 279 010a 07EE903A 		vmov	s15, r3	@ int
+ 280 010e F8EEE77A 		vcvt.f32.s32	s15, s15
+ 281 0112 9FEDB17A 		vldr.32	s14, .L4+64
+ 282              		.loc 1 35 9
+ 283 0116 67EE877A 		vmul.f32	s15, s15, s14
+ARM GAS  /tmp/ccbnG7lh.s 			page 6
+
+
+ 284 011a C7ED227A 		vstr.32	s15, [r7, #136]
+  36:./Hardware/Src/AHRS.c ****   float Ay = MPU6050_data[1] * Kg;
+ 285              		.loc 1 36 26
+ 286 011e A84B     		ldr	r3, .L4+40
+ 287 0120 B3F90230 		ldrsh	r3, [r3, #2]
+ 288              		.loc 1 36 30
+ 289 0124 07EE903A 		vmov	s15, r3	@ int
+ 290 0128 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 291 012c 9FEDAA7A 		vldr.32	s14, .L4+64
+ 292              		.loc 1 36 9
+ 293 0130 67EE877A 		vmul.f32	s15, s15, s14
+ 294 0134 C7ED217A 		vstr.32	s15, [r7, #132]
+  37:./Hardware/Src/AHRS.c ****   float Az = MPU6050_data[2] * Kg;
+ 295              		.loc 1 37 26
+ 296 0138 A14B     		ldr	r3, .L4+40
+ 297 013a B3F90430 		ldrsh	r3, [r3, #4]
+ 298              		.loc 1 37 30
+ 299 013e 07EE903A 		vmov	s15, r3	@ int
+ 300 0142 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 301 0146 9FEDA47A 		vldr.32	s14, .L4+64
+ 302              		.loc 1 37 9
+ 303 014a 67EE877A 		vmul.f32	s15, s15, s14
+ 304 014e C7ED207A 		vstr.32	s15, [r7, #128]
+  38:./Hardware/Src/AHRS.c ****   float _2q0, _2q1, _2q2, _2q3, q0q0,q0q1,q0q2,q0q3,_2q0q2, q1q1, q1q2,q2q2, q2q3,q3q3,_2q2q3,q1q3,
+  39:./Hardware/Src/AHRS.c **** //加速度归一化
+  40:./Hardware/Src/AHRS.c ****   float sum_ac = sqrt(pow(Ax,2)+pow(Ay,2)+pow(Az,2));
+ 305              		.loc 1 40 23
+ 306 0152 D7F88800 		ldr	r0, [r7, #136]	@ float
+ 307 0156 FFF7FEFF 		bl	__aeabi_f2d
+ 308 015a 0246     		mov	r2, r0
+ 309 015c 0B46     		mov	r3, r1
+ 310 015e 9FED8E1B 		vldr.64	d1, .L4
+ 311 0162 43EC102B 		vmov	d0, r2, r3
+ 312 0166 FFF7FEFF 		bl	pow
+ 313 016a 55EC104B 		vmov	r4, r5, d0
+ 314              		.loc 1 40 33
+ 315 016e D7F88400 		ldr	r0, [r7, #132]	@ float
+ 316 0172 FFF7FEFF 		bl	__aeabi_f2d
+ 317 0176 0246     		mov	r2, r0
+ 318 0178 0B46     		mov	r3, r1
+ 319 017a 9FED871B 		vldr.64	d1, .L4
+ 320 017e 43EC102B 		vmov	d0, r2, r3
+ 321 0182 FFF7FEFF 		bl	pow
+ 322 0186 53EC102B 		vmov	r2, r3, d0
+ 323              		.loc 1 40 32
+ 324 018a 2046     		mov	r0, r4
+ 325 018c 2946     		mov	r1, r5
+ 326 018e FFF7FEFF 		bl	__aeabi_dadd
+ 327 0192 0246     		mov	r2, r0
+ 328 0194 0B46     		mov	r3, r1
+ 329 0196 1446     		mov	r4, r2
+ 330 0198 1D46     		mov	r5, r3
+ 331              		.loc 1 40 43
+ 332 019a D7F88000 		ldr	r0, [r7, #128]	@ float
+ 333 019e FFF7FEFF 		bl	__aeabi_f2d
+ 334 01a2 0246     		mov	r2, r0
+ 335 01a4 0B46     		mov	r3, r1
+ARM GAS  /tmp/ccbnG7lh.s 			page 7
+
+
+ 336 01a6 9FED7C1B 		vldr.64	d1, .L4
+ 337 01aa 43EC102B 		vmov	d0, r2, r3
+ 338 01ae FFF7FEFF 		bl	pow
+ 339 01b2 53EC102B 		vmov	r2, r3, d0
+ 340              		.loc 1 40 18
+ 341 01b6 2046     		mov	r0, r4
+ 342 01b8 2946     		mov	r1, r5
+ 343 01ba FFF7FEFF 		bl	__aeabi_dadd
+ 344 01be 0246     		mov	r2, r0
+ 345 01c0 0B46     		mov	r3, r1
+ 346 01c2 43EC172B 		vmov	d7, r2, r3
+ 347 01c6 B0EE470A 		vmov.f32	s0, s14
+ 348 01ca F0EE670A 		vmov.f32	s1, s15
+ 349 01ce FFF7FEFF 		bl	sqrt
+ 350 01d2 53EC102B 		vmov	r2, r3, d0
+ 351              		.loc 1 40 9
+ 352 01d6 1046     		mov	r0, r2
+ 353 01d8 1946     		mov	r1, r3
+ 354 01da FFF7FEFF 		bl	__aeabi_d2f
+ 355 01de 0346     		mov	r3, r0	@ float
+ 356 01e0 FB67     		str	r3, [r7, #124]	@ float
+  41:./Hardware/Src/AHRS.c ****   Ax = Ax/sum_ac;
+ 357              		.loc 1 41 6
+ 358 01e2 D7ED226A 		vldr.32	s13, [r7, #136]
+ 359 01e6 97ED1F7A 		vldr.32	s14, [r7, #124]
+ 360 01ea C6EE877A 		vdiv.f32	s15, s13, s14
+ 361 01ee C7ED227A 		vstr.32	s15, [r7, #136]
+  42:./Hardware/Src/AHRS.c ****   Ay = Ay/sum_ac;
+ 362              		.loc 1 42 6
+ 363 01f2 D7ED216A 		vldr.32	s13, [r7, #132]
+ 364 01f6 97ED1F7A 		vldr.32	s14, [r7, #124]
+ 365 01fa C6EE877A 		vdiv.f32	s15, s13, s14
+ 366 01fe C7ED217A 		vstr.32	s15, [r7, #132]
+  43:./Hardware/Src/AHRS.c ****   Az = Az/sum_ac;
+ 367              		.loc 1 43 6
+ 368 0202 D7ED206A 		vldr.32	s13, [r7, #128]
+ 369 0206 97ED1F7A 		vldr.32	s14, [r7, #124]
+ 370 020a C6EE877A 		vdiv.f32	s15, s13, s14
+ 371 020e C7ED207A 		vstr.32	s15, [r7, #128]
+  44:./Hardware/Src/AHRS.c **** //磁力计
+  45:./Hardware/Src/AHRS.c ****    _2q0Mx = 2.0f * QNum.q0 * Mx;
+ 372              		.loc 1 45 24
+ 373 0212 724B     		ldr	r3, .L4+68
+ 374 0214 D3ED007A 		vldr.32	s15, [r3]
+ 375              		.loc 1 45 18
+ 376 0218 77EEA77A 		vadd.f32	s15, s15, s15
+ 377              		.loc 1 45 11
+ 378 021c 97ED257A 		vldr.32	s14, [r7, #148]
+ 379 0220 67EE277A 		vmul.f32	s15, s14, s15
+ 380 0224 C7ED1E7A 		vstr.32	s15, [r7, #120]
+  46:./Hardware/Src/AHRS.c ****    _2q0My = 2.0f * QNum.q0 * My;
+ 381              		.loc 1 46 24
+ 382 0228 6C4B     		ldr	r3, .L4+68
+ 383 022a D3ED007A 		vldr.32	s15, [r3]
+ 384              		.loc 1 46 18
+ 385 022e 77EEA77A 		vadd.f32	s15, s15, s15
+ 386              		.loc 1 46 11
+ARM GAS  /tmp/ccbnG7lh.s 			page 8
+
+
+ 387 0232 97ED247A 		vldr.32	s14, [r7, #144]
+ 388 0236 67EE277A 		vmul.f32	s15, s14, s15
+ 389 023a C7ED1D7A 		vstr.32	s15, [r7, #116]
+  47:./Hardware/Src/AHRS.c ****    _2q0Mz = 2.0f * QNum.q0 * Mz;
+ 390              		.loc 1 47 24
+ 391 023e 674B     		ldr	r3, .L4+68
+ 392 0240 D3ED007A 		vldr.32	s15, [r3]
+ 393              		.loc 1 47 18
+ 394 0244 77EEA77A 		vadd.f32	s15, s15, s15
+ 395              		.loc 1 47 11
+ 396 0248 97ED237A 		vldr.32	s14, [r7, #140]
+ 397 024c 67EE277A 		vmul.f32	s15, s14, s15
+ 398 0250 C7ED1C7A 		vstr.32	s15, [r7, #112]
+  48:./Hardware/Src/AHRS.c ****    _2q1Mx = 2.0f * QNum.q1 * Mx;
+ 399              		.loc 1 48 24
+ 400 0254 614B     		ldr	r3, .L4+68
+ 401 0256 D3ED017A 		vldr.32	s15, [r3, #4]
+ 402              		.loc 1 48 18
+ 403 025a 77EEA77A 		vadd.f32	s15, s15, s15
+ 404              		.loc 1 48 11
+ 405 025e 97ED257A 		vldr.32	s14, [r7, #148]
+ 406 0262 67EE277A 		vmul.f32	s15, s14, s15
+ 407 0266 C7ED1B7A 		vstr.32	s15, [r7, #108]
+  49:./Hardware/Src/AHRS.c **** //加速度
+  50:./Hardware/Src/AHRS.c **** 		_2q0 = 2.0f * QNum.q0;
+ 408              		.loc 1 50 21
+ 409 026a 5C4B     		ldr	r3, .L4+68
+ 410 026c D3ED007A 		vldr.32	s15, [r3]
+ 411              		.loc 1 50 8
+ 412 0270 77EEA77A 		vadd.f32	s15, s15, s15
+ 413 0274 C7ED1A7A 		vstr.32	s15, [r7, #104]
+  51:./Hardware/Src/AHRS.c **** 		_2q1 = 2.0f * QNum.q1;
+ 414              		.loc 1 51 21
+ 415 0278 584B     		ldr	r3, .L4+68
+ 416 027a D3ED017A 		vldr.32	s15, [r3, #4]
+ 417              		.loc 1 51 8
+ 418 027e 77EEA77A 		vadd.f32	s15, s15, s15
+ 419 0282 C7ED197A 		vstr.32	s15, [r7, #100]
+  52:./Hardware/Src/AHRS.c **** 		_2q2 = 2.0f * QNum.q2;
+ 420              		.loc 1 52 21
+ 421 0286 554B     		ldr	r3, .L4+68
+ 422 0288 D3ED027A 		vldr.32	s15, [r3, #8]
+ 423              		.loc 1 52 8
+ 424 028c 77EEA77A 		vadd.f32	s15, s15, s15
+ 425 0290 C7ED187A 		vstr.32	s15, [r7, #96]
+  53:./Hardware/Src/AHRS.c **** 		_2q3 = 2.0f * QNum.q3;
+ 426              		.loc 1 53 21
+ 427 0294 514B     		ldr	r3, .L4+68
+ 428 0296 D3ED037A 		vldr.32	s15, [r3, #12]
+ 429              		.loc 1 53 8
+ 430 029a 77EEA77A 		vadd.f32	s15, s15, s15
+ 431 029e C7ED177A 		vstr.32	s15, [r7, #92]
+  54:./Hardware/Src/AHRS.c **** 		q0q0 = QNum.q0 * QNum.q0;
+ 432              		.loc 1 54 14
+ 433 02a2 4E4B     		ldr	r3, .L4+68
+ 434 02a4 93ED007A 		vldr.32	s14, [r3]
+ 435              		.loc 1 54 24
+ARM GAS  /tmp/ccbnG7lh.s 			page 9
+
+
+ 436 02a8 4C4B     		ldr	r3, .L4+68
+ 437 02aa D3ED007A 		vldr.32	s15, [r3]
+ 438              		.loc 1 54 8
+ 439 02ae 67EE277A 		vmul.f32	s15, s14, s15
+ 440 02b2 C7ED167A 		vstr.32	s15, [r7, #88]
+  55:./Hardware/Src/AHRS.c ****     q0q1 = QNum.q0 * QNum.q1;
+ 441              		.loc 1 55 16
+ 442 02b6 494B     		ldr	r3, .L4+68
+ 443 02b8 93ED007A 		vldr.32	s14, [r3]
+ 444              		.loc 1 55 26
+ 445 02bc 474B     		ldr	r3, .L4+68
+ 446 02be D3ED017A 		vldr.32	s15, [r3, #4]
+ 447              		.loc 1 55 10
+ 448 02c2 67EE277A 		vmul.f32	s15, s14, s15
+ 449 02c6 C7ED157A 		vstr.32	s15, [r7, #84]
+  56:./Hardware/Src/AHRS.c ****     q0q2 = QNum.q0 * QNum.q2;
+ 450              		.loc 1 56 16
+ 451 02ca 444B     		ldr	r3, .L4+68
+ 452 02cc 93ED007A 		vldr.32	s14, [r3]
+ 453              		.loc 1 56 26
+ 454 02d0 424B     		ldr	r3, .L4+68
+ 455 02d2 D3ED027A 		vldr.32	s15, [r3, #8]
+ 456              		.loc 1 56 10
+ 457 02d6 67EE277A 		vmul.f32	s15, s14, s15
+ 458 02da C7ED147A 		vstr.32	s15, [r7, #80]
+  57:./Hardware/Src/AHRS.c ****     _2q0q2 = 2.0f * QNum.q2 * QNum.q0;
+ 459              		.loc 1 57 25
+ 460 02de 3F4B     		ldr	r3, .L4+68
+ 461 02e0 D3ED027A 		vldr.32	s15, [r3, #8]
+ 462              		.loc 1 57 19
+ 463 02e4 37EEA77A 		vadd.f32	s14, s15, s15
+ 464              		.loc 1 57 35
+ 465 02e8 3C4B     		ldr	r3, .L4+68
+ 466 02ea D3ED007A 		vldr.32	s15, [r3]
+ 467              		.loc 1 57 12
+ 468 02ee 67EE277A 		vmul.f32	s15, s14, s15
+ 469 02f2 C7ED137A 		vstr.32	s15, [r7, #76]
+  58:./Hardware/Src/AHRS.c **** 		q1q1 = QNum.q1 * QNum.q1;
+ 470              		.loc 1 58 14
+ 471 02f6 394B     		ldr	r3, .L4+68
+ 472 02f8 93ED017A 		vldr.32	s14, [r3, #4]
+ 473              		.loc 1 58 24
+ 474 02fc 374B     		ldr	r3, .L4+68
+ 475 02fe D3ED017A 		vldr.32	s15, [r3, #4]
+ 476              		.loc 1 58 8
+ 477 0302 67EE277A 		vmul.f32	s15, s14, s15
+ 478 0306 C7ED127A 		vstr.32	s15, [r7, #72]
+  59:./Hardware/Src/AHRS.c ****     q1q2 = QNum.q1 * QNum.q2;
+ 479              		.loc 1 59 16
+ 480 030a 344B     		ldr	r3, .L4+68
+ 481 030c 93ED017A 		vldr.32	s14, [r3, #4]
+ 482              		.loc 1 59 26
+ 483 0310 324B     		ldr	r3, .L4+68
+ 484 0312 D3ED027A 		vldr.32	s15, [r3, #8]
+ 485              		.loc 1 59 10
+ 486 0316 67EE277A 		vmul.f32	s15, s14, s15
+ 487 031a C7ED117A 		vstr.32	s15, [r7, #68]
+ARM GAS  /tmp/ccbnG7lh.s 			page 10
+
+
+  60:./Hardware/Src/AHRS.c ****     q0q3 = QNum.q0 * QNum.q3;
+ 488              		.loc 1 60 16
+ 489 031e 2F4B     		ldr	r3, .L4+68
+ 490 0320 93ED007A 		vldr.32	s14, [r3]
+ 491              		.loc 1 60 26
+ 492 0324 2D4B     		ldr	r3, .L4+68
+ 493 0326 D3ED037A 		vldr.32	s15, [r3, #12]
+ 494              		.loc 1 60 10
+ 495 032a 67EE277A 		vmul.f32	s15, s14, s15
+ 496 032e C7ED107A 		vstr.32	s15, [r7, #64]
+  61:./Hardware/Src/AHRS.c ****     q1q3 = QNum.q1 * QNum.q3;
+ 497              		.loc 1 61 16
+ 498 0332 2A4B     		ldr	r3, .L4+68
+ 499 0334 93ED017A 		vldr.32	s14, [r3, #4]
+ 500              		.loc 1 61 26
+ 501 0338 284B     		ldr	r3, .L4+68
+ 502 033a D3ED037A 		vldr.32	s15, [r3, #12]
+ 503              		.loc 1 61 10
+ 504 033e 67EE277A 		vmul.f32	s15, s14, s15
+ 505 0342 C7ED0F7A 		vstr.32	s15, [r7, #60]
+  62:./Hardware/Src/AHRS.c **** 		q2q2 = QNum.q2 * QNum.q2;
+ 506              		.loc 1 62 14
+ 507 0346 254B     		ldr	r3, .L4+68
+ 508 0348 93ED027A 		vldr.32	s14, [r3, #8]
+ 509              		.loc 1 62 24
+ 510 034c 234B     		ldr	r3, .L4+68
+ 511 034e D3ED027A 		vldr.32	s15, [r3, #8]
+ 512              		.loc 1 62 8
+ 513 0352 67EE277A 		vmul.f32	s15, s14, s15
+ 514 0356 C7ED0E7A 		vstr.32	s15, [r7, #56]
+  63:./Hardware/Src/AHRS.c ****     q2q3 = QNum.q2 * QNum.q3;
+ 515              		.loc 1 63 16
+ 516 035a 204B     		ldr	r3, .L4+68
+ 517 035c 93ED027A 		vldr.32	s14, [r3, #8]
+ 518              		.loc 1 63 26
+ 519 0360 1E4B     		ldr	r3, .L4+68
+ 520 0362 D3ED037A 		vldr.32	s15, [r3, #12]
+ 521              		.loc 1 63 10
+ 522 0366 67EE277A 		vmul.f32	s15, s14, s15
+ 523 036a C7ED0D7A 		vstr.32	s15, [r7, #52]
+  64:./Hardware/Src/AHRS.c **** 		q3q3 = QNum.q3 * QNum.q3;
+ 524              		.loc 1 64 14
+ 525 036e 1B4B     		ldr	r3, .L4+68
+ 526 0370 93ED037A 		vldr.32	s14, [r3, #12]
+ 527              		.loc 1 64 24
+ 528 0374 194B     		ldr	r3, .L4+68
+ 529 0376 D3ED037A 		vldr.32	s15, [r3, #12]
+ 530              		.loc 1 64 8
+ 531 037a 67EE277A 		vmul.f32	s15, s14, s15
+ 532 037e C7ED0C7A 		vstr.32	s15, [r7, #48]
+  65:./Hardware/Src/AHRS.c ****     _2q2q3 = 2.0f * QNum.q2 * QNum.q3;
+ 533              		.loc 1 65 25
+ 534 0382 164B     		ldr	r3, .L4+68
+ 535 0384 D3ED027A 		vldr.32	s15, [r3, #8]
+ 536              		.loc 1 65 19
+ 537 0388 37EEA77A 		vadd.f32	s14, s15, s15
+ 538              		.loc 1 65 35
+ARM GAS  /tmp/ccbnG7lh.s 			page 11
+
+
+ 539 038c 134B     		ldr	r3, .L4+68
+ 540 038e D3ED037A 		vldr.32	s15, [r3, #12]
+ 541 0392 25E0     		b	.L5
+ 542              	.L6:
+ 543 0394 AFF30080 		.align	3
+ 544              	.L4:
+ 545 0398 00000000 		.word	0
+ 546 039c 00000040 		.word	1073741824
+ 547 03a0 00000000 		.word	HMC5883L_data
+ 548 03a4 00000000 		.word	Ox
+ 549 03a8 00000000 		.word	Rx
+ 550 03ac 00408844 		.word	1149779968
+ 551 03b0 00000000 		.word	Oy
+ 552 03b4 00000000 		.word	Ry
+ 553 03b8 00000000 		.word	Oz
+ 554 03bc 00000000 		.word	Rz
+ 555 03c0 00000000 		.word	MPU6050_data
+ 556 03c4 FA007A3D 		.word	1031405818
+ 557 03c8 D02E6542 		.word	1113927376
+ 558 03cc 00000000 		.word	Wx
+ 559 03d0 00000000 		.word	Wy
+ 560 03d4 00000000 		.word	Wz
+ 561 03d8 80008038 		.word	947912832
+ 562 03dc 00000000 		.word	QNum
+ 563              	.L5:
+ 564              		.loc 1 65 12
+ 565 03e0 67EE277A 		vmul.f32	s15, s14, s15
+ 566 03e4 C7ED0B7A 		vstr.32	s15, [r7, #44]
+  66:./Hardware/Src/AHRS.c **** //磁场
+  67:./Hardware/Src/AHRS.c ****     hx = Mx*q0q0 - _2q0My*QNum.q3 + _2q0Mz*QNum.q2 + Mx*q1q1 + My*_2q1*QNum.q2 + Mz*_2q1*QNum.q3 - 
+ 567              		.loc 1 67 12
+ 568 03e8 97ED257A 		vldr.32	s14, [r7, #148]
+ 569 03ec D7ED167A 		vldr.32	s15, [r7, #88]
+ 570 03f0 27EE277A 		vmul.f32	s14, s14, s15
+ 571              		.loc 1 67 31
+ 572 03f4 F34B     		ldr	r3, .L7
+ 573 03f6 D3ED036A 		vldr.32	s13, [r3, #12]
+ 574              		.loc 1 67 26
+ 575 03fa D7ED1D7A 		vldr.32	s15, [r7, #116]
+ 576 03fe 66EEA77A 		vmul.f32	s15, s13, s15
+ 577              		.loc 1 67 18
+ 578 0402 37EE677A 		vsub.f32	s14, s14, s15
+ 579              		.loc 1 67 48
+ 580 0406 EF4B     		ldr	r3, .L7
+ 581 0408 D3ED026A 		vldr.32	s13, [r3, #8]
+ 582              		.loc 1 67 43
+ 583 040c D7ED1C7A 		vldr.32	s15, [r7, #112]
+ 584 0410 66EEA77A 		vmul.f32	s15, s13, s15
+ 585              		.loc 1 67 35
+ 586 0414 37EE277A 		vadd.f32	s14, s14, s15
+ 587              		.loc 1 67 56
+ 588 0418 D7ED256A 		vldr.32	s13, [r7, #148]
+ 589 041c D7ED127A 		vldr.32	s15, [r7, #72]
+ 590 0420 66EEA77A 		vmul.f32	s15, s13, s15
+ 591              		.loc 1 67 52
+ 592 0424 37EE277A 		vadd.f32	s14, s14, s15
+ 593              		.loc 1 67 66
+ARM GAS  /tmp/ccbnG7lh.s 			page 12
+
+
+ 594 0428 D7ED246A 		vldr.32	s13, [r7, #144]
+ 595 042c D7ED197A 		vldr.32	s15, [r7, #100]
+ 596 0430 66EEA76A 		vmul.f32	s13, s13, s15
+ 597              		.loc 1 67 76
+ 598 0434 E34B     		ldr	r3, .L7
+ 599 0436 D3ED027A 		vldr.32	s15, [r3, #8]
+ 600              		.loc 1 67 71
+ 601 043a 66EEA77A 		vmul.f32	s15, s13, s15
+ 602              		.loc 1 67 62
+ 603 043e 37EE277A 		vadd.f32	s14, s14, s15
+ 604              		.loc 1 67 84
+ 605 0442 D7ED236A 		vldr.32	s13, [r7, #140]
+ 606 0446 D7ED197A 		vldr.32	s15, [r7, #100]
+ 607 044a 66EEA76A 		vmul.f32	s13, s13, s15
+ 608              		.loc 1 67 94
+ 609 044e DD4B     		ldr	r3, .L7
+ 610 0450 D3ED037A 		vldr.32	s15, [r3, #12]
+ 611              		.loc 1 67 89
+ 612 0454 66EEA77A 		vmul.f32	s15, s13, s15
+ 613              		.loc 1 67 80
+ 614 0458 37EE277A 		vadd.f32	s14, s14, s15
+ 615              		.loc 1 67 102
+ 616 045c D7ED256A 		vldr.32	s13, [r7, #148]
+ 617 0460 D7ED0E7A 		vldr.32	s15, [r7, #56]
+ 618 0464 66EEA77A 		vmul.f32	s15, s13, s15
+ 619              		.loc 1 67 98
+ 620 0468 37EE677A 		vsub.f32	s14, s14, s15
+ 621              		.loc 1 67 112
+ 622 046c D7ED256A 		vldr.32	s13, [r7, #148]
+ 623 0470 D7ED0C7A 		vldr.32	s15, [r7, #48]
+ 624 0474 66EEA77A 		vmul.f32	s15, s13, s15
+ 625              		.loc 1 67 8
+ 626 0478 77EE677A 		vsub.f32	s15, s14, s15
+ 627 047c C7ED0A7A 		vstr.32	s15, [r7, #40]
+  68:./Hardware/Src/AHRS.c ****     hy = _2q0Mx * QNum.q3 + My * q0q0 - _2q0Mz * QNum.q1 + _2q1Mx * QNum.q2 - My * q1q1 + My * q2q2
+ 628              		.loc 1 68 23
+ 629 0480 D04B     		ldr	r3, .L7
+ 630 0482 93ED037A 		vldr.32	s14, [r3, #12]
+ 631              		.loc 1 68 17
+ 632 0486 D7ED1E7A 		vldr.32	s15, [r7, #120]
+ 633 048a 27EE277A 		vmul.f32	s14, s14, s15
+ 634              		.loc 1 68 32
+ 635 048e D7ED246A 		vldr.32	s13, [r7, #144]
+ 636 0492 D7ED167A 		vldr.32	s15, [r7, #88]
+ 637 0496 66EEA77A 		vmul.f32	s15, s13, s15
+ 638              		.loc 1 68 27
+ 639 049a 37EE277A 		vadd.f32	s14, s14, s15
+ 640              		.loc 1 68 54
+ 641 049e C94B     		ldr	r3, .L7
+ 642 04a0 D3ED016A 		vldr.32	s13, [r3, #4]
+ 643              		.loc 1 68 48
+ 644 04a4 D7ED1C7A 		vldr.32	s15, [r7, #112]
+ 645 04a8 66EEA77A 		vmul.f32	s15, s13, s15
+ 646              		.loc 1 68 39
+ 647 04ac 37EE677A 		vsub.f32	s14, s14, s15
+ 648              		.loc 1 68 73
+ 649 04b0 C44B     		ldr	r3, .L7
+ARM GAS  /tmp/ccbnG7lh.s 			page 13
+
+
+ 650 04b2 D3ED026A 		vldr.32	s13, [r3, #8]
+ 651              		.loc 1 68 67
+ 652 04b6 D7ED1B7A 		vldr.32	s15, [r7, #108]
+ 653 04ba 66EEA77A 		vmul.f32	s15, s13, s15
+ 654              		.loc 1 68 58
+ 655 04be 37EE277A 		vadd.f32	s14, s14, s15
+ 656              		.loc 1 68 82
+ 657 04c2 D7ED246A 		vldr.32	s13, [r7, #144]
+ 658 04c6 D7ED127A 		vldr.32	s15, [r7, #72]
+ 659 04ca 66EEA77A 		vmul.f32	s15, s13, s15
+ 660              		.loc 1 68 77
+ 661 04ce 37EE677A 		vsub.f32	s14, s14, s15
+ 662              		.loc 1 68 94
+ 663 04d2 D7ED246A 		vldr.32	s13, [r7, #144]
+ 664 04d6 D7ED0E7A 		vldr.32	s15, [r7, #56]
+ 665 04da 66EEA77A 		vmul.f32	s15, s13, s15
+ 666              		.loc 1 68 89
+ 667 04de 37EE277A 		vadd.f32	s14, s14, s15
+ 668              		.loc 1 68 108
+ 669 04e2 D7ED186A 		vldr.32	s13, [r7, #96]
+ 670 04e6 D7ED237A 		vldr.32	s15, [r7, #140]
+ 671 04ea 66EEA76A 		vmul.f32	s13, s13, s15
+ 672              		.loc 1 68 119
+ 673 04ee B54B     		ldr	r3, .L7
+ 674 04f0 D3ED037A 		vldr.32	s15, [r3, #12]
+ 675              		.loc 1 68 113
+ 676 04f4 66EEA77A 		vmul.f32	s15, s13, s15
+ 677              		.loc 1 68 101
+ 678 04f8 37EE277A 		vadd.f32	s14, s14, s15
+ 679              		.loc 1 68 128
+ 680 04fc D7ED246A 		vldr.32	s13, [r7, #144]
+ 681 0500 D7ED0C7A 		vldr.32	s15, [r7, #48]
+ 682 0504 66EEA77A 		vmul.f32	s15, s13, s15
+ 683              		.loc 1 68 8
+ 684 0508 77EE677A 		vsub.f32	s15, s14, s15
+ 685 050c C7ED097A 		vstr.32	s15, [r7, #36]
+  69:./Hardware/Src/AHRS.c **** 		_2bx = sqrt(hx * hx + hy * hy);
+ 686              		.loc 1 69 18
+ 687 0510 D7ED0A7A 		vldr.32	s15, [r7, #40]
+ 688 0514 27EEA77A 		vmul.f32	s14, s15, s15
+ 689              		.loc 1 69 28
+ 690 0518 D7ED097A 		vldr.32	s15, [r7, #36]
+ 691 051c 67EEA77A 		vmul.f32	s15, s15, s15
+ 692              		.loc 1 69 23
+ 693 0520 77EE277A 		vadd.f32	s15, s14, s15
+ 694              		.loc 1 69 10
+ 695 0524 17EE900A 		vmov	r0, s15
+ 696 0528 FFF7FEFF 		bl	__aeabi_f2d
+ 697 052c 0246     		mov	r2, r0
+ 698 052e 0B46     		mov	r3, r1
+ 699 0530 43EC102B 		vmov	d0, r2, r3
+ 700 0534 FFF7FEFF 		bl	sqrt
+ 701 0538 53EC102B 		vmov	r2, r3, d0
+ 702              		.loc 1 69 8
+ 703 053c 1046     		mov	r0, r2
+ 704 053e 1946     		mov	r1, r3
+ 705 0540 FFF7FEFF 		bl	__aeabi_d2f
+ARM GAS  /tmp/ccbnG7lh.s 			page 14
+
+
+ 706 0544 0346     		mov	r3, r0	@ float
+ 707 0546 3B62     		str	r3, [r7, #32]	@ float
+  70:./Hardware/Src/AHRS.c **** 		_2bz = -_2q0Mx * QNum.q2 + _2q0My * QNum.q1 + Mz * q0q0 + _2q1Mx * QNum.q3 - Mz * q1q1 + _2q2 * M
+ 708              		.loc 1 70 10
+ 709 0548 D7ED1E7A 		vldr.32	s15, [r7, #120]
+ 710 054c B1EE677A 		vneg.f32	s14, s15
+ 711              		.loc 1 70 24
+ 712 0550 9C4B     		ldr	r3, .L7
+ 713 0552 D3ED027A 		vldr.32	s15, [r3, #8]
+ 714              		.loc 1 70 18
+ 715 0556 27EE277A 		vmul.f32	s14, s14, s15
+ 716              		.loc 1 70 43
+ 717 055a 9A4B     		ldr	r3, .L7
+ 718 055c D3ED016A 		vldr.32	s13, [r3, #4]
+ 719              		.loc 1 70 37
+ 720 0560 D7ED1D7A 		vldr.32	s15, [r7, #116]
+ 721 0564 66EEA77A 		vmul.f32	s15, s13, s15
+ 722              		.loc 1 70 28
+ 723 0568 37EE277A 		vadd.f32	s14, s14, s15
+ 724              		.loc 1 70 52
+ 725 056c D7ED236A 		vldr.32	s13, [r7, #140]
+ 726 0570 D7ED167A 		vldr.32	s15, [r7, #88]
+ 727 0574 66EEA77A 		vmul.f32	s15, s13, s15
+ 728              		.loc 1 70 47
+ 729 0578 37EE277A 		vadd.f32	s14, s14, s15
+ 730              		.loc 1 70 74
+ 731 057c 914B     		ldr	r3, .L7
+ 732 057e D3ED036A 		vldr.32	s13, [r3, #12]
+ 733              		.loc 1 70 68
+ 734 0582 D7ED1B7A 		vldr.32	s15, [r7, #108]
+ 735 0586 66EEA77A 		vmul.f32	s15, s13, s15
+ 736              		.loc 1 70 59
+ 737 058a 37EE277A 		vadd.f32	s14, s14, s15
+ 738              		.loc 1 70 83
+ 739 058e D7ED236A 		vldr.32	s13, [r7, #140]
+ 740 0592 D7ED127A 		vldr.32	s15, [r7, #72]
+ 741 0596 66EEA77A 		vmul.f32	s15, s13, s15
+ 742              		.loc 1 70 78
+ 743 059a 37EE677A 		vsub.f32	s14, s14, s15
+ 744              		.loc 1 70 97
+ 745 059e D7ED186A 		vldr.32	s13, [r7, #96]
+ 746 05a2 D7ED247A 		vldr.32	s15, [r7, #144]
+ 747 05a6 66EEA76A 		vmul.f32	s13, s13, s15
+ 748              		.loc 1 70 108
+ 749 05aa 864B     		ldr	r3, .L7
+ 750 05ac D3ED037A 		vldr.32	s15, [r3, #12]
+ 751              		.loc 1 70 102
+ 752 05b0 66EEA77A 		vmul.f32	s15, s13, s15
+ 753              		.loc 1 70 90
+ 754 05b4 37EE277A 		vadd.f32	s14, s14, s15
+ 755              		.loc 1 70 117
+ 756 05b8 D7ED236A 		vldr.32	s13, [r7, #140]
+ 757 05bc D7ED0E7A 		vldr.32	s15, [r7, #56]
+ 758 05c0 66EEA77A 		vmul.f32	s15, s13, s15
+ 759              		.loc 1 70 112
+ 760 05c4 37EE677A 		vsub.f32	s14, s14, s15
+ 761              		.loc 1 70 129
+ARM GAS  /tmp/ccbnG7lh.s 			page 15
+
+
+ 762 05c8 D7ED236A 		vldr.32	s13, [r7, #140]
+ 763 05cc D7ED0C7A 		vldr.32	s15, [r7, #48]
+ 764 05d0 66EEA77A 		vmul.f32	s15, s13, s15
+ 765              		.loc 1 70 8
+ 766 05d4 77EE277A 		vadd.f32	s15, s14, s15
+ 767 05d8 C7ED077A 		vstr.32	s15, [r7, #28]
+  71:./Hardware/Src/AHRS.c **** 		_4bx = 2.0f * _2bx;
+ 768              		.loc 1 71 8
+ 769 05dc D7ED087A 		vldr.32	s15, [r7, #32]
+ 770 05e0 77EEA77A 		vadd.f32	s15, s15, s15
+ 771 05e4 C7ED067A 		vstr.32	s15, [r7, #24]
+  72:./Hardware/Src/AHRS.c **** 		_4bz = 2.0f * _2bz;
+ 772              		.loc 1 72 8
+ 773 05e8 D7ED077A 		vldr.32	s15, [r7, #28]
+ 774 05ec 77EEA77A 		vadd.f32	s15, s15, s15
+ 775 05f0 C7ED057A 		vstr.32	s15, [r7, #20]
+  73:./Hardware/Src/AHRS.c ****    
+  74:./Hardware/Src/AHRS.c **** //加速度矫正误差
+  75:./Hardware/Src/AHRS.c **** 		e0 = -_2q2 * (2.0f * q1q3 - _2q0q2 - Ax) + _2q1 * (2.0f * q0q1 + _2q2q3 - Ay) - _2bz * QNum.q2 * 
+ 776              		.loc 1 75 8
+ 777 05f4 D7ED187A 		vldr.32	s15, [r7, #96]
+ 778 05f8 B1EE677A 		vneg.f32	s14, s15
+ 779              		.loc 1 75 22
+ 780 05fc D7ED0F7A 		vldr.32	s15, [r7, #60]
+ 781 0600 77EEA76A 		vadd.f32	s13, s15, s15
+ 782              		.loc 1 75 29
+ 783 0604 D7ED137A 		vldr.32	s15, [r7, #76]
+ 784 0608 76EEE76A 		vsub.f32	s13, s13, s15
+ 785              		.loc 1 75 38
+ 786 060c D7ED227A 		vldr.32	s15, [r7, #136]
+ 787 0610 76EEE77A 		vsub.f32	s15, s13, s15
+ 788              		.loc 1 75 14
+ 789 0614 27EE277A 		vmul.f32	s14, s14, s15
+ 790              		.loc 1 75 59
+ 791 0618 D7ED157A 		vldr.32	s15, [r7, #84]
+ 792 061c 77EEA76A 		vadd.f32	s13, s15, s15
+ 793              		.loc 1 75 66
+ 794 0620 D7ED0B7A 		vldr.32	s15, [r7, #44]
+ 795 0624 76EEA76A 		vadd.f32	s13, s13, s15
+ 796              		.loc 1 75 75
+ 797 0628 D7ED217A 		vldr.32	s15, [r7, #132]
+ 798 062c 76EEE76A 		vsub.f32	s13, s13, s15
+ 799              		.loc 1 75 51
+ 800 0630 D7ED197A 		vldr.32	s15, [r7, #100]
+ 801 0634 66EEA77A 		vmul.f32	s15, s13, s15
+ 802              		.loc 1 75 44
+ 803 0638 37EE277A 		vadd.f32	s14, s14, s15
+ 804              		.loc 1 75 94
+ 805 063c 614B     		ldr	r3, .L7
+ 806 063e D3ED026A 		vldr.32	s13, [r3, #8]
+ 807              		.loc 1 75 88
+ 808 0642 D7ED077A 		vldr.32	s15, [r7, #28]
+ 809 0646 66EEA76A 		vmul.f32	s13, s13, s15
+ 810              		.loc 1 75 114
+ 811 064a B6EE006A 		vmov.f32	s12, #5.0e-1
+ 812 064e D7ED0E7A 		vldr.32	s15, [r7, #56]
+ 813 0652 36EE676A 		vsub.f32	s12, s12, s15
+ARM GAS  /tmp/ccbnG7lh.s 			page 16
+
+
+ 814              		.loc 1 75 121
+ 815 0656 D7ED0C7A 		vldr.32	s15, [r7, #48]
+ 816 065a 36EE676A 		vsub.f32	s12, s12, s15
+ 817              		.loc 1 75 106
+ 818 065e D7ED087A 		vldr.32	s15, [r7, #32]
+ 819 0662 26EE276A 		vmul.f32	s12, s12, s15
+ 820              		.loc 1 75 144
+ 821 0666 D7ED0F5A 		vldr.32	s11, [r7, #60]
+ 822 066a D7ED147A 		vldr.32	s15, [r7, #80]
+ 823 066e 75EEE75A 		vsub.f32	s11, s11, s15
+ 824              		.loc 1 75 136
+ 825 0672 D7ED077A 		vldr.32	s15, [r7, #28]
+ 826 0676 65EEA77A 		vmul.f32	s15, s11, s15
+ 827              		.loc 1 75 129
+ 828 067a 36EE276A 		vadd.f32	s12, s12, s15
+ 829              		.loc 1 75 152
+ 830 067e D7ED257A 		vldr.32	s15, [r7, #148]
+ 831 0682 76EE677A 		vsub.f32	s15, s12, s15
+ 832              		.loc 1 75 98
+ 833 0686 66EEA77A 		vmul.f32	s15, s13, s15
+ 834              		.loc 1 75 81
+ 835 068a 37EE677A 		vsub.f32	s14, s14, s15
+ 836              		.loc 1 75 161
+ 837 068e D7ED087A 		vldr.32	s15, [r7, #32]
+ 838 0692 F1EE676A 		vneg.f32	s13, s15
+ 839              		.loc 1 75 173
+ 840 0696 4B4B     		ldr	r3, .L7
+ 841 0698 D3ED037A 		vldr.32	s15, [r3, #12]
+ 842              		.loc 1 75 167
+ 843 069c 66EEA76A 		vmul.f32	s13, s13, s15
+ 844              		.loc 1 75 190
+ 845 06a0 484B     		ldr	r3, .L7
+ 846 06a2 93ED016A 		vldr.32	s12, [r3, #4]
+ 847              		.loc 1 75 184
+ 848 06a6 D7ED077A 		vldr.32	s15, [r7, #28]
+ 849 06aa 66EE277A 		vmul.f32	s15, s12, s15
+ 850              		.loc 1 75 177
+ 851 06ae 76EEA76A 		vadd.f32	s13, s13, s15
+ 852              		.loc 1 75 211
+ 853 06b2 97ED116A 		vldr.32	s12, [r7, #68]
+ 854 06b6 D7ED107A 		vldr.32	s15, [r7, #64]
+ 855 06ba 36EE676A 		vsub.f32	s12, s12, s15
+ 856              		.loc 1 75 203
+ 857 06be D7ED087A 		vldr.32	s15, [r7, #32]
+ 858 06c2 26EE276A 		vmul.f32	s12, s12, s15
+ 859              		.loc 1 75 234
+ 860 06c6 D7ED155A 		vldr.32	s11, [r7, #84]
+ 861 06ca D7ED0D7A 		vldr.32	s15, [r7, #52]
+ 862 06ce 75EEA75A 		vadd.f32	s11, s11, s15
+ 863              		.loc 1 75 226
+ 864 06d2 D7ED077A 		vldr.32	s15, [r7, #28]
+ 865 06d6 65EEA77A 		vmul.f32	s15, s11, s15
+ 866              		.loc 1 75 219
+ 867 06da 36EE276A 		vadd.f32	s12, s12, s15
+ 868              		.loc 1 75 242
+ 869 06de D7ED247A 		vldr.32	s15, [r7, #144]
+ 870 06e2 76EE677A 		vsub.f32	s15, s12, s15
+ARM GAS  /tmp/ccbnG7lh.s 			page 17
+
+
+ 871              		.loc 1 75 195
+ 872 06e6 66EEA77A 		vmul.f32	s15, s13, s15
+ 873              		.loc 1 75 158
+ 874 06ea 37EE277A 		vadd.f32	s14, s14, s15
+ 875              		.loc 1 75 261
+ 876 06ee 354B     		ldr	r3, .L7
+ 877 06f0 D3ED026A 		vldr.32	s13, [r3, #8]
+ 878              		.loc 1 75 255
+ 879 06f4 D7ED087A 		vldr.32	s15, [r7, #32]
+ 880 06f8 66EEA76A 		vmul.f32	s13, s13, s15
+ 881              		.loc 1 75 281
+ 882 06fc 97ED146A 		vldr.32	s12, [r7, #80]
+ 883 0700 D7ED0F7A 		vldr.32	s15, [r7, #60]
+ 884 0704 36EE276A 		vadd.f32	s12, s12, s15
+ 885              		.loc 1 75 273
+ 886 0708 D7ED087A 		vldr.32	s15, [r7, #32]
+ 887 070c 26EE276A 		vmul.f32	s12, s12, s15
+ 888              		.loc 1 75 304
+ 889 0710 F6EE005A 		vmov.f32	s11, #5.0e-1
+ 890 0714 D7ED127A 		vldr.32	s15, [r7, #72]
+ 891 0718 75EEE75A 		vsub.f32	s11, s11, s15
+ 892              		.loc 1 75 311
+ 893 071c D7ED0E7A 		vldr.32	s15, [r7, #56]
+ 894 0720 75EEE75A 		vsub.f32	s11, s11, s15
+ 895              		.loc 1 75 296
+ 896 0724 D7ED077A 		vldr.32	s15, [r7, #28]
+ 897 0728 65EEA77A 		vmul.f32	s15, s11, s15
+ 898              		.loc 1 75 289
+ 899 072c 36EE276A 		vadd.f32	s12, s12, s15
+ 900              		.loc 1 75 319
+ 901 0730 D7ED237A 		vldr.32	s15, [r7, #140]
+ 902 0734 76EE677A 		vsub.f32	s15, s12, s15
+ 903              		.loc 1 75 265
+ 904 0738 66EEA77A 		vmul.f32	s15, s13, s15
+ 905              		.loc 1 75 248
+ 906 073c 77EE277A 		vadd.f32	s15, s14, s15
+ 907              		.loc 1 75 6
+ 908 0740 214B     		ldr	r3, .L7+4
+ 909 0742 C3ED007A 		vstr.32	s15, [r3]
+  76:./Hardware/Src/AHRS.c **** 		e1 = _2q3 * (2.0f * q1q3 - _2q0q2 - Ax) + _2q0 * (2.0f * q0q1 + _2q2q3 - Ay) - 4.0f * QNum.q1 * (
+ 910              		.loc 1 76 21
+ 911 0746 D7ED0F7A 		vldr.32	s15, [r7, #60]
+ 912 074a 37EEA77A 		vadd.f32	s14, s15, s15
+ 913              		.loc 1 76 28
+ 914 074e D7ED137A 		vldr.32	s15, [r7, #76]
+ 915 0752 37EE677A 		vsub.f32	s14, s14, s15
+ 916              		.loc 1 76 37
+ 917 0756 D7ED227A 		vldr.32	s15, [r7, #136]
+ 918 075a 37EE677A 		vsub.f32	s14, s14, s15
+ 919              		.loc 1 76 13
+ 920 075e D7ED177A 		vldr.32	s15, [r7, #92]
+ 921 0762 27EE277A 		vmul.f32	s14, s14, s15
+ 922              		.loc 1 76 58
+ 923 0766 D7ED157A 		vldr.32	s15, [r7, #84]
+ 924 076a 77EEA76A 		vadd.f32	s13, s15, s15
+ 925              		.loc 1 76 65
+ 926 076e D7ED0B7A 		vldr.32	s15, [r7, #44]
+ARM GAS  /tmp/ccbnG7lh.s 			page 18
+
+
+ 927 0772 76EEA76A 		vadd.f32	s13, s13, s15
+ 928              		.loc 1 76 74
+ 929 0776 D7ED217A 		vldr.32	s15, [r7, #132]
+ 930 077a 76EEE76A 		vsub.f32	s13, s13, s15
+ 931              		.loc 1 76 50
+ 932 077e D7ED1A7A 		vldr.32	s15, [r7, #104]
+ 933 0782 66EEA77A 		vmul.f32	s15, s13, s15
+ 934              		.loc 1 76 43
+ 935 0786 37EE277A 		vadd.f32	s14, s14, s15
+ 936              		.loc 1 76 93
+ 937 078a 0E4B     		ldr	r3, .L7
+ 938 078c D3ED017A 		vldr.32	s15, [r3, #4]
+ 939              		.loc 1 76 87
+ 940 0790 F1EE006A 		vmov.f32	s13, #4.0e+0
+ 941 0794 67EEA66A 		vmul.f32	s13, s15, s13
+ 942              		.loc 1 76 109
+ 943 0798 D7ED127A 		vldr.32	s15, [r7, #72]
+ 944 079c 77EEA77A 		vadd.f32	s15, s15, s15
+ 945              		.loc 1 76 102
+ 946 07a0 B7EE006A 		vmov.f32	s12, #1.0e+0
+ 947 07a4 36EE676A 		vsub.f32	s12, s12, s15
+ 948              		.loc 1 76 123
+ 949 07a8 D7ED0E7A 		vldr.32	s15, [r7, #56]
+ 950 07ac 77EEA77A 		vadd.f32	s15, s15, s15
+ 951              		.loc 1 76 116
+ 952 07b0 36EE676A 		vsub.f32	s12, s12, s15
+ 953              		.loc 1 76 130
+ 954 07b4 D7ED207A 		vldr.32	s15, [r7, #128]
+ 955 07b8 76EE677A 		vsub.f32	s15, s12, s15
+ 956              		.loc 1 76 97
+ 957 07bc 66EEA77A 		vmul.f32	s15, s13, s15
+ 958 07c0 04E0     		b	.L8
+ 959              	.L9:
+ 960 07c2 00BF     		.align	2
+ 961              	.L7:
+ 962 07c4 00000000 		.word	QNum
+ 963 07c8 00000000 		.word	e0
+ 964              	.L8:
+ 965              		.loc 1 76 80
+ 966 07cc 37EE677A 		vsub.f32	s14, s14, s15
+ 967              		.loc 1 76 149
+ 968 07d0 F44B     		ldr	r3, .L10
+ 969 07d2 D3ED036A 		vldr.32	s13, [r3, #12]
+ 970              		.loc 1 76 143
+ 971 07d6 D7ED077A 		vldr.32	s15, [r7, #28]
+ 972 07da 66EEA76A 		vmul.f32	s13, s13, s15
+ 973              		.loc 1 76 169
+ 974 07de B6EE006A 		vmov.f32	s12, #5.0e-1
+ 975 07e2 D7ED0E7A 		vldr.32	s15, [r7, #56]
+ 976 07e6 36EE676A 		vsub.f32	s12, s12, s15
+ 977              		.loc 1 76 176
+ 978 07ea D7ED0C7A 		vldr.32	s15, [r7, #48]
+ 979 07ee 36EE676A 		vsub.f32	s12, s12, s15
+ 980              		.loc 1 76 161
+ 981 07f2 D7ED087A 		vldr.32	s15, [r7, #32]
+ 982 07f6 26EE276A 		vmul.f32	s12, s12, s15
+ 983              		.loc 1 76 199
+ARM GAS  /tmp/ccbnG7lh.s 			page 19
+
+
+ 984 07fa D7ED0F5A 		vldr.32	s11, [r7, #60]
+ 985 07fe D7ED147A 		vldr.32	s15, [r7, #80]
+ 986 0802 75EEE75A 		vsub.f32	s11, s11, s15
+ 987              		.loc 1 76 191
+ 988 0806 D7ED077A 		vldr.32	s15, [r7, #28]
+ 989 080a 65EEA77A 		vmul.f32	s15, s11, s15
+ 990              		.loc 1 76 184
+ 991 080e 36EE276A 		vadd.f32	s12, s12, s15
+ 992              		.loc 1 76 207
+ 993 0812 D7ED257A 		vldr.32	s15, [r7, #148]
+ 994 0816 76EE677A 		vsub.f32	s15, s12, s15
+ 995              		.loc 1 76 153
+ 996 081a 66EEA77A 		vmul.f32	s15, s13, s15
+ 997              		.loc 1 76 136
+ 998 081e 37EE277A 		vadd.f32	s14, s14, s15
+ 999              		.loc 1 76 227
+ 1000 0822 E04B     		ldr	r3, .L10
+ 1001 0824 D3ED026A 		vldr.32	s13, [r3, #8]
+ 1002              		.loc 1 76 221
+ 1003 0828 D7ED087A 		vldr.32	s15, [r7, #32]
+ 1004 082c 66EEA76A 		vmul.f32	s13, s13, s15
+ 1005              		.loc 1 76 244
+ 1006 0830 DC4B     		ldr	r3, .L10
+ 1007 0832 93ED006A 		vldr.32	s12, [r3]
+ 1008              		.loc 1 76 238
+ 1009 0836 D7ED077A 		vldr.32	s15, [r7, #28]
+ 1010 083a 66EE277A 		vmul.f32	s15, s12, s15
+ 1011              		.loc 1 76 231
+ 1012 083e 76EEA76A 		vadd.f32	s13, s13, s15
+ 1013              		.loc 1 76 265
+ 1014 0842 97ED116A 		vldr.32	s12, [r7, #68]
+ 1015 0846 D7ED107A 		vldr.32	s15, [r7, #64]
+ 1016 084a 36EE676A 		vsub.f32	s12, s12, s15
+ 1017              		.loc 1 76 257
+ 1018 084e D7ED087A 		vldr.32	s15, [r7, #32]
+ 1019 0852 26EE276A 		vmul.f32	s12, s12, s15
+ 1020              		.loc 1 76 288
+ 1021 0856 D7ED155A 		vldr.32	s11, [r7, #84]
+ 1022 085a D7ED0D7A 		vldr.32	s15, [r7, #52]
+ 1023 085e 75EEA75A 		vadd.f32	s11, s11, s15
+ 1024              		.loc 1 76 280
+ 1025 0862 D7ED077A 		vldr.32	s15, [r7, #28]
+ 1026 0866 65EEA77A 		vmul.f32	s15, s11, s15
+ 1027              		.loc 1 76 273
+ 1028 086a 36EE276A 		vadd.f32	s12, s12, s15
+ 1029              		.loc 1 76 296
+ 1030 086e D7ED247A 		vldr.32	s15, [r7, #144]
+ 1031 0872 76EE677A 		vsub.f32	s15, s12, s15
+ 1032              		.loc 1 76 249
+ 1033 0876 66EEA77A 		vmul.f32	s15, s13, s15
+ 1034              		.loc 1 76 213
+ 1035 087a 37EE277A 		vadd.f32	s14, s14, s15
+ 1036              		.loc 1 76 316
+ 1037 087e C94B     		ldr	r3, .L10
+ 1038 0880 D3ED036A 		vldr.32	s13, [r3, #12]
+ 1039              		.loc 1 76 310
+ 1040 0884 D7ED087A 		vldr.32	s15, [r7, #32]
+ARM GAS  /tmp/ccbnG7lh.s 			page 20
+
+
+ 1041 0888 66EEA76A 		vmul.f32	s13, s13, s15
+ 1042              		.loc 1 76 333
+ 1043 088c C54B     		ldr	r3, .L10
+ 1044 088e 93ED016A 		vldr.32	s12, [r3, #4]
+ 1045              		.loc 1 76 327
+ 1046 0892 D7ED057A 		vldr.32	s15, [r7, #20]
+ 1047 0896 66EE277A 		vmul.f32	s15, s12, s15
+ 1048              		.loc 1 76 320
+ 1049 089a 76EEE76A 		vsub.f32	s13, s13, s15
+ 1050              		.loc 1 76 354
+ 1051 089e 97ED146A 		vldr.32	s12, [r7, #80]
+ 1052 08a2 D7ED0F7A 		vldr.32	s15, [r7, #60]
+ 1053 08a6 36EE276A 		vadd.f32	s12, s12, s15
+ 1054              		.loc 1 76 346
+ 1055 08aa D7ED087A 		vldr.32	s15, [r7, #32]
+ 1056 08ae 26EE276A 		vmul.f32	s12, s12, s15
+ 1057              		.loc 1 76 377
+ 1058 08b2 F6EE005A 		vmov.f32	s11, #5.0e-1
+ 1059 08b6 D7ED127A 		vldr.32	s15, [r7, #72]
+ 1060 08ba 75EEE75A 		vsub.f32	s11, s11, s15
+ 1061              		.loc 1 76 384
+ 1062 08be D7ED0E7A 		vldr.32	s15, [r7, #56]
+ 1063 08c2 75EEE75A 		vsub.f32	s11, s11, s15
+ 1064              		.loc 1 76 369
+ 1065 08c6 D7ED077A 		vldr.32	s15, [r7, #28]
+ 1066 08ca 65EEA77A 		vmul.f32	s15, s11, s15
+ 1067              		.loc 1 76 362
+ 1068 08ce 36EE276A 		vadd.f32	s12, s12, s15
+ 1069              		.loc 1 76 392
+ 1070 08d2 D7ED237A 		vldr.32	s15, [r7, #140]
+ 1071 08d6 76EE677A 		vsub.f32	s15, s12, s15
+ 1072              		.loc 1 76 338
+ 1073 08da 66EEA77A 		vmul.f32	s15, s13, s15
+ 1074              		.loc 1 76 302
+ 1075 08de 77EE277A 		vadd.f32	s15, s14, s15
+ 1076              		.loc 1 76 6
+ 1077 08e2 B14B     		ldr	r3, .L10+4
+ 1078 08e4 C3ED007A 		vstr.32	s15, [r3]
+  77:./Hardware/Src/AHRS.c **** 		e2 = -_2q0 * (2.0f * q1q3 - _2q0q2 - Ax) + _2q3 * (2.0f * q0q1 + _2q2q3 - Ay) - 4.0f * QNum.q2 * 
+ 1079              		.loc 1 77 8
+ 1080 08e8 D7ED1A7A 		vldr.32	s15, [r7, #104]
+ 1081 08ec B1EE677A 		vneg.f32	s14, s15
+ 1082              		.loc 1 77 22
+ 1083 08f0 D7ED0F7A 		vldr.32	s15, [r7, #60]
+ 1084 08f4 77EEA76A 		vadd.f32	s13, s15, s15
+ 1085              		.loc 1 77 29
+ 1086 08f8 D7ED137A 		vldr.32	s15, [r7, #76]
+ 1087 08fc 76EEE76A 		vsub.f32	s13, s13, s15
+ 1088              		.loc 1 77 38
+ 1089 0900 D7ED227A 		vldr.32	s15, [r7, #136]
+ 1090 0904 76EEE77A 		vsub.f32	s15, s13, s15
+ 1091              		.loc 1 77 14
+ 1092 0908 27EE277A 		vmul.f32	s14, s14, s15
+ 1093              		.loc 1 77 59
+ 1094 090c D7ED157A 		vldr.32	s15, [r7, #84]
+ 1095 0910 77EEA76A 		vadd.f32	s13, s15, s15
+ 1096              		.loc 1 77 66
+ARM GAS  /tmp/ccbnG7lh.s 			page 21
+
+
+ 1097 0914 D7ED0B7A 		vldr.32	s15, [r7, #44]
+ 1098 0918 76EEA76A 		vadd.f32	s13, s13, s15
+ 1099              		.loc 1 77 75
+ 1100 091c D7ED217A 		vldr.32	s15, [r7, #132]
+ 1101 0920 76EEE76A 		vsub.f32	s13, s13, s15
+ 1102              		.loc 1 77 51
+ 1103 0924 D7ED177A 		vldr.32	s15, [r7, #92]
+ 1104 0928 66EEA77A 		vmul.f32	s15, s13, s15
+ 1105              		.loc 1 77 44
+ 1106 092c 37EE277A 		vadd.f32	s14, s14, s15
+ 1107              		.loc 1 77 94
+ 1108 0930 9C4B     		ldr	r3, .L10
+ 1109 0932 D3ED027A 		vldr.32	s15, [r3, #8]
+ 1110              		.loc 1 77 88
+ 1111 0936 F1EE006A 		vmov.f32	s13, #4.0e+0
+ 1112 093a 67EEA66A 		vmul.f32	s13, s15, s13
+ 1113              		.loc 1 77 110
+ 1114 093e D7ED127A 		vldr.32	s15, [r7, #72]
+ 1115 0942 77EEA77A 		vadd.f32	s15, s15, s15
+ 1116              		.loc 1 77 103
+ 1117 0946 B7EE006A 		vmov.f32	s12, #1.0e+0
+ 1118 094a 36EE676A 		vsub.f32	s12, s12, s15
+ 1119              		.loc 1 77 124
+ 1120 094e D7ED0E7A 		vldr.32	s15, [r7, #56]
+ 1121 0952 77EEA77A 		vadd.f32	s15, s15, s15
+ 1122              		.loc 1 77 117
+ 1123 0956 36EE676A 		vsub.f32	s12, s12, s15
+ 1124              		.loc 1 77 131
+ 1125 095a D7ED207A 		vldr.32	s15, [r7, #128]
+ 1126 095e 76EE677A 		vsub.f32	s15, s12, s15
+ 1127              		.loc 1 77 98
+ 1128 0962 66EEA77A 		vmul.f32	s15, s13, s15
+ 1129              		.loc 1 77 81
+ 1130 0966 37EE677A 		vsub.f32	s14, s14, s15
+ 1131              		.loc 1 77 140
+ 1132 096a D7ED067A 		vldr.32	s15, [r7, #24]
+ 1133 096e F1EE676A 		vneg.f32	s13, s15
+ 1134              		.loc 1 77 152
+ 1135 0972 8C4B     		ldr	r3, .L10
+ 1136 0974 D3ED027A 		vldr.32	s15, [r3, #8]
+ 1137              		.loc 1 77 146
+ 1138 0978 66EEA76A 		vmul.f32	s13, s13, s15
+ 1139              		.loc 1 77 170
+ 1140 097c 894B     		ldr	r3, .L10
+ 1141 097e 93ED006A 		vldr.32	s12, [r3]
+ 1142              		.loc 1 77 163
+ 1143 0982 D7ED077A 		vldr.32	s15, [r7, #28]
+ 1144 0986 66EE277A 		vmul.f32	s15, s12, s15
+ 1145              		.loc 1 77 156
+ 1146 098a 76EEE76A 		vsub.f32	s13, s13, s15
+ 1147              		.loc 1 77 191
+ 1148 098e B6EE006A 		vmov.f32	s12, #5.0e-1
+ 1149 0992 D7ED0E7A 		vldr.32	s15, [r7, #56]
+ 1150 0996 36EE676A 		vsub.f32	s12, s12, s15
+ 1151              		.loc 1 77 198
+ 1152 099a D7ED0C7A 		vldr.32	s15, [r7, #48]
+ 1153 099e 36EE676A 		vsub.f32	s12, s12, s15
+ARM GAS  /tmp/ccbnG7lh.s 			page 22
+
+
+ 1154              		.loc 1 77 183
+ 1155 09a2 D7ED087A 		vldr.32	s15, [r7, #32]
+ 1156 09a6 26EE276A 		vmul.f32	s12, s12, s15
+ 1157              		.loc 1 77 221
+ 1158 09aa D7ED0F5A 		vldr.32	s11, [r7, #60]
+ 1159 09ae D7ED147A 		vldr.32	s15, [r7, #80]
+ 1160 09b2 75EEE75A 		vsub.f32	s11, s11, s15
+ 1161              		.loc 1 77 213
+ 1162 09b6 D7ED077A 		vldr.32	s15, [r7, #28]
+ 1163 09ba 65EEA77A 		vmul.f32	s15, s11, s15
+ 1164              		.loc 1 77 206
+ 1165 09be 36EE276A 		vadd.f32	s12, s12, s15
+ 1166              		.loc 1 77 229
+ 1167 09c2 D7ED257A 		vldr.32	s15, [r7, #148]
+ 1168 09c6 76EE677A 		vsub.f32	s15, s12, s15
+ 1169              		.loc 1 77 175
+ 1170 09ca 66EEA77A 		vmul.f32	s15, s13, s15
+ 1171              		.loc 1 77 137
+ 1172 09ce 37EE277A 		vadd.f32	s14, s14, s15
+ 1173              		.loc 1 77 249
+ 1174 09d2 744B     		ldr	r3, .L10
+ 1175 09d4 D3ED016A 		vldr.32	s13, [r3, #4]
+ 1176              		.loc 1 77 243
+ 1177 09d8 D7ED087A 		vldr.32	s15, [r7, #32]
+ 1178 09dc 66EEA76A 		vmul.f32	s13, s13, s15
+ 1179              		.loc 1 77 266
+ 1180 09e0 704B     		ldr	r3, .L10
+ 1181 09e2 93ED036A 		vldr.32	s12, [r3, #12]
+ 1182              		.loc 1 77 260
+ 1183 09e6 D7ED077A 		vldr.32	s15, [r7, #28]
+ 1184 09ea 66EE277A 		vmul.f32	s15, s12, s15
+ 1185              		.loc 1 77 253
+ 1186 09ee 76EEA76A 		vadd.f32	s13, s13, s15
+ 1187              		.loc 1 77 287
+ 1188 09f2 97ED116A 		vldr.32	s12, [r7, #68]
+ 1189 09f6 D7ED107A 		vldr.32	s15, [r7, #64]
+ 1190 09fa 36EE676A 		vsub.f32	s12, s12, s15
+ 1191              		.loc 1 77 279
+ 1192 09fe D7ED087A 		vldr.32	s15, [r7, #32]
+ 1193 0a02 26EE276A 		vmul.f32	s12, s12, s15
+ 1194              		.loc 1 77 310
+ 1195 0a06 D7ED155A 		vldr.32	s11, [r7, #84]
+ 1196 0a0a D7ED0D7A 		vldr.32	s15, [r7, #52]
+ 1197 0a0e 75EEA75A 		vadd.f32	s11, s11, s15
+ 1198              		.loc 1 77 302
+ 1199 0a12 D7ED077A 		vldr.32	s15, [r7, #28]
+ 1200 0a16 65EEA77A 		vmul.f32	s15, s11, s15
+ 1201              		.loc 1 77 295
+ 1202 0a1a 36EE276A 		vadd.f32	s12, s12, s15
+ 1203              		.loc 1 77 318
+ 1204 0a1e D7ED247A 		vldr.32	s15, [r7, #144]
+ 1205 0a22 76EE677A 		vsub.f32	s15, s12, s15
+ 1206              		.loc 1 77 271
+ 1207 0a26 66EEA77A 		vmul.f32	s15, s13, s15
+ 1208              		.loc 1 77 235
+ 1209 0a2a 37EE277A 		vadd.f32	s14, s14, s15
+ 1210              		.loc 1 77 338
+ARM GAS  /tmp/ccbnG7lh.s 			page 23
+
+
+ 1211 0a2e 5D4B     		ldr	r3, .L10
+ 1212 0a30 D3ED006A 		vldr.32	s13, [r3]
+ 1213              		.loc 1 77 332
+ 1214 0a34 D7ED087A 		vldr.32	s15, [r7, #32]
+ 1215 0a38 66EEA76A 		vmul.f32	s13, s13, s15
+ 1216              		.loc 1 77 355
+ 1217 0a3c 594B     		ldr	r3, .L10
+ 1218 0a3e 93ED026A 		vldr.32	s12, [r3, #8]
+ 1219              		.loc 1 77 349
+ 1220 0a42 D7ED057A 		vldr.32	s15, [r7, #20]
+ 1221 0a46 66EE277A 		vmul.f32	s15, s12, s15
+ 1222              		.loc 1 77 342
+ 1223 0a4a 76EEE76A 		vsub.f32	s13, s13, s15
+ 1224              		.loc 1 77 376
+ 1225 0a4e 97ED146A 		vldr.32	s12, [r7, #80]
+ 1226 0a52 D7ED0F7A 		vldr.32	s15, [r7, #60]
+ 1227 0a56 36EE276A 		vadd.f32	s12, s12, s15
+ 1228              		.loc 1 77 368
+ 1229 0a5a D7ED087A 		vldr.32	s15, [r7, #32]
+ 1230 0a5e 26EE276A 		vmul.f32	s12, s12, s15
+ 1231              		.loc 1 77 399
+ 1232 0a62 F6EE005A 		vmov.f32	s11, #5.0e-1
+ 1233 0a66 D7ED127A 		vldr.32	s15, [r7, #72]
+ 1234 0a6a 75EEE75A 		vsub.f32	s11, s11, s15
+ 1235              		.loc 1 77 406
+ 1236 0a6e D7ED0E7A 		vldr.32	s15, [r7, #56]
+ 1237 0a72 75EEE75A 		vsub.f32	s11, s11, s15
+ 1238              		.loc 1 77 391
+ 1239 0a76 D7ED077A 		vldr.32	s15, [r7, #28]
+ 1240 0a7a 65EEA77A 		vmul.f32	s15, s11, s15
+ 1241              		.loc 1 77 384
+ 1242 0a7e 36EE276A 		vadd.f32	s12, s12, s15
+ 1243              		.loc 1 77 414
+ 1244 0a82 D7ED237A 		vldr.32	s15, [r7, #140]
+ 1245 0a86 76EE677A 		vsub.f32	s15, s12, s15
+ 1246              		.loc 1 77 360
+ 1247 0a8a 66EEA77A 		vmul.f32	s15, s13, s15
+ 1248              		.loc 1 77 324
+ 1249 0a8e 77EE277A 		vadd.f32	s15, s14, s15
+ 1250              		.loc 1 77 6
+ 1251 0a92 464B     		ldr	r3, .L10+8
+ 1252 0a94 C3ED007A 		vstr.32	s15, [r3]
+  78:./Hardware/Src/AHRS.c **** 		e3 = _2q1 * (2.0f * q1q3 - _2q0q2 - Ax) + _2q2 * (2.0f * q0q1 + _2q2q3 - Ay) + (-_4bx * QNum.q3 +
+ 1253              		.loc 1 78 21
+ 1254 0a98 D7ED0F7A 		vldr.32	s15, [r7, #60]
+ 1255 0a9c 37EEA77A 		vadd.f32	s14, s15, s15
+ 1256              		.loc 1 78 28
+ 1257 0aa0 D7ED137A 		vldr.32	s15, [r7, #76]
+ 1258 0aa4 37EE677A 		vsub.f32	s14, s14, s15
+ 1259              		.loc 1 78 37
+ 1260 0aa8 D7ED227A 		vldr.32	s15, [r7, #136]
+ 1261 0aac 37EE677A 		vsub.f32	s14, s14, s15
+ 1262              		.loc 1 78 13
+ 1263 0ab0 D7ED197A 		vldr.32	s15, [r7, #100]
+ 1264 0ab4 27EE277A 		vmul.f32	s14, s14, s15
+ 1265              		.loc 1 78 58
+ 1266 0ab8 D7ED157A 		vldr.32	s15, [r7, #84]
+ARM GAS  /tmp/ccbnG7lh.s 			page 24
+
+
+ 1267 0abc 77EEA76A 		vadd.f32	s13, s15, s15
+ 1268              		.loc 1 78 65
+ 1269 0ac0 D7ED0B7A 		vldr.32	s15, [r7, #44]
+ 1270 0ac4 76EEA76A 		vadd.f32	s13, s13, s15
+ 1271              		.loc 1 78 74
+ 1272 0ac8 D7ED217A 		vldr.32	s15, [r7, #132]
+ 1273 0acc 76EEE76A 		vsub.f32	s13, s13, s15
+ 1274              		.loc 1 78 50
+ 1275 0ad0 D7ED187A 		vldr.32	s15, [r7, #96]
+ 1276 0ad4 66EEA77A 		vmul.f32	s15, s13, s15
+ 1277              		.loc 1 78 43
+ 1278 0ad8 37EE277A 		vadd.f32	s14, s14, s15
+ 1279              		.loc 1 78 83
+ 1280 0adc D7ED067A 		vldr.32	s15, [r7, #24]
+ 1281 0ae0 F1EE676A 		vneg.f32	s13, s15
+ 1282              		.loc 1 78 95
+ 1283 0ae4 2F4B     		ldr	r3, .L10
+ 1284 0ae6 D3ED037A 		vldr.32	s15, [r3, #12]
+ 1285              		.loc 1 78 89
+ 1286 0aea 66EEA76A 		vmul.f32	s13, s13, s15
+ 1287              		.loc 1 78 112
+ 1288 0aee 2D4B     		ldr	r3, .L10
+ 1289 0af0 93ED016A 		vldr.32	s12, [r3, #4]
+ 1290              		.loc 1 78 106
+ 1291 0af4 D7ED077A 		vldr.32	s15, [r7, #28]
+ 1292 0af8 66EE277A 		vmul.f32	s15, s12, s15
+ 1293              		.loc 1 78 99
+ 1294 0afc 76EEA76A 		vadd.f32	s13, s13, s15
+ 1295              		.loc 1 78 133
+ 1296 0b00 B6EE006A 		vmov.f32	s12, #5.0e-1
+ 1297 0b04 D7ED0E7A 		vldr.32	s15, [r7, #56]
+ 1298 0b08 36EE676A 		vsub.f32	s12, s12, s15
+ 1299              		.loc 1 78 140
+ 1300 0b0c D7ED0C7A 		vldr.32	s15, [r7, #48]
+ 1301 0b10 36EE676A 		vsub.f32	s12, s12, s15
+ 1302              		.loc 1 78 125
+ 1303 0b14 D7ED087A 		vldr.32	s15, [r7, #32]
+ 1304 0b18 26EE276A 		vmul.f32	s12, s12, s15
+ 1305              		.loc 1 78 163
+ 1306 0b1c D7ED0F5A 		vldr.32	s11, [r7, #60]
+ 1307 0b20 D7ED147A 		vldr.32	s15, [r7, #80]
+ 1308 0b24 75EEE75A 		vsub.f32	s11, s11, s15
+ 1309              		.loc 1 78 155
+ 1310 0b28 D7ED077A 		vldr.32	s15, [r7, #28]
+ 1311 0b2c 65EEA77A 		vmul.f32	s15, s11, s15
+ 1312              		.loc 1 78 148
+ 1313 0b30 36EE276A 		vadd.f32	s12, s12, s15
+ 1314              		.loc 1 78 171
+ 1315 0b34 D7ED257A 		vldr.32	s15, [r7, #148]
+ 1316 0b38 76EE677A 		vsub.f32	s15, s12, s15
+ 1317              		.loc 1 78 117
+ 1318 0b3c 66EEA77A 		vmul.f32	s15, s13, s15
+ 1319              		.loc 1 78 80
+ 1320 0b40 37EE277A 		vadd.f32	s14, s14, s15
+ 1321              		.loc 1 78 180
+ 1322 0b44 D7ED087A 		vldr.32	s15, [r7, #32]
+ 1323 0b48 F1EE676A 		vneg.f32	s13, s15
+ARM GAS  /tmp/ccbnG7lh.s 			page 25
+
+
+ 1324              		.loc 1 78 193
+ 1325 0b4c 154B     		ldr	r3, .L10
+ 1326 0b4e D3ED007A 		vldr.32	s15, [r3]
+ 1327              		.loc 1 78 186
+ 1328 0b52 66EEA76A 		vmul.f32	s13, s13, s15
+ 1329              		.loc 1 78 210
+ 1330 0b56 134B     		ldr	r3, .L10
+ 1331 0b58 93ED026A 		vldr.32	s12, [r3, #8]
+ 1332              		.loc 1 78 204
+ 1333 0b5c D7ED077A 		vldr.32	s15, [r7, #28]
+ 1334 0b60 66EE277A 		vmul.f32	s15, s12, s15
+ 1335              		.loc 1 78 197
+ 1336 0b64 76EEA76A 		vadd.f32	s13, s13, s15
+ 1337              		.loc 1 78 231
+ 1338 0b68 97ED116A 		vldr.32	s12, [r7, #68]
+ 1339 0b6c D7ED107A 		vldr.32	s15, [r7, #64]
+ 1340 0b70 36EE676A 		vsub.f32	s12, s12, s15
+ 1341              		.loc 1 78 223
+ 1342 0b74 D7ED087A 		vldr.32	s15, [r7, #32]
+ 1343 0b78 26EE276A 		vmul.f32	s12, s12, s15
+ 1344              		.loc 1 78 254
+ 1345 0b7c D7ED155A 		vldr.32	s11, [r7, #84]
+ 1346 0b80 D7ED0D7A 		vldr.32	s15, [r7, #52]
+ 1347 0b84 75EEA75A 		vadd.f32	s11, s11, s15
+ 1348              		.loc 1 78 246
+ 1349 0b88 D7ED077A 		vldr.32	s15, [r7, #28]
+ 1350 0b8c 65EEA77A 		vmul.f32	s15, s11, s15
+ 1351              		.loc 1 78 239
+ 1352 0b90 36EE276A 		vadd.f32	s12, s12, s15
+ 1353              		.loc 1 78 262
+ 1354 0b94 D7ED247A 		vldr.32	s15, [r7, #144]
+ 1355 0b98 76EE677A 		vsub.f32	s15, s12, s15
+ 1356              		.loc 1 78 215
+ 1357 0b9c 66EEA77A 		vmul.f32	s15, s13, s15
+ 1358 0ba0 06E0     		b	.L11
+ 1359              	.L12:
+ 1360 0ba2 00BF     		.align	2
+ 1361              	.L10:
+ 1362 0ba4 00000000 		.word	QNum
+ 1363 0ba8 00000000 		.word	e1
+ 1364 0bac 00000000 		.word	e2
+ 1365              	.L11:
+ 1366              		.loc 1 78 177
+ 1367 0bb0 37EE277A 		vadd.f32	s14, s14, s15
+ 1368              		.loc 1 78 281
+ 1369 0bb4 D44B     		ldr	r3, .L13+8
+ 1370 0bb6 D3ED016A 		vldr.32	s13, [r3, #4]
+ 1371              		.loc 1 78 275
+ 1372 0bba D7ED087A 		vldr.32	s15, [r7, #32]
+ 1373 0bbe 66EEA76A 		vmul.f32	s13, s13, s15
+ 1374              		.loc 1 78 301
+ 1375 0bc2 97ED146A 		vldr.32	s12, [r7, #80]
+ 1376 0bc6 D7ED0F7A 		vldr.32	s15, [r7, #60]
+ 1377 0bca 36EE276A 		vadd.f32	s12, s12, s15
+ 1378              		.loc 1 78 293
+ 1379 0bce D7ED087A 		vldr.32	s15, [r7, #32]
+ 1380 0bd2 26EE276A 		vmul.f32	s12, s12, s15
+ARM GAS  /tmp/ccbnG7lh.s 			page 26
+
+
+ 1381              		.loc 1 78 324
+ 1382 0bd6 F6EE005A 		vmov.f32	s11, #5.0e-1
+ 1383 0bda D7ED127A 		vldr.32	s15, [r7, #72]
+ 1384 0bde 75EEE75A 		vsub.f32	s11, s11, s15
+ 1385              		.loc 1 78 331
+ 1386 0be2 D7ED0E7A 		vldr.32	s15, [r7, #56]
+ 1387 0be6 75EEE75A 		vsub.f32	s11, s11, s15
+ 1388              		.loc 1 78 316
+ 1389 0bea D7ED077A 		vldr.32	s15, [r7, #28]
+ 1390 0bee 65EEA77A 		vmul.f32	s15, s11, s15
+ 1391              		.loc 1 78 309
+ 1392 0bf2 36EE276A 		vadd.f32	s12, s12, s15
+ 1393              		.loc 1 78 339
+ 1394 0bf6 D7ED237A 		vldr.32	s15, [r7, #140]
+ 1395 0bfa 76EE677A 		vsub.f32	s15, s12, s15
+ 1396              		.loc 1 78 285
+ 1397 0bfe 66EEA77A 		vmul.f32	s15, s13, s15
+ 1398              		.loc 1 78 268
+ 1399 0c02 77EE277A 		vadd.f32	s15, s14, s15
+ 1400              		.loc 1 78 6
+ 1401 0c06 C14B     		ldr	r3, .L13+12
+ 1402 0c08 C3ED007A 		vstr.32	s15, [r3]
+  79:./Hardware/Src/AHRS.c **** if(e0!=0||e1!=0||e2!=0||e3!=0)
+ 1403              		.loc 1 79 6
+ 1404 0c0c C04B     		ldr	r3, .L13+16
+ 1405 0c0e D3ED007A 		vldr.32	s15, [r3]
+ 1406              		.loc 1 79 3
+ 1407 0c12 F5EE407A 		vcmp.f32	s15, #0
+ 1408 0c16 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 1409 0c1a 17D1     		bne	.L2
+ 1410              		.loc 1 79 13 discriminator 1
+ 1411 0c1c BD4B     		ldr	r3, .L13+20
+ 1412 0c1e D3ED007A 		vldr.32	s15, [r3]
+ 1413              		.loc 1 79 9 discriminator 1
+ 1414 0c22 F5EE407A 		vcmp.f32	s15, #0
+ 1415 0c26 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 1416 0c2a 0FD1     		bne	.L2
+ 1417              		.loc 1 79 20 discriminator 2
+ 1418 0c2c BA4B     		ldr	r3, .L13+24
+ 1419 0c2e D3ED007A 		vldr.32	s15, [r3]
+ 1420              		.loc 1 79 16 discriminator 2
+ 1421 0c32 F5EE407A 		vcmp.f32	s15, #0
+ 1422 0c36 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 1423 0c3a 07D1     		bne	.L2
+ 1424              		.loc 1 79 27 discriminator 3
+ 1425 0c3c B34B     		ldr	r3, .L13+12
+ 1426 0c3e D3ED007A 		vldr.32	s15, [r3]
+ 1427              		.loc 1 79 23 discriminator 3
+ 1428 0c42 F5EE407A 		vcmp.f32	s15, #0
+ 1429 0c46 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 1430 0c4a 5FD0     		beq	.L3
+ 1431              	.L2:
+ 1432              	.LBB2:
+  80:./Hardware/Src/AHRS.c **** {
+  81:./Hardware/Src/AHRS.c **** float err_sum = sqrt(e0*e0+e1*e1+e2*e2+e3*e3);
+ 1433              		.loc 1 81 24
+ 1434 0c4c B04B     		ldr	r3, .L13+16
+ARM GAS  /tmp/ccbnG7lh.s 			page 27
+
+
+ 1435 0c4e 93ED007A 		vldr.32	s14, [r3]
+ 1436 0c52 AF4B     		ldr	r3, .L13+16
+ 1437 0c54 D3ED007A 		vldr.32	s15, [r3]
+ 1438 0c58 27EE277A 		vmul.f32	s14, s14, s15
+ 1439              		.loc 1 81 30
+ 1440 0c5c AD4B     		ldr	r3, .L13+20
+ 1441 0c5e D3ED006A 		vldr.32	s13, [r3]
+ 1442 0c62 AC4B     		ldr	r3, .L13+20
+ 1443 0c64 D3ED007A 		vldr.32	s15, [r3]
+ 1444 0c68 66EEA77A 		vmul.f32	s15, s13, s15
+ 1445              		.loc 1 81 27
+ 1446 0c6c 37EE277A 		vadd.f32	s14, s14, s15
+ 1447              		.loc 1 81 36
+ 1448 0c70 A94B     		ldr	r3, .L13+24
+ 1449 0c72 D3ED006A 		vldr.32	s13, [r3]
+ 1450 0c76 A84B     		ldr	r3, .L13+24
+ 1451 0c78 D3ED007A 		vldr.32	s15, [r3]
+ 1452 0c7c 66EEA77A 		vmul.f32	s15, s13, s15
+ 1453              		.loc 1 81 33
+ 1454 0c80 37EE277A 		vadd.f32	s14, s14, s15
+ 1455              		.loc 1 81 42
+ 1456 0c84 A14B     		ldr	r3, .L13+12
+ 1457 0c86 D3ED006A 		vldr.32	s13, [r3]
+ 1458 0c8a A04B     		ldr	r3, .L13+12
+ 1459 0c8c D3ED007A 		vldr.32	s15, [r3]
+ 1460 0c90 66EEA77A 		vmul.f32	s15, s13, s15
+ 1461              		.loc 1 81 39
+ 1462 0c94 77EE277A 		vadd.f32	s15, s14, s15
+ 1463              		.loc 1 81 17
+ 1464 0c98 17EE900A 		vmov	r0, s15
+ 1465 0c9c FFF7FEFF 		bl	__aeabi_f2d
+ 1466 0ca0 0246     		mov	r2, r0
+ 1467 0ca2 0B46     		mov	r3, r1
+ 1468 0ca4 43EC102B 		vmov	d0, r2, r3
+ 1469 0ca8 FFF7FEFF 		bl	sqrt
+ 1470 0cac 53EC102B 		vmov	r2, r3, d0
+ 1471              		.loc 1 81 7
+ 1472 0cb0 1046     		mov	r0, r2
+ 1473 0cb2 1946     		mov	r1, r3
+ 1474 0cb4 FFF7FEFF 		bl	__aeabi_d2f
+ 1475 0cb8 0346     		mov	r3, r0	@ float
+ 1476 0cba 3B61     		str	r3, [r7, #16]	@ float
+  82:./Hardware/Src/AHRS.c **** e0 = e0/err_sum;
+ 1477              		.loc 1 82 8
+ 1478 0cbc 944B     		ldr	r3, .L13+16
+ 1479 0cbe D3ED006A 		vldr.32	s13, [r3]
+ 1480 0cc2 97ED047A 		vldr.32	s14, [r7, #16]
+ 1481 0cc6 C6EE877A 		vdiv.f32	s15, s13, s14
+ 1482              		.loc 1 82 4
+ 1483 0cca 914B     		ldr	r3, .L13+16
+ 1484 0ccc C3ED007A 		vstr.32	s15, [r3]
+  83:./Hardware/Src/AHRS.c **** e1 = e1/err_sum;
+ 1485              		.loc 1 83 8
+ 1486 0cd0 904B     		ldr	r3, .L13+20
+ 1487 0cd2 D3ED006A 		vldr.32	s13, [r3]
+ 1488 0cd6 97ED047A 		vldr.32	s14, [r7, #16]
+ 1489 0cda C6EE877A 		vdiv.f32	s15, s13, s14
+ARM GAS  /tmp/ccbnG7lh.s 			page 28
+
+
+ 1490              		.loc 1 83 4
+ 1491 0cde 8D4B     		ldr	r3, .L13+20
+ 1492 0ce0 C3ED007A 		vstr.32	s15, [r3]
+  84:./Hardware/Src/AHRS.c **** e2 = e2/err_sum;
+ 1493              		.loc 1 84 8
+ 1494 0ce4 8C4B     		ldr	r3, .L13+24
+ 1495 0ce6 D3ED006A 		vldr.32	s13, [r3]
+ 1496 0cea 97ED047A 		vldr.32	s14, [r7, #16]
+ 1497 0cee C6EE877A 		vdiv.f32	s15, s13, s14
+ 1498              		.loc 1 84 4
+ 1499 0cf2 894B     		ldr	r3, .L13+24
+ 1500 0cf4 C3ED007A 		vstr.32	s15, [r3]
+  85:./Hardware/Src/AHRS.c **** e3 = e3/err_sum;
+ 1501              		.loc 1 85 8
+ 1502 0cf8 844B     		ldr	r3, .L13+12
+ 1503 0cfa D3ED006A 		vldr.32	s13, [r3]
+ 1504 0cfe 97ED047A 		vldr.32	s14, [r7, #16]
+ 1505 0d02 C6EE877A 		vdiv.f32	s15, s13, s14
+ 1506              		.loc 1 85 4
+ 1507 0d06 814B     		ldr	r3, .L13+12
+ 1508 0d08 C3ED007A 		vstr.32	s15, [r3]
+ 1509              	.L3:
+ 1510              	.LBE2:
+  86:./Hardware/Src/AHRS.c **** }
+  87:./Hardware/Src/AHRS.c **** float Alpha = 0.1;
+ 1511              		.loc 1 87 7
+ 1512 0d0c 834B     		ldr	r3, .L13+28
+ 1513 0d0e FB60     		str	r3, [r7, #12]	@ float
+  88:./Hardware/Src/AHRS.c **** //四元数更新
+  89:./Hardware/Src/AHRS.c ****   QNum.q0 = QNum.q0 - 0.006*(Wx*QNum.q1+Wy*QNum.q2+Wz*QNum.q3)- Alpha*e0;
+ 1514              		.loc 1 89 17
+ 1515 0d10 7D4B     		ldr	r3, .L13+8
+ 1516 0d12 1B68     		ldr	r3, [r3]	@ float
+ 1517 0d14 1846     		mov	r0, r3	@ float
+ 1518 0d16 FFF7FEFF 		bl	__aeabi_f2d
+ 1519 0d1a 0446     		mov	r4, r0
+ 1520 0d1c 0D46     		mov	r5, r1
+ 1521              		.loc 1 89 37
+ 1522 0d1e 7A4B     		ldr	r3, .L13+8
+ 1523 0d20 93ED017A 		vldr.32	s14, [r3, #4]
+ 1524              		.loc 1 89 32
+ 1525 0d24 7E4B     		ldr	r3, .L13+32
+ 1526 0d26 D3ED007A 		vldr.32	s15, [r3]
+ 1527 0d2a 27EE277A 		vmul.f32	s14, s14, s15
+ 1528              		.loc 1 89 48
+ 1529 0d2e 764B     		ldr	r3, .L13+8
+ 1530 0d30 D3ED026A 		vldr.32	s13, [r3, #8]
+ 1531              		.loc 1 89 43
+ 1532 0d34 7B4B     		ldr	r3, .L13+36
+ 1533 0d36 D3ED007A 		vldr.32	s15, [r3]
+ 1534 0d3a 66EEA77A 		vmul.f32	s15, s13, s15
+ 1535              		.loc 1 89 40
+ 1536 0d3e 37EE277A 		vadd.f32	s14, s14, s15
+ 1537              		.loc 1 89 59
+ 1538 0d42 714B     		ldr	r3, .L13+8
+ 1539 0d44 D3ED036A 		vldr.32	s13, [r3, #12]
+ 1540              		.loc 1 89 54
+ARM GAS  /tmp/ccbnG7lh.s 			page 29
+
+
+ 1541 0d48 774B     		ldr	r3, .L13+40
+ 1542 0d4a D3ED007A 		vldr.32	s15, [r3]
+ 1543 0d4e 66EEA77A 		vmul.f32	s15, s13, s15
+ 1544              		.loc 1 89 51
+ 1545 0d52 77EE277A 		vadd.f32	s15, s14, s15
+ 1546 0d56 17EE900A 		vmov	r0, s15
+ 1547 0d5a FFF7FEFF 		bl	__aeabi_f2d
+ 1548              		.loc 1 89 28
+ 1549 0d5e 68A3     		adr	r3, .L13
+ 1550 0d60 D3E90023 		ldrd	r2, [r3]
+ 1551 0d64 FFF7FEFF 		bl	__aeabi_dmul
+ 1552 0d68 0246     		mov	r2, r0
+ 1553 0d6a 0B46     		mov	r3, r1
+ 1554              		.loc 1 89 21
+ 1555 0d6c 2046     		mov	r0, r4
+ 1556 0d6e 2946     		mov	r1, r5
+ 1557 0d70 FFF7FEFF 		bl	__aeabi_dsub
+ 1558 0d74 0246     		mov	r2, r0
+ 1559 0d76 0B46     		mov	r3, r1
+ 1560 0d78 1446     		mov	r4, r2
+ 1561 0d7a 1D46     		mov	r5, r3
+ 1562              		.loc 1 89 70
+ 1563 0d7c 644B     		ldr	r3, .L13+16
+ 1564 0d7e 93ED007A 		vldr.32	s14, [r3]
+ 1565 0d82 D7ED037A 		vldr.32	s15, [r7, #12]
+ 1566 0d86 67EE277A 		vmul.f32	s15, s14, s15
+ 1567 0d8a 17EE900A 		vmov	r0, s15
+ 1568 0d8e FFF7FEFF 		bl	__aeabi_f2d
+ 1569 0d92 0246     		mov	r2, r0
+ 1570 0d94 0B46     		mov	r3, r1
+ 1571              		.loc 1 89 63
+ 1572 0d96 2046     		mov	r0, r4
+ 1573 0d98 2946     		mov	r1, r5
+ 1574 0d9a FFF7FEFF 		bl	__aeabi_dsub
+ 1575 0d9e 0246     		mov	r2, r0
+ 1576 0da0 0B46     		mov	r3, r1
+ 1577 0da2 1046     		mov	r0, r2
+ 1578 0da4 1946     		mov	r1, r3
+ 1579 0da6 FFF7FEFF 		bl	__aeabi_d2f
+ 1580 0daa 0346     		mov	r3, r0	@ float
+ 1581              		.loc 1 89 11
+ 1582 0dac 564A     		ldr	r2, .L13+8
+ 1583 0dae 1360     		str	r3, [r2]	@ float
+  90:./Hardware/Src/AHRS.c ****   QNum.q1 = QNum.q1 + 0.006*(Wx*QNum.q0-Wy*QNum.q3+Wz*QNum.q2)- Alpha*e1;
+ 1584              		.loc 1 90 17
+ 1585 0db0 554B     		ldr	r3, .L13+8
+ 1586 0db2 5B68     		ldr	r3, [r3, #4]	@ float
+ 1587 0db4 1846     		mov	r0, r3	@ float
+ 1588 0db6 FFF7FEFF 		bl	__aeabi_f2d
+ 1589 0dba 0446     		mov	r4, r0
+ 1590 0dbc 0D46     		mov	r5, r1
+ 1591              		.loc 1 90 37
+ 1592 0dbe 524B     		ldr	r3, .L13+8
+ 1593 0dc0 93ED007A 		vldr.32	s14, [r3]
+ 1594              		.loc 1 90 32
+ 1595 0dc4 564B     		ldr	r3, .L13+32
+ 1596 0dc6 D3ED007A 		vldr.32	s15, [r3]
+ARM GAS  /tmp/ccbnG7lh.s 			page 30
+
+
+ 1597 0dca 27EE277A 		vmul.f32	s14, s14, s15
+ 1598              		.loc 1 90 48
+ 1599 0dce 4E4B     		ldr	r3, .L13+8
+ 1600 0dd0 D3ED036A 		vldr.32	s13, [r3, #12]
+ 1601              		.loc 1 90 43
+ 1602 0dd4 534B     		ldr	r3, .L13+36
+ 1603 0dd6 D3ED007A 		vldr.32	s15, [r3]
+ 1604 0dda 66EEA77A 		vmul.f32	s15, s13, s15
+ 1605              		.loc 1 90 40
+ 1606 0dde 37EE677A 		vsub.f32	s14, s14, s15
+ 1607              		.loc 1 90 59
+ 1608 0de2 494B     		ldr	r3, .L13+8
+ 1609 0de4 D3ED026A 		vldr.32	s13, [r3, #8]
+ 1610              		.loc 1 90 54
+ 1611 0de8 4F4B     		ldr	r3, .L13+40
+ 1612 0dea D3ED007A 		vldr.32	s15, [r3]
+ 1613 0dee 66EEA77A 		vmul.f32	s15, s13, s15
+ 1614              		.loc 1 90 51
+ 1615 0df2 77EE277A 		vadd.f32	s15, s14, s15
+ 1616 0df6 17EE900A 		vmov	r0, s15
+ 1617 0dfa FFF7FEFF 		bl	__aeabi_f2d
+ 1618              		.loc 1 90 28
+ 1619 0dfe 40A3     		adr	r3, .L13
+ 1620 0e00 D3E90023 		ldrd	r2, [r3]
+ 1621 0e04 FFF7FEFF 		bl	__aeabi_dmul
+ 1622 0e08 0246     		mov	r2, r0
+ 1623 0e0a 0B46     		mov	r3, r1
+ 1624              		.loc 1 90 21
+ 1625 0e0c 2046     		mov	r0, r4
+ 1626 0e0e 2946     		mov	r1, r5
+ 1627 0e10 FFF7FEFF 		bl	__aeabi_dadd
+ 1628 0e14 0246     		mov	r2, r0
+ 1629 0e16 0B46     		mov	r3, r1
+ 1630 0e18 1446     		mov	r4, r2
+ 1631 0e1a 1D46     		mov	r5, r3
+ 1632              		.loc 1 90 70
+ 1633 0e1c 3D4B     		ldr	r3, .L13+20
+ 1634 0e1e 93ED007A 		vldr.32	s14, [r3]
+ 1635 0e22 D7ED037A 		vldr.32	s15, [r7, #12]
+ 1636 0e26 67EE277A 		vmul.f32	s15, s14, s15
+ 1637 0e2a 17EE900A 		vmov	r0, s15
+ 1638 0e2e FFF7FEFF 		bl	__aeabi_f2d
+ 1639 0e32 0246     		mov	r2, r0
+ 1640 0e34 0B46     		mov	r3, r1
+ 1641              		.loc 1 90 63
+ 1642 0e36 2046     		mov	r0, r4
+ 1643 0e38 2946     		mov	r1, r5
+ 1644 0e3a FFF7FEFF 		bl	__aeabi_dsub
+ 1645 0e3e 0246     		mov	r2, r0
+ 1646 0e40 0B46     		mov	r3, r1
+ 1647 0e42 1046     		mov	r0, r2
+ 1648 0e44 1946     		mov	r1, r3
+ 1649 0e46 FFF7FEFF 		bl	__aeabi_d2f
+ 1650 0e4a 0346     		mov	r3, r0	@ float
+ 1651              		.loc 1 90 11
+ 1652 0e4c 2E4A     		ldr	r2, .L13+8
+ 1653 0e4e 5360     		str	r3, [r2, #4]	@ float
+ARM GAS  /tmp/ccbnG7lh.s 			page 31
+
+
+  91:./Hardware/Src/AHRS.c ****   QNum.q2 = QNum.q2 + 0.006*(Wx*QNum.q3+Wy*QNum.q0-Wz*QNum.q1)- Alpha*e2;
+ 1654              		.loc 1 91 17
+ 1655 0e50 2D4B     		ldr	r3, .L13+8
+ 1656 0e52 9B68     		ldr	r3, [r3, #8]	@ float
+ 1657 0e54 1846     		mov	r0, r3	@ float
+ 1658 0e56 FFF7FEFF 		bl	__aeabi_f2d
+ 1659 0e5a 0446     		mov	r4, r0
+ 1660 0e5c 0D46     		mov	r5, r1
+ 1661              		.loc 1 91 37
+ 1662 0e5e 2A4B     		ldr	r3, .L13+8
+ 1663 0e60 93ED037A 		vldr.32	s14, [r3, #12]
+ 1664              		.loc 1 91 32
+ 1665 0e64 2E4B     		ldr	r3, .L13+32
+ 1666 0e66 D3ED007A 		vldr.32	s15, [r3]
+ 1667 0e6a 27EE277A 		vmul.f32	s14, s14, s15
+ 1668              		.loc 1 91 48
+ 1669 0e6e 264B     		ldr	r3, .L13+8
+ 1670 0e70 D3ED006A 		vldr.32	s13, [r3]
+ 1671              		.loc 1 91 43
+ 1672 0e74 2B4B     		ldr	r3, .L13+36
+ 1673 0e76 D3ED007A 		vldr.32	s15, [r3]
+ 1674 0e7a 66EEA77A 		vmul.f32	s15, s13, s15
+ 1675              		.loc 1 91 40
+ 1676 0e7e 37EE277A 		vadd.f32	s14, s14, s15
+ 1677              		.loc 1 91 59
+ 1678 0e82 214B     		ldr	r3, .L13+8
+ 1679 0e84 D3ED016A 		vldr.32	s13, [r3, #4]
+ 1680              		.loc 1 91 54
+ 1681 0e88 274B     		ldr	r3, .L13+40
+ 1682 0e8a D3ED007A 		vldr.32	s15, [r3]
+ 1683 0e8e 66EEA77A 		vmul.f32	s15, s13, s15
+ 1684              		.loc 1 91 51
+ 1685 0e92 77EE677A 		vsub.f32	s15, s14, s15
+ 1686 0e96 17EE900A 		vmov	r0, s15
+ 1687 0e9a FFF7FEFF 		bl	__aeabi_f2d
+ 1688              		.loc 1 91 28
+ 1689 0e9e 18A3     		adr	r3, .L13
+ 1690 0ea0 D3E90023 		ldrd	r2, [r3]
+ 1691 0ea4 FFF7FEFF 		bl	__aeabi_dmul
+ 1692 0ea8 0246     		mov	r2, r0
+ 1693 0eaa 0B46     		mov	r3, r1
+ 1694              		.loc 1 91 21
+ 1695 0eac 2046     		mov	r0, r4
+ 1696 0eae 2946     		mov	r1, r5
+ 1697 0eb0 FFF7FEFF 		bl	__aeabi_dadd
+ 1698 0eb4 0246     		mov	r2, r0
+ 1699 0eb6 0B46     		mov	r3, r1
+ 1700 0eb8 1446     		mov	r4, r2
+ 1701 0eba 1D46     		mov	r5, r3
+ 1702              		.loc 1 91 70
+ 1703 0ebc 164B     		ldr	r3, .L13+24
+ 1704 0ebe 93ED007A 		vldr.32	s14, [r3]
+ 1705 0ec2 D7ED037A 		vldr.32	s15, [r7, #12]
+ 1706 0ec6 67EE277A 		vmul.f32	s15, s14, s15
+ 1707 0eca 17EE900A 		vmov	r0, s15
+ 1708 0ece FFF7FEFF 		bl	__aeabi_f2d
+ 1709 0ed2 0246     		mov	r2, r0
+ARM GAS  /tmp/ccbnG7lh.s 			page 32
+
+
+ 1710 0ed4 0B46     		mov	r3, r1
+ 1711              		.loc 1 91 63
+ 1712 0ed6 2046     		mov	r0, r4
+ 1713 0ed8 2946     		mov	r1, r5
+ 1714 0eda FFF7FEFF 		bl	__aeabi_dsub
+ 1715 0ede 0246     		mov	r2, r0
+ 1716 0ee0 0B46     		mov	r3, r1
+ 1717 0ee2 1046     		mov	r0, r2
+ 1718 0ee4 1946     		mov	r1, r3
+ 1719 0ee6 FFF7FEFF 		bl	__aeabi_d2f
+ 1720 0eea 0346     		mov	r3, r0	@ float
+ 1721              		.loc 1 91 11
+ 1722 0eec 064A     		ldr	r2, .L13+8
+ 1723 0eee 9360     		str	r3, [r2, #8]	@ float
+  92:./Hardware/Src/AHRS.c ****   QNum.q3 = QNum.q3 + 0.006*(Wy*QNum.q1-Wx*QNum.q2+Wz*QNum.q0)- Alpha*e3;
+ 1724              		.loc 1 92 17
+ 1725 0ef0 054B     		ldr	r3, .L13+8
+ 1726 0ef2 DB68     		ldr	r3, [r3, #12]	@ float
+ 1727 0ef4 1846     		mov	r0, r3	@ float
+ 1728 0ef6 FFF7FEFF 		bl	__aeabi_f2d
+ 1729 0efa 0446     		mov	r4, r0
+ 1730 0efc 0D46     		mov	r5, r1
+ 1731 0efe 15E0     		b	.L14
+ 1732              	.L15:
+ 1733              		.align	3
+ 1734              	.L13:
+ 1735 0f00 FA7E6ABC 		.word	-1133871366
+ 1736 0f04 7493783F 		.word	1064866676
+ 1737 0f08 00000000 		.word	QNum
+ 1738 0f0c 00000000 		.word	e3
+ 1739 0f10 00000000 		.word	e0
+ 1740 0f14 00000000 		.word	e1
+ 1741 0f18 00000000 		.word	e2
+ 1742 0f1c CDCCCC3D 		.word	1036831949
+ 1743 0f20 00000000 		.word	Wx
+ 1744 0f24 00000000 		.word	Wy
+ 1745 0f28 00000000 		.word	Wz
+ 1746              	.L14:
+ 1747              		.loc 1 92 37
+ 1748 0f2c DA4B     		ldr	r3, .L16+16
+ 1749 0f2e 93ED017A 		vldr.32	s14, [r3, #4]
+ 1750              		.loc 1 92 32
+ 1751 0f32 DA4B     		ldr	r3, .L16+20
+ 1752 0f34 D3ED007A 		vldr.32	s15, [r3]
+ 1753 0f38 27EE277A 		vmul.f32	s14, s14, s15
+ 1754              		.loc 1 92 48
+ 1755 0f3c D64B     		ldr	r3, .L16+16
+ 1756 0f3e D3ED026A 		vldr.32	s13, [r3, #8]
+ 1757              		.loc 1 92 43
+ 1758 0f42 D74B     		ldr	r3, .L16+24
+ 1759 0f44 D3ED007A 		vldr.32	s15, [r3]
+ 1760 0f48 66EEA77A 		vmul.f32	s15, s13, s15
+ 1761              		.loc 1 92 40
+ 1762 0f4c 37EE677A 		vsub.f32	s14, s14, s15
+ 1763              		.loc 1 92 59
+ 1764 0f50 D14B     		ldr	r3, .L16+16
+ 1765 0f52 D3ED006A 		vldr.32	s13, [r3]
+ARM GAS  /tmp/ccbnG7lh.s 			page 33
+
+
+ 1766              		.loc 1 92 54
+ 1767 0f56 D34B     		ldr	r3, .L16+28
+ 1768 0f58 D3ED007A 		vldr.32	s15, [r3]
+ 1769 0f5c 66EEA77A 		vmul.f32	s15, s13, s15
+ 1770              		.loc 1 92 51
+ 1771 0f60 77EE277A 		vadd.f32	s15, s14, s15
+ 1772 0f64 17EE900A 		vmov	r0, s15
+ 1773 0f68 FFF7FEFF 		bl	__aeabi_f2d
+ 1774              		.loc 1 92 28
+ 1775 0f6c C6A3     		adr	r3, .L16
+ 1776 0f6e D3E90023 		ldrd	r2, [r3]
+ 1777 0f72 FFF7FEFF 		bl	__aeabi_dmul
+ 1778 0f76 0246     		mov	r2, r0
+ 1779 0f78 0B46     		mov	r3, r1
+ 1780              		.loc 1 92 21
+ 1781 0f7a 2046     		mov	r0, r4
+ 1782 0f7c 2946     		mov	r1, r5
+ 1783 0f7e FFF7FEFF 		bl	__aeabi_dadd
+ 1784 0f82 0246     		mov	r2, r0
+ 1785 0f84 0B46     		mov	r3, r1
+ 1786 0f86 1446     		mov	r4, r2
+ 1787 0f88 1D46     		mov	r5, r3
+ 1788              		.loc 1 92 70
+ 1789 0f8a C74B     		ldr	r3, .L16+32
+ 1790 0f8c 93ED007A 		vldr.32	s14, [r3]
+ 1791 0f90 D7ED037A 		vldr.32	s15, [r7, #12]
+ 1792 0f94 67EE277A 		vmul.f32	s15, s14, s15
+ 1793 0f98 17EE900A 		vmov	r0, s15
+ 1794 0f9c FFF7FEFF 		bl	__aeabi_f2d
+ 1795 0fa0 0246     		mov	r2, r0
+ 1796 0fa2 0B46     		mov	r3, r1
+ 1797              		.loc 1 92 63
+ 1798 0fa4 2046     		mov	r0, r4
+ 1799 0fa6 2946     		mov	r1, r5
+ 1800 0fa8 FFF7FEFF 		bl	__aeabi_dsub
+ 1801 0fac 0246     		mov	r2, r0
+ 1802 0fae 0B46     		mov	r3, r1
+ 1803 0fb0 1046     		mov	r0, r2
+ 1804 0fb2 1946     		mov	r1, r3
+ 1805 0fb4 FFF7FEFF 		bl	__aeabi_d2f
+ 1806 0fb8 0346     		mov	r3, r0	@ float
+ 1807              		.loc 1 92 11
+ 1808 0fba B74A     		ldr	r2, .L16+16
+ 1809 0fbc D360     		str	r3, [r2, #12]	@ float
+  93:./Hardware/Src/AHRS.c **** //四元数归一化
+  94:./Hardware/Src/AHRS.c ****   float sum = sqrt(pow(QNum.q0,2)+pow(QNum.q1,2)+pow(QNum.q2,2)+pow(QNum.q3,2));
+ 1810              		.loc 1 94 28
+ 1811 0fbe B64B     		ldr	r3, .L16+16
+ 1812 0fc0 1B68     		ldr	r3, [r3]	@ float
+ 1813              		.loc 1 94 20
+ 1814 0fc2 1846     		mov	r0, r3	@ float
+ 1815 0fc4 FFF7FEFF 		bl	__aeabi_f2d
+ 1816 0fc8 0246     		mov	r2, r0
+ 1817 0fca 0B46     		mov	r3, r1
+ 1818 0fcc 9FEDB01B 		vldr.64	d1, .L16+8
+ 1819 0fd0 43EC102B 		vmov	d0, r2, r3
+ 1820 0fd4 FFF7FEFF 		bl	pow
+ARM GAS  /tmp/ccbnG7lh.s 			page 34
+
+
+ 1821 0fd8 55EC104B 		vmov	r4, r5, d0
+ 1822              		.loc 1 94 43
+ 1823 0fdc AE4B     		ldr	r3, .L16+16
+ 1824 0fde 5B68     		ldr	r3, [r3, #4]	@ float
+ 1825              		.loc 1 94 35
+ 1826 0fe0 1846     		mov	r0, r3	@ float
+ 1827 0fe2 FFF7FEFF 		bl	__aeabi_f2d
+ 1828 0fe6 0246     		mov	r2, r0
+ 1829 0fe8 0B46     		mov	r3, r1
+ 1830 0fea 9FEDA91B 		vldr.64	d1, .L16+8
+ 1831 0fee 43EC102B 		vmov	d0, r2, r3
+ 1832 0ff2 FFF7FEFF 		bl	pow
+ 1833 0ff6 53EC102B 		vmov	r2, r3, d0
+ 1834              		.loc 1 94 34
+ 1835 0ffa 2046     		mov	r0, r4
+ 1836 0ffc 2946     		mov	r1, r5
+ 1837 0ffe FFF7FEFF 		bl	__aeabi_dadd
+ 1838 1002 0246     		mov	r2, r0
+ 1839 1004 0B46     		mov	r3, r1
+ 1840 1006 1446     		mov	r4, r2
+ 1841 1008 1D46     		mov	r5, r3
+ 1842              		.loc 1 94 58
+ 1843 100a A34B     		ldr	r3, .L16+16
+ 1844 100c 9B68     		ldr	r3, [r3, #8]	@ float
+ 1845              		.loc 1 94 50
+ 1846 100e 1846     		mov	r0, r3	@ float
+ 1847 1010 FFF7FEFF 		bl	__aeabi_f2d
+ 1848 1014 0246     		mov	r2, r0
+ 1849 1016 0B46     		mov	r3, r1
+ 1850 1018 9FED9D1B 		vldr.64	d1, .L16+8
+ 1851 101c 43EC102B 		vmov	d0, r2, r3
+ 1852 1020 FFF7FEFF 		bl	pow
+ 1853 1024 53EC102B 		vmov	r2, r3, d0
+ 1854              		.loc 1 94 49
+ 1855 1028 2046     		mov	r0, r4
+ 1856 102a 2946     		mov	r1, r5
+ 1857 102c FFF7FEFF 		bl	__aeabi_dadd
+ 1858 1030 0246     		mov	r2, r0
+ 1859 1032 0B46     		mov	r3, r1
+ 1860 1034 1446     		mov	r4, r2
+ 1861 1036 1D46     		mov	r5, r3
+ 1862              		.loc 1 94 73
+ 1863 1038 974B     		ldr	r3, .L16+16
+ 1864 103a DB68     		ldr	r3, [r3, #12]	@ float
+ 1865              		.loc 1 94 65
+ 1866 103c 1846     		mov	r0, r3	@ float
+ 1867 103e FFF7FEFF 		bl	__aeabi_f2d
+ 1868 1042 0246     		mov	r2, r0
+ 1869 1044 0B46     		mov	r3, r1
+ 1870 1046 9FED921B 		vldr.64	d1, .L16+8
+ 1871 104a 43EC102B 		vmov	d0, r2, r3
+ 1872 104e FFF7FEFF 		bl	pow
+ 1873 1052 53EC102B 		vmov	r2, r3, d0
+ 1874              		.loc 1 94 15
+ 1875 1056 2046     		mov	r0, r4
+ 1876 1058 2946     		mov	r1, r5
+ 1877 105a FFF7FEFF 		bl	__aeabi_dadd
+ARM GAS  /tmp/ccbnG7lh.s 			page 35
+
+
+ 1878 105e 0246     		mov	r2, r0
+ 1879 1060 0B46     		mov	r3, r1
+ 1880 1062 43EC172B 		vmov	d7, r2, r3
+ 1881 1066 B0EE470A 		vmov.f32	s0, s14
+ 1882 106a F0EE670A 		vmov.f32	s1, s15
+ 1883 106e FFF7FEFF 		bl	sqrt
+ 1884 1072 53EC102B 		vmov	r2, r3, d0
+ 1885              		.loc 1 94 9
+ 1886 1076 1046     		mov	r0, r2
+ 1887 1078 1946     		mov	r1, r3
+ 1888 107a FFF7FEFF 		bl	__aeabi_d2f
+ 1889 107e 0346     		mov	r3, r0	@ float
+ 1890 1080 BB60     		str	r3, [r7, #8]	@ float
+  95:./Hardware/Src/AHRS.c ****   QNum.q0 = QNum.q0/sum;
+ 1891              		.loc 1 95 17
+ 1892 1082 854B     		ldr	r3, .L16+16
+ 1893 1084 D3ED006A 		vldr.32	s13, [r3]
+ 1894              		.loc 1 95 20
+ 1895 1088 97ED027A 		vldr.32	s14, [r7, #8]
+ 1896 108c C6EE877A 		vdiv.f32	s15, s13, s14
+ 1897              		.loc 1 95 11
+ 1898 1090 814B     		ldr	r3, .L16+16
+ 1899 1092 C3ED007A 		vstr.32	s15, [r3]
+  96:./Hardware/Src/AHRS.c ****   QNum.q1 = QNum.q1/sum;
+ 1900              		.loc 1 96 17
+ 1901 1096 804B     		ldr	r3, .L16+16
+ 1902 1098 D3ED016A 		vldr.32	s13, [r3, #4]
+ 1903              		.loc 1 96 20
+ 1904 109c 97ED027A 		vldr.32	s14, [r7, #8]
+ 1905 10a0 C6EE877A 		vdiv.f32	s15, s13, s14
+ 1906              		.loc 1 96 11
+ 1907 10a4 7C4B     		ldr	r3, .L16+16
+ 1908 10a6 C3ED017A 		vstr.32	s15, [r3, #4]
+  97:./Hardware/Src/AHRS.c ****   QNum.q2 = QNum.q2/sum;
+ 1909              		.loc 1 97 17
+ 1910 10aa 7B4B     		ldr	r3, .L16+16
+ 1911 10ac D3ED026A 		vldr.32	s13, [r3, #8]
+ 1912              		.loc 1 97 20
+ 1913 10b0 97ED027A 		vldr.32	s14, [r7, #8]
+ 1914 10b4 C6EE877A 		vdiv.f32	s15, s13, s14
+ 1915              		.loc 1 97 11
+ 1916 10b8 774B     		ldr	r3, .L16+16
+ 1917 10ba C3ED027A 		vstr.32	s15, [r3, #8]
+  98:./Hardware/Src/AHRS.c ****   QNum.q3 = QNum.q3/sum;
+ 1918              		.loc 1 98 17
+ 1919 10be 764B     		ldr	r3, .L16+16
+ 1920 10c0 D3ED036A 		vldr.32	s13, [r3, #12]
+ 1921              		.loc 1 98 20
+ 1922 10c4 97ED027A 		vldr.32	s14, [r7, #8]
+ 1923 10c8 C6EE877A 		vdiv.f32	s15, s13, s14
+ 1924              		.loc 1 98 11
+ 1925 10cc 724B     		ldr	r3, .L16+16
+ 1926 10ce C3ED037A 		vstr.32	s15, [r3, #12]
+  99:./Hardware/Src/AHRS.c **** 
+ 100:./Hardware/Src/AHRS.c **** //四元数转欧拉角 Yaw->Pitch->Roll
+ 101:./Hardware/Src/AHRS.c ****   angle->pitch =  asin(-2*(QNum.q2*QNum.q3-QNum.q0*QNum.q1));
+ 1927              		.loc 1 101 32
+ARM GAS  /tmp/ccbnG7lh.s 			page 36
+
+
+ 1928 10d2 714B     		ldr	r3, .L16+16
+ 1929 10d4 93ED027A 		vldr.32	s14, [r3, #8]
+ 1930              		.loc 1 101 40
+ 1931 10d8 6F4B     		ldr	r3, .L16+16
+ 1932 10da D3ED037A 		vldr.32	s15, [r3, #12]
+ 1933              		.loc 1 101 35
+ 1934 10de 27EE277A 		vmul.f32	s14, s14, s15
+ 1935              		.loc 1 101 48
+ 1936 10e2 6D4B     		ldr	r3, .L16+16
+ 1937 10e4 D3ED006A 		vldr.32	s13, [r3]
+ 1938              		.loc 1 101 56
+ 1939 10e8 6B4B     		ldr	r3, .L16+16
+ 1940 10ea D3ED017A 		vldr.32	s15, [r3, #4]
+ 1941              		.loc 1 101 51
+ 1942 10ee 66EEA77A 		vmul.f32	s15, s13, s15
+ 1943              		.loc 1 101 43
+ 1944 10f2 77EE677A 		vsub.f32	s15, s14, s15
+ 1945              		.loc 1 101 26
+ 1946 10f6 B8EE007A 		vmov.f32	s14, #-2.0e+0
+ 1947 10fa 67EE877A 		vmul.f32	s15, s15, s14
+ 1948              		.loc 1 101 19
+ 1949 10fe 17EE900A 		vmov	r0, s15
+ 1950 1102 FFF7FEFF 		bl	__aeabi_f2d
+ 1951 1106 0246     		mov	r2, r0
+ 1952 1108 0B46     		mov	r3, r1
+ 1953 110a 43EC102B 		vmov	d0, r2, r3
+ 1954 110e FFF7FEFF 		bl	asin
+ 1955 1112 53EC102B 		vmov	r2, r3, d0
+ 1956 1116 1046     		mov	r0, r2
+ 1957 1118 1946     		mov	r1, r3
+ 1958 111a FFF7FEFF 		bl	__aeabi_d2f
+ 1959 111e 0246     		mov	r2, r0	@ float
+ 1960              		.loc 1 101 16
+ 1961 1120 7B68     		ldr	r3, [r7, #4]
+ 1962 1122 1A60     		str	r2, [r3]	@ float
+ 102:./Hardware/Src/AHRS.c ****   angle->yaw = atan((2*(QNum.q1*QNum.q2+QNum.q0*QNum.q3))/(pow(QNum.q0,2)-pow(QNum.q1,2)+pow(QNum.q
+ 1963              		.loc 1 102 29
+ 1964 1124 5C4B     		ldr	r3, .L16+16
+ 1965 1126 93ED017A 		vldr.32	s14, [r3, #4]
+ 1966              		.loc 1 102 37
+ 1967 112a 5B4B     		ldr	r3, .L16+16
+ 1968 112c D3ED027A 		vldr.32	s15, [r3, #8]
+ 1969              		.loc 1 102 32
+ 1970 1130 27EE277A 		vmul.f32	s14, s14, s15
+ 1971              		.loc 1 102 45
+ 1972 1134 584B     		ldr	r3, .L16+16
+ 1973 1136 D3ED006A 		vldr.32	s13, [r3]
+ 1974              		.loc 1 102 53
+ 1975 113a 574B     		ldr	r3, .L16+16
+ 1976 113c D3ED037A 		vldr.32	s15, [r3, #12]
+ 1977              		.loc 1 102 48
+ 1978 1140 66EEA77A 		vmul.f32	s15, s13, s15
+ 1979              		.loc 1 102 40
+ 1980 1144 77EE277A 		vadd.f32	s15, s14, s15
+ 1981              		.loc 1 102 23
+ 1982 1148 77EEA77A 		vadd.f32	s15, s15, s15
+ 1983 114c 17EE900A 		vmov	r0, s15
+ARM GAS  /tmp/ccbnG7lh.s 			page 37
+
+
+ 1984 1150 FFF7FEFF 		bl	__aeabi_f2d
+ 1985 1154 0446     		mov	r4, r0
+ 1986 1156 0D46     		mov	r5, r1
+ 1987              		.loc 1 102 68
+ 1988 1158 4F4B     		ldr	r3, .L16+16
+ 1989 115a 1B68     		ldr	r3, [r3]	@ float
+ 1990              		.loc 1 102 60
+ 1991 115c 1846     		mov	r0, r3	@ float
+ 1992 115e FFF7FEFF 		bl	__aeabi_f2d
+ 1993 1162 0246     		mov	r2, r0
+ 1994 1164 0B46     		mov	r3, r1
+ 1995 1166 9FED4A1B 		vldr.64	d1, .L16+8
+ 1996 116a 43EC102B 		vmov	d0, r2, r3
+ 1997 116e FFF7FEFF 		bl	pow
+ 1998 1172 59EC108B 		vmov	r8, r9, d0
+ 1999              		.loc 1 102 83
+ 2000 1176 484B     		ldr	r3, .L16+16
+ 2001 1178 5B68     		ldr	r3, [r3, #4]	@ float
+ 2002              		.loc 1 102 75
+ 2003 117a 1846     		mov	r0, r3	@ float
+ 2004 117c FFF7FEFF 		bl	__aeabi_f2d
+ 2005 1180 0246     		mov	r2, r0
+ 2006 1182 0B46     		mov	r3, r1
+ 2007 1184 9FED421B 		vldr.64	d1, .L16+8
+ 2008 1188 43EC102B 		vmov	d0, r2, r3
+ 2009 118c FFF7FEFF 		bl	pow
+ 2010 1190 53EC102B 		vmov	r2, r3, d0
+ 2011              		.loc 1 102 74
+ 2012 1194 4046     		mov	r0, r8
+ 2013 1196 4946     		mov	r1, r9
+ 2014 1198 FFF7FEFF 		bl	__aeabi_dsub
+ 2015 119c 0246     		mov	r2, r0
+ 2016 119e 0B46     		mov	r3, r1
+ 2017 11a0 9046     		mov	r8, r2
+ 2018 11a2 9946     		mov	r9, r3
+ 2019              		.loc 1 102 98
+ 2020 11a4 3C4B     		ldr	r3, .L16+16
+ 2021 11a6 9B68     		ldr	r3, [r3, #8]	@ float
+ 2022              		.loc 1 102 90
+ 2023 11a8 1846     		mov	r0, r3	@ float
+ 2024 11aa FFF7FEFF 		bl	__aeabi_f2d
+ 2025 11ae 0246     		mov	r2, r0
+ 2026 11b0 0B46     		mov	r3, r1
+ 2027 11b2 9FED371B 		vldr.64	d1, .L16+8
+ 2028 11b6 43EC102B 		vmov	d0, r2, r3
+ 2029 11ba FFF7FEFF 		bl	pow
+ 2030 11be 53EC102B 		vmov	r2, r3, d0
+ 2031              		.loc 1 102 89
+ 2032 11c2 4046     		mov	r0, r8
+ 2033 11c4 4946     		mov	r1, r9
+ 2034 11c6 FFF7FEFF 		bl	__aeabi_dadd
+ 2035 11ca 0246     		mov	r2, r0
+ 2036 11cc 0B46     		mov	r3, r1
+ 2037 11ce 9046     		mov	r8, r2
+ 2038 11d0 9946     		mov	r9, r3
+ 2039              		.loc 1 102 113
+ 2040 11d2 314B     		ldr	r3, .L16+16
+ARM GAS  /tmp/ccbnG7lh.s 			page 38
+
+
+ 2041 11d4 DB68     		ldr	r3, [r3, #12]	@ float
+ 2042              		.loc 1 102 105
+ 2043 11d6 1846     		mov	r0, r3	@ float
+ 2044 11d8 FFF7FEFF 		bl	__aeabi_f2d
+ 2045 11dc 0246     		mov	r2, r0
+ 2046 11de 0B46     		mov	r3, r1
+ 2047 11e0 9FED2B1B 		vldr.64	d1, .L16+8
+ 2048 11e4 43EC102B 		vmov	d0, r2, r3
+ 2049 11e8 FFF7FEFF 		bl	pow
+ 2050 11ec 53EC102B 		vmov	r2, r3, d0
+ 2051              		.loc 1 102 104
+ 2052 11f0 4046     		mov	r0, r8
+ 2053 11f2 4946     		mov	r1, r9
+ 2054 11f4 FFF7FEFF 		bl	__aeabi_dsub
+ 2055 11f8 0246     		mov	r2, r0
+ 2056 11fa 0B46     		mov	r3, r1
+ 2057              		.loc 1 102 16
+ 2058 11fc 2046     		mov	r0, r4
+ 2059 11fe 2946     		mov	r1, r5
+ 2060 1200 FFF7FEFF 		bl	__aeabi_ddiv
+ 2061 1204 0246     		mov	r2, r0
+ 2062 1206 0B46     		mov	r3, r1
+ 2063 1208 43EC172B 		vmov	d7, r2, r3
+ 2064 120c B0EE470A 		vmov.f32	s0, s14
+ 2065 1210 F0EE670A 		vmov.f32	s1, s15
+ 2066 1214 FFF7FEFF 		bl	atan
+ 2067 1218 53EC102B 		vmov	r2, r3, d0
+ 2068 121c 1046     		mov	r0, r2
+ 2069 121e 1946     		mov	r1, r3
+ 2070 1220 FFF7FEFF 		bl	__aeabi_d2f
+ 2071 1224 0246     		mov	r2, r0	@ float
+ 2072              		.loc 1 102 14
+ 2073 1226 7B68     		ldr	r3, [r7, #4]
+ 2074 1228 9A60     		str	r2, [r3, #8]	@ float
+ 103:./Hardware/Src/AHRS.c ****   angle->roll = atan((2*(QNum.q1*QNum.q3+QNum.q0*QNum.q2))/(pow(QNum.q0,2)-pow(QNum.q1,2)-pow(QNum.
+ 2075              		.loc 1 103 30
+ 2076 122a 1B4B     		ldr	r3, .L16+16
+ 2077 122c 93ED017A 		vldr.32	s14, [r3, #4]
+ 2078              		.loc 1 103 38
+ 2079 1230 194B     		ldr	r3, .L16+16
+ 2080 1232 D3ED037A 		vldr.32	s15, [r3, #12]
+ 2081              		.loc 1 103 33
+ 2082 1236 27EE277A 		vmul.f32	s14, s14, s15
+ 2083              		.loc 1 103 46
+ 2084 123a 174B     		ldr	r3, .L16+16
+ 2085 123c D3ED006A 		vldr.32	s13, [r3]
+ 2086              		.loc 1 103 54
+ 2087 1240 154B     		ldr	r3, .L16+16
+ 2088 1242 D3ED027A 		vldr.32	s15, [r3, #8]
+ 2089              		.loc 1 103 49
+ 2090 1246 66EEA77A 		vmul.f32	s15, s13, s15
+ 2091              		.loc 1 103 41
+ 2092 124a 77EE277A 		vadd.f32	s15, s14, s15
+ 2093              		.loc 1 103 24
+ 2094 124e 77EEA77A 		vadd.f32	s15, s15, s15
+ 2095 1252 17EE900A 		vmov	r0, s15
+ 2096 1256 FFF7FEFF 		bl	__aeabi_f2d
+ARM GAS  /tmp/ccbnG7lh.s 			page 39
+
+
+ 2097 125a 0446     		mov	r4, r0
+ 2098 125c 0D46     		mov	r5, r1
+ 2099              		.loc 1 103 69
+ 2100 125e 0E4B     		ldr	r3, .L16+16
+ 2101 1260 1B68     		ldr	r3, [r3]	@ float
+ 2102              		.loc 1 103 61
+ 2103 1262 1846     		mov	r0, r3	@ float
+ 2104 1264 FFF7FEFF 		bl	__aeabi_f2d
+ 2105 1268 0246     		mov	r2, r0
+ 2106 126a 0B46     		mov	r3, r1
+ 2107 126c 9FED081B 		vldr.64	d1, .L16+8
+ 2108 1270 43EC102B 		vmov	d0, r2, r3
+ 2109 1274 FFF7FEFF 		bl	pow
+ 2110 1278 59EC108B 		vmov	r8, r9, d0
+ 2111              		.loc 1 103 84
+ 2112 127c 064B     		ldr	r3, .L16+16
+ 2113 127e 5B68     		ldr	r3, [r3, #4]	@ float
+ 2114              		.loc 1 103 76
+ 2115 1280 1846     		mov	r0, r3	@ float
+ 2116 1282 FFF7FEFF 		bl	__aeabi_f2d
+ 2117 1286 11E0     		b	.L17
+ 2118              	.L18:
+ 2119              		.align	3
+ 2120              	.L16:
+ 2121 1288 FA7E6ABC 		.word	-1133871366
+ 2122 128c 7493783F 		.word	1064866676
+ 2123 1290 00000000 		.word	0
+ 2124 1294 00000040 		.word	1073741824
+ 2125 1298 00000000 		.word	QNum
+ 2126 129c 00000000 		.word	Wy
+ 2127 12a0 00000000 		.word	Wx
+ 2128 12a4 00000000 		.word	Wz
+ 2129 12a8 00000000 		.word	e3
+ 2130              	.L17:
+ 2131 12ac 0246     		mov	r2, r0
+ 2132 12ae 0B46     		mov	r3, r1
+ 2133 12b0 9FED2B1B 		vldr.64	d1, .L19
+ 2134 12b4 43EC102B 		vmov	d0, r2, r3
+ 2135 12b8 FFF7FEFF 		bl	pow
+ 2136 12bc 53EC102B 		vmov	r2, r3, d0
+ 2137              		.loc 1 103 75
+ 2138 12c0 4046     		mov	r0, r8
+ 2139 12c2 4946     		mov	r1, r9
+ 2140 12c4 FFF7FEFF 		bl	__aeabi_dsub
+ 2141 12c8 0246     		mov	r2, r0
+ 2142 12ca 0B46     		mov	r3, r1
+ 2143 12cc 9046     		mov	r8, r2
+ 2144 12ce 9946     		mov	r9, r3
+ 2145              		.loc 1 103 99
+ 2146 12d0 254B     		ldr	r3, .L19+8
+ 2147 12d2 9B68     		ldr	r3, [r3, #8]	@ float
+ 2148              		.loc 1 103 91
+ 2149 12d4 1846     		mov	r0, r3	@ float
+ 2150 12d6 FFF7FEFF 		bl	__aeabi_f2d
+ 2151 12da 0246     		mov	r2, r0
+ 2152 12dc 0B46     		mov	r3, r1
+ 2153 12de 9FED201B 		vldr.64	d1, .L19
+ARM GAS  /tmp/ccbnG7lh.s 			page 40
+
+
+ 2154 12e2 43EC102B 		vmov	d0, r2, r3
+ 2155 12e6 FFF7FEFF 		bl	pow
+ 2156 12ea 53EC102B 		vmov	r2, r3, d0
+ 2157              		.loc 1 103 90
+ 2158 12ee 4046     		mov	r0, r8
+ 2159 12f0 4946     		mov	r1, r9
+ 2160 12f2 FFF7FEFF 		bl	__aeabi_dsub
+ 2161 12f6 0246     		mov	r2, r0
+ 2162 12f8 0B46     		mov	r3, r1
+ 2163 12fa 9046     		mov	r8, r2
+ 2164 12fc 9946     		mov	r9, r3
+ 2165              		.loc 1 103 114
+ 2166 12fe 1A4B     		ldr	r3, .L19+8
+ 2167 1300 DB68     		ldr	r3, [r3, #12]	@ float
+ 2168              		.loc 1 103 106
+ 2169 1302 1846     		mov	r0, r3	@ float
+ 2170 1304 FFF7FEFF 		bl	__aeabi_f2d
+ 2171 1308 0246     		mov	r2, r0
+ 2172 130a 0B46     		mov	r3, r1
+ 2173 130c 9FED141B 		vldr.64	d1, .L19
+ 2174 1310 43EC102B 		vmov	d0, r2, r3
+ 2175 1314 FFF7FEFF 		bl	pow
+ 2176 1318 53EC102B 		vmov	r2, r3, d0
+ 2177              		.loc 1 103 105
+ 2178 131c 4046     		mov	r0, r8
+ 2179 131e 4946     		mov	r1, r9
+ 2180 1320 FFF7FEFF 		bl	__aeabi_dadd
+ 2181 1324 0246     		mov	r2, r0
+ 2182 1326 0B46     		mov	r3, r1
+ 2183              		.loc 1 103 17
+ 2184 1328 2046     		mov	r0, r4
+ 2185 132a 2946     		mov	r1, r5
+ 2186 132c FFF7FEFF 		bl	__aeabi_ddiv
+ 2187 1330 0246     		mov	r2, r0
+ 2188 1332 0B46     		mov	r3, r1
+ 2189 1334 43EC172B 		vmov	d7, r2, r3
+ 2190 1338 B0EE470A 		vmov.f32	s0, s14
+ 2191 133c F0EE670A 		vmov.f32	s1, s15
+ 2192 1340 FFF7FEFF 		bl	atan
+ 2193 1344 53EC102B 		vmov	r2, r3, d0
+ 2194 1348 1046     		mov	r0, r2
+ 2195 134a 1946     		mov	r1, r3
+ 2196 134c FFF7FEFF 		bl	__aeabi_d2f
+ 2197 1350 0246     		mov	r2, r0	@ float
+ 2198              		.loc 1 103 15
+ 2199 1352 7B68     		ldr	r3, [r7, #4]
+ 2200 1354 5A60     		str	r2, [r3, #4]	@ float
+ 104:./Hardware/Src/AHRS.c **** }
+ 2201              		.loc 1 104 1
+ 2202 1356 00BF     		nop
+ 2203 1358 9837     		adds	r7, r7, #152
+ 2204              		.cfi_def_cfa_offset 24
+ 2205 135a BD46     		mov	sp, r7
+ 2206              		.cfi_def_cfa_register 13
+ 2207              		@ sp needed
+ 2208 135c BDE8B083 		pop	{r4, r5, r7, r8, r9, pc}
+ 2209              	.L20:
+ARM GAS  /tmp/ccbnG7lh.s 			page 41
+
+
+ 2210              		.align	3
+ 2211              	.L19:
+ 2212 1360 00000000 		.word	0
+ 2213 1364 00000040 		.word	1073741824
+ 2214 1368 00000000 		.word	QNum
+ 2215              		.cfi_endproc
+ 2216              	.LFE123:
+ 2218              		.global	Xoffset
+ 2219              		.section	.bss.Xoffset,"aw",%nobits
+ 2220              		.align	2
+ 2223              	Xoffset:
+ 2224 0000 00000000 		.space	4
+ 2225              		.global	Yoffset
+ 2226              		.section	.bss.Yoffset,"aw",%nobits
+ 2227              		.align	2
+ 2230              	Yoffset:
+ 2231 0000 00000000 		.space	4
+ 2232              		.global	Zoffset
+ 2233              		.section	.bss.Zoffset,"aw",%nobits
+ 2234              		.align	2
+ 2237              	Zoffset:
+ 2238 0000 00000000 		.space	4
+ 2239              		.global	Kmx
+ 2240              		.section	.bss.Kmx,"aw",%nobits
+ 2241              		.align	2
+ 2244              	Kmx:
+ 2245 0000 00000000 		.space	4
+ 2246              		.global	Kmy
+ 2247              		.section	.bss.Kmy,"aw",%nobits
+ 2248              		.align	2
+ 2251              	Kmy:
+ 2252 0000 00000000 		.space	4
+ 2253              		.global	Kmz
+ 2254              		.section	.bss.Kmz,"aw",%nobits
+ 2255              		.align	2
+ 2258              	Kmz:
+ 2259 0000 00000000 		.space	4
+ 2260              		.section	.text.HMC5883L_Motify,"ax",%progbits
+ 2261              		.align	1
+ 2262              		.global	HMC5883L_Motify
+ 2263              		.syntax unified
+ 2264              		.thumb
+ 2265              		.thumb_func
+ 2267              	HMC5883L_Motify:
+ 2268              	.LFB124:
+ 105:./Hardware/Src/AHRS.c **** 
+ 106:./Hardware/Src/AHRS.c **** float Xoffset,Yoffset,Zoffset,Kmx,Kmy,Kmz;
+ 107:./Hardware/Src/AHRS.c **** void HMC5883L_Motify(void){
+ 2269              		.loc 1 107 27
+ 2270              		.cfi_startproc
+ 2271              		@ args = 0, pretend = 0, frame = 32
+ 2272              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2273 0000 80B5     		push	{r7, lr}
+ 2274              		.cfi_def_cfa_offset 8
+ 2275              		.cfi_offset 7, -8
+ 2276              		.cfi_offset 14, -4
+ 2277 0002 88B0     		sub	sp, sp, #32
+ARM GAS  /tmp/ccbnG7lh.s 			page 42
+
+
+ 2278              		.cfi_def_cfa_offset 40
+ 2279 0004 00AF     		add	r7, sp, #0
+ 2280              		.cfi_def_cfa_register 7
+ 108:./Hardware/Src/AHRS.c ****   HMC588CL_ReadData(HMC5883L_data);
+ 2281              		.loc 1 108 3
+ 2282 0006 8448     		ldr	r0, .L42
+ 2283 0008 FFF7FEFF 		bl	HMC588CL_ReadData
+ 109:./Hardware/Src/AHRS.c ****   float Xmin,Xmax = HMC5883L_data[0];
+ 2284              		.loc 1 109 34
+ 2285 000c 824B     		ldr	r3, .L42
+ 2286 000e B3F90030 		ldrsh	r3, [r3]
+ 2287              		.loc 1 109 14
+ 2288 0012 07EE903A 		vmov	s15, r3	@ int
+ 2289 0016 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 2290 001a C7ED067A 		vstr.32	s15, [r7, #24]
+ 110:./Hardware/Src/AHRS.c ****   float Ymin,Ymax = HMC5883L_data[1];
+ 2291              		.loc 1 110 34
+ 2292 001e 7E4B     		ldr	r3, .L42
+ 2293 0020 B3F90230 		ldrsh	r3, [r3, #2]
+ 2294              		.loc 1 110 14
+ 2295 0024 07EE903A 		vmov	s15, r3	@ int
+ 2296 0028 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 2297 002c C7ED047A 		vstr.32	s15, [r7, #16]
+ 111:./Hardware/Src/AHRS.c ****   float Zmin,Zmax = HMC5883L_data[2];
+ 2298              		.loc 1 111 34
+ 2299 0030 794B     		ldr	r3, .L42
+ 2300 0032 B3F90430 		ldrsh	r3, [r3, #4]
+ 2301              		.loc 1 111 14
+ 2302 0036 07EE903A 		vmov	s15, r3	@ int
+ 2303 003a F8EEE77A 		vcvt.f32.s32	s15, s15
+ 2304 003e C7ED027A 		vstr.32	s15, [r7, #8]
+ 112:./Hardware/Src/AHRS.c **** 
+ 113:./Hardware/Src/AHRS.c ****   int i = 200;
+ 2305              		.loc 1 113 7
+ 2306 0042 C823     		movs	r3, #200
+ 2307 0044 7B60     		str	r3, [r7, #4]
+ 114:./Hardware/Src/AHRS.c ****   while(i--){
+ 2308              		.loc 1 114 8
+ 2309 0046 8FE0     		b	.L22
+ 2310              	.L35:
+ 115:./Hardware/Src/AHRS.c ****     HMC588CL_ReadData(HMC5883L_data);
+ 2311              		.loc 1 115 5
+ 2312 0048 7348     		ldr	r0, .L42
+ 2313 004a FFF7FEFF 		bl	HMC588CL_ReadData
+ 116:./Hardware/Src/AHRS.c ****     if(Xmin>HMC5883L_data[0]) Xmin = HMC5883L_data[0];
+ 2314              		.loc 1 116 26
+ 2315 004e 724B     		ldr	r3, .L42
+ 2316 0050 B3F90030 		ldrsh	r3, [r3]
+ 2317              		.loc 1 116 12
+ 2318 0054 07EE903A 		vmov	s15, r3	@ int
+ 2319 0058 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 2320              		.loc 1 116 7
+ 2321 005c 97ED077A 		vldr.32	s14, [r7, #28]
+ 2322 0060 B4EEE77A 		vcmpe.f32	s14, s15
+ 2323 0064 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 2324 0068 08DD     		ble	.L23
+ 2325              		.loc 1 116 51 discriminator 1
+ARM GAS  /tmp/ccbnG7lh.s 			page 43
+
+
+ 2326 006a 6B4B     		ldr	r3, .L42
+ 2327 006c B3F90030 		ldrsh	r3, [r3]
+ 2328              		.loc 1 116 36 discriminator 1
+ 2329 0070 07EE903A 		vmov	s15, r3	@ int
+ 2330 0074 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 2331 0078 C7ED077A 		vstr.32	s15, [r7, #28]
+ 2332              	.L23:
+ 117:./Hardware/Src/AHRS.c ****     if(Xmax<HMC5883L_data[0]) Xmax = HMC5883L_data[0];
+ 2333              		.loc 1 117 26
+ 2334 007c 664B     		ldr	r3, .L42
+ 2335 007e B3F90030 		ldrsh	r3, [r3]
+ 2336              		.loc 1 117 12
+ 2337 0082 07EE903A 		vmov	s15, r3	@ int
+ 2338 0086 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 2339              		.loc 1 117 7
+ 2340 008a 97ED067A 		vldr.32	s14, [r7, #24]
+ 2341 008e B4EEE77A 		vcmpe.f32	s14, s15
+ 2342 0092 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 2343 0096 08D5     		bpl	.L25
+ 2344              		.loc 1 117 51 discriminator 1
+ 2345 0098 5F4B     		ldr	r3, .L42
+ 2346 009a B3F90030 		ldrsh	r3, [r3]
+ 2347              		.loc 1 117 36 discriminator 1
+ 2348 009e 07EE903A 		vmov	s15, r3	@ int
+ 2349 00a2 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 2350 00a6 C7ED067A 		vstr.32	s15, [r7, #24]
+ 2351              	.L25:
+ 118:./Hardware/Src/AHRS.c ****     if(Ymin>HMC5883L_data[1]) Ymin = HMC5883L_data[1];
+ 2352              		.loc 1 118 26
+ 2353 00aa 5B4B     		ldr	r3, .L42
+ 2354 00ac B3F90230 		ldrsh	r3, [r3, #2]
+ 2355              		.loc 1 118 12
+ 2356 00b0 07EE903A 		vmov	s15, r3	@ int
+ 2357 00b4 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 2358              		.loc 1 118 7
+ 2359 00b8 97ED057A 		vldr.32	s14, [r7, #20]
+ 2360 00bc B4EEE77A 		vcmpe.f32	s14, s15
+ 2361 00c0 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 2362 00c4 08DD     		ble	.L27
+ 2363              		.loc 1 118 51 discriminator 1
+ 2364 00c6 544B     		ldr	r3, .L42
+ 2365 00c8 B3F90230 		ldrsh	r3, [r3, #2]
+ 2366              		.loc 1 118 36 discriminator 1
+ 2367 00cc 07EE903A 		vmov	s15, r3	@ int
+ 2368 00d0 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 2369 00d4 C7ED057A 		vstr.32	s15, [r7, #20]
+ 2370              	.L27:
+ 119:./Hardware/Src/AHRS.c ****     if(Ymax<HMC5883L_data[1]) Ymax = HMC5883L_data[1];    
+ 2371              		.loc 1 119 26
+ 2372 00d8 4F4B     		ldr	r3, .L42
+ 2373 00da B3F90230 		ldrsh	r3, [r3, #2]
+ 2374              		.loc 1 119 12
+ 2375 00de 07EE903A 		vmov	s15, r3	@ int
+ 2376 00e2 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 2377              		.loc 1 119 7
+ 2378 00e6 97ED047A 		vldr.32	s14, [r7, #16]
+ 2379 00ea B4EEE77A 		vcmpe.f32	s14, s15
+ARM GAS  /tmp/ccbnG7lh.s 			page 44
+
+
+ 2380 00ee F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 2381 00f2 08D5     		bpl	.L29
+ 2382              		.loc 1 119 51 discriminator 1
+ 2383 00f4 484B     		ldr	r3, .L42
+ 2384 00f6 B3F90230 		ldrsh	r3, [r3, #2]
+ 2385              		.loc 1 119 36 discriminator 1
+ 2386 00fa 07EE903A 		vmov	s15, r3	@ int
+ 2387 00fe F8EEE77A 		vcvt.f32.s32	s15, s15
+ 2388 0102 C7ED047A 		vstr.32	s15, [r7, #16]
+ 2389              	.L29:
+ 120:./Hardware/Src/AHRS.c ****     if(Zmin>HMC5883L_data[2]) Zmin = HMC5883L_data[2];
+ 2390              		.loc 1 120 26
+ 2391 0106 444B     		ldr	r3, .L42
+ 2392 0108 B3F90430 		ldrsh	r3, [r3, #4]
+ 2393              		.loc 1 120 12
+ 2394 010c 07EE903A 		vmov	s15, r3	@ int
+ 2395 0110 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 2396              		.loc 1 120 7
+ 2397 0114 97ED037A 		vldr.32	s14, [r7, #12]
+ 2398 0118 B4EEE77A 		vcmpe.f32	s14, s15
+ 2399 011c F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 2400 0120 08DD     		ble	.L31
+ 2401              		.loc 1 120 51 discriminator 1
+ 2402 0122 3D4B     		ldr	r3, .L42
+ 2403 0124 B3F90430 		ldrsh	r3, [r3, #4]
+ 2404              		.loc 1 120 36 discriminator 1
+ 2405 0128 07EE903A 		vmov	s15, r3	@ int
+ 2406 012c F8EEE77A 		vcvt.f32.s32	s15, s15
+ 2407 0130 C7ED037A 		vstr.32	s15, [r7, #12]
+ 2408              	.L31:
+ 121:./Hardware/Src/AHRS.c ****     if(Zmax<HMC5883L_data[2]) Zmax = HMC5883L_data[2]; 
+ 2409              		.loc 1 121 26
+ 2410 0134 384B     		ldr	r3, .L42
+ 2411 0136 B3F90430 		ldrsh	r3, [r3, #4]
+ 2412              		.loc 1 121 12
+ 2413 013a 07EE903A 		vmov	s15, r3	@ int
+ 2414 013e F8EEE77A 		vcvt.f32.s32	s15, s15
+ 2415              		.loc 1 121 7
+ 2416 0142 97ED027A 		vldr.32	s14, [r7, #8]
+ 2417 0146 B4EEE77A 		vcmpe.f32	s14, s15
+ 2418 014a F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 2419 014e 08D5     		bpl	.L33
+ 2420              		.loc 1 121 51 discriminator 1
+ 2421 0150 314B     		ldr	r3, .L42
+ 2422 0152 B3F90430 		ldrsh	r3, [r3, #4]
+ 2423              		.loc 1 121 36 discriminator 1
+ 2424 0156 07EE903A 		vmov	s15, r3	@ int
+ 2425 015a F8EEE77A 		vcvt.f32.s32	s15, s15
+ 2426 015e C7ED027A 		vstr.32	s15, [r7, #8]
+ 2427              	.L33:
+ 122:./Hardware/Src/AHRS.c ****     Delay_ms(100);    
+ 2428              		.loc 1 122 5
+ 2429 0162 6420     		movs	r0, #100
+ 2430 0164 FFF7FEFF 		bl	Delay_ms
+ 2431              	.L22:
+ 114:./Hardware/Src/AHRS.c ****     HMC588CL_ReadData(HMC5883L_data);
+ 2432              		.loc 1 114 10
+ARM GAS  /tmp/ccbnG7lh.s 			page 45
+
+
+ 2433 0168 7B68     		ldr	r3, [r7, #4]
+ 2434 016a 5A1E     		subs	r2, r3, #1
+ 2435 016c 7A60     		str	r2, [r7, #4]
+ 114:./Hardware/Src/AHRS.c ****     HMC588CL_ReadData(HMC5883L_data);
+ 2436              		.loc 1 114 9
+ 2437 016e 002B     		cmp	r3, #0
+ 2438 0170 7FF46AAF 		bne	.L35
+ 123:./Hardware/Src/AHRS.c ****   }
+ 124:./Hardware/Src/AHRS.c ****   Xoffset = (Xmax+Xmin)/2;
+ 2439              		.loc 1 124 18
+ 2440 0174 97ED067A 		vldr.32	s14, [r7, #24]
+ 2441 0178 D7ED077A 		vldr.32	s15, [r7, #28]
+ 2442 017c 37EE277A 		vadd.f32	s14, s14, s15
+ 2443              		.loc 1 124 24
+ 2444 0180 F0EE006A 		vmov.f32	s13, #2.0e+0
+ 2445 0184 C7EE267A 		vdiv.f32	s15, s14, s13
+ 2446              		.loc 1 124 11
+ 2447 0188 244B     		ldr	r3, .L42+4
+ 2448 018a C3ED007A 		vstr.32	s15, [r3]
+ 125:./Hardware/Src/AHRS.c ****   Yoffset = (Ymax+Ymin)/2;
+ 2449              		.loc 1 125 18
+ 2450 018e 97ED047A 		vldr.32	s14, [r7, #16]
+ 2451 0192 D7ED057A 		vldr.32	s15, [r7, #20]
+ 2452 0196 37EE277A 		vadd.f32	s14, s14, s15
+ 2453              		.loc 1 125 24
+ 2454 019a F0EE006A 		vmov.f32	s13, #2.0e+0
+ 2455 019e C7EE267A 		vdiv.f32	s15, s14, s13
+ 2456              		.loc 1 125 11
+ 2457 01a2 1F4B     		ldr	r3, .L42+8
+ 2458 01a4 C3ED007A 		vstr.32	s15, [r3]
+ 126:./Hardware/Src/AHRS.c ****   Zoffset = (Zmax+Zmin)/2;
+ 2459              		.loc 1 126 18
+ 2460 01a8 97ED027A 		vldr.32	s14, [r7, #8]
+ 2461 01ac D7ED037A 		vldr.32	s15, [r7, #12]
+ 2462 01b0 37EE277A 		vadd.f32	s14, s14, s15
+ 2463              		.loc 1 126 24
+ 2464 01b4 F0EE006A 		vmov.f32	s13, #2.0e+0
+ 2465 01b8 C7EE267A 		vdiv.f32	s15, s14, s13
+ 2466              		.loc 1 126 11
+ 2467 01bc 194B     		ldr	r3, .L42+12
+ 2468 01be C3ED007A 		vstr.32	s15, [r3]
+ 127:./Hardware/Src/AHRS.c ****   Kmx = 2/(Xmax-Xmin);
+ 2469              		.loc 1 127 16
+ 2470 01c2 97ED067A 		vldr.32	s14, [r7, #24]
+ 2471 01c6 D7ED077A 		vldr.32	s15, [r7, #28]
+ 2472 01ca 37EE677A 		vsub.f32	s14, s14, s15
+ 2473              		.loc 1 127 10
+ 2474 01ce F0EE006A 		vmov.f32	s13, #2.0e+0
+ 2475 01d2 C6EE877A 		vdiv.f32	s15, s13, s14
+ 2476              		.loc 1 127 7
+ 2477 01d6 144B     		ldr	r3, .L42+16
+ 2478 01d8 C3ED007A 		vstr.32	s15, [r3]
+ 128:./Hardware/Src/AHRS.c ****   Kmy = 2/(Ymax-Ymin);
+ 2479              		.loc 1 128 16
+ 2480 01dc 97ED047A 		vldr.32	s14, [r7, #16]
+ 2481 01e0 D7ED057A 		vldr.32	s15, [r7, #20]
+ 2482 01e4 37EE677A 		vsub.f32	s14, s14, s15
+ARM GAS  /tmp/ccbnG7lh.s 			page 46
+
+
+ 2483              		.loc 1 128 10
+ 2484 01e8 F0EE006A 		vmov.f32	s13, #2.0e+0
+ 2485 01ec C6EE877A 		vdiv.f32	s15, s13, s14
+ 2486              		.loc 1 128 7
+ 2487 01f0 0E4B     		ldr	r3, .L42+20
+ 2488 01f2 C3ED007A 		vstr.32	s15, [r3]
+ 129:./Hardware/Src/AHRS.c ****   Kmz = 2/(Zmax-Zmin);
+ 2489              		.loc 1 129 16
+ 2490 01f6 97ED027A 		vldr.32	s14, [r7, #8]
+ 2491 01fa D7ED037A 		vldr.32	s15, [r7, #12]
+ 2492 01fe 37EE677A 		vsub.f32	s14, s14, s15
+ 2493              		.loc 1 129 10
+ 2494 0202 F0EE006A 		vmov.f32	s13, #2.0e+0
+ 2495 0206 C6EE877A 		vdiv.f32	s15, s13, s14
+ 2496              		.loc 1 129 7
+ 2497 020a 094B     		ldr	r3, .L42+24
+ 2498 020c C3ED007A 		vstr.32	s15, [r3]
+ 130:./Hardware/Src/AHRS.c **** }
+ 2499              		.loc 1 130 1
+ 2500 0210 00BF     		nop
+ 2501 0212 2037     		adds	r7, r7, #32
+ 2502              		.cfi_def_cfa_offset 8
+ 2503 0214 BD46     		mov	sp, r7
+ 2504              		.cfi_def_cfa_register 13
+ 2505              		@ sp needed
+ 2506 0216 80BD     		pop	{r7, pc}
+ 2507              	.L43:
+ 2508              		.align	2
+ 2509              	.L42:
+ 2510 0218 00000000 		.word	HMC5883L_data
+ 2511 021c 00000000 		.word	Xoffset
+ 2512 0220 00000000 		.word	Yoffset
+ 2513 0224 00000000 		.word	Zoffset
+ 2514 0228 00000000 		.word	Kmx
+ 2515 022c 00000000 		.word	Kmy
+ 2516 0230 00000000 		.word	Kmz
+ 2517              		.cfi_endproc
+ 2518              	.LFE124:
+ 2520              		.text
+ 2521              	.Letext0:
+ 2522              		.file 2 "./Hardware/Inc/IMU.h"
+ 2523              		.file 3 "/usr/lib/gcc/arm-none-eabi/12.2.1/include/stdint.h"
+ 2524              		.file 4 "./Hardware/Inc/MPU6050.h"
+ 2525              		.file 5 "./Hardware/Inc/HMC5883L.h"
+ 2526              		.file 6 "./Tools/Inc/delay.h"
+ 2527              		.file 7 "/usr/include/newlib/math.h"
+ 2528              		.file 8 "./Start/stm32f4xx.h"
+ARM GAS  /tmp/ccbnG7lh.s 			page 47
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 AHRS.c
+     /tmp/ccbnG7lh.s:25     .rodata.Pic:0000000000000000 Pic
+     /tmp/ccbnG7lh.s:22     .rodata.Pic:0000000000000000 $d
+     /tmp/ccbnG7lh.s:32     .rodata.K:0000000000000000 K
+     /tmp/ccbnG7lh.s:29     .rodata.K:0000000000000000 $d
+     /tmp/ccbnG7lh.s:39     .rodata.Kg:0000000000000000 Kg
+     /tmp/ccbnG7lh.s:36     .rodata.Kg:0000000000000000 $d
+     /tmp/ccbnG7lh.s:46     .bss.Gyro:0000000000000000 Gyro
+     /tmp/ccbnG7lh.s:43     .bss.Gyro:0000000000000000 $d
+     /tmp/ccbnG7lh.s:53     .data.QNum:0000000000000000 QNum
+     /tmp/ccbnG7lh.s:50     .data.QNum:0000000000000000 $d
+     /tmp/ccbnG7lh.s:63     .bss.angle:0000000000000000 angle
+     /tmp/ccbnG7lh.s:60     .bss.angle:0000000000000000 $d
+     /tmp/ccbnG7lh.s:70     .bss.e0:0000000000000000 e0
+     /tmp/ccbnG7lh.s:67     .bss.e0:0000000000000000 $d
+     /tmp/ccbnG7lh.s:77     .bss.e1:0000000000000000 e1
+     /tmp/ccbnG7lh.s:74     .bss.e1:0000000000000000 $d
+     /tmp/ccbnG7lh.s:84     .bss.e2:0000000000000000 e2
+     /tmp/ccbnG7lh.s:81     .bss.e2:0000000000000000 $d
+     /tmp/ccbnG7lh.s:91     .bss.e3:0000000000000000 e3
+     /tmp/ccbnG7lh.s:88     .bss.e3:0000000000000000 $d
+     /tmp/ccbnG7lh.s:98     .bss.Gyro_Xerr:0000000000000000 Gyro_Xerr
+     /tmp/ccbnG7lh.s:95     .bss.Gyro_Xerr:0000000000000000 $d
+     /tmp/ccbnG7lh.s:105    .bss.Gyro_Yerr:0000000000000000 Gyro_Yerr
+     /tmp/ccbnG7lh.s:102    .bss.Gyro_Yerr:0000000000000000 $d
+     /tmp/ccbnG7lh.s:112    .bss.Gyro_Zerr:0000000000000000 Gyro_Zerr
+     /tmp/ccbnG7lh.s:109    .bss.Gyro_Zerr:0000000000000000 $d
+     /tmp/ccbnG7lh.s:119    .bss.Acc_Xerr:0000000000000000 Acc_Xerr
+     /tmp/ccbnG7lh.s:116    .bss.Acc_Xerr:0000000000000000 $d
+     /tmp/ccbnG7lh.s:126    .bss.Acc_Yerr:0000000000000000 Acc_Yerr
+     /tmp/ccbnG7lh.s:123    .bss.Acc_Yerr:0000000000000000 $d
+     /tmp/ccbnG7lh.s:133    .bss.Wx:0000000000000000 Wx
+     /tmp/ccbnG7lh.s:130    .bss.Wx:0000000000000000 $d
+     /tmp/ccbnG7lh.s:140    .bss.Wy:0000000000000000 Wy
+     /tmp/ccbnG7lh.s:137    .bss.Wy:0000000000000000 $d
+     /tmp/ccbnG7lh.s:147    .bss.Wz:0000000000000000 Wz
+     /tmp/ccbnG7lh.s:144    .bss.Wz:0000000000000000 $d
+     /tmp/ccbnG7lh.s:156    .text.CalAngle:0000000000000000 $t
+     /tmp/ccbnG7lh.s:162    .text.CalAngle:0000000000000000 CalAngle
+     /tmp/ccbnG7lh.s:545    .text.CalAngle:0000000000000398 $d
+     /tmp/ccbnG7lh.s:565    .text.CalAngle:00000000000003e0 $t
+     /tmp/ccbnG7lh.s:962    .text.CalAngle:00000000000007c4 $d
+     /tmp/ccbnG7lh.s:966    .text.CalAngle:00000000000007cc $t
+     /tmp/ccbnG7lh.s:1362   .text.CalAngle:0000000000000ba4 $d
+     /tmp/ccbnG7lh.s:1367   .text.CalAngle:0000000000000bb0 $t
+     /tmp/ccbnG7lh.s:1735   .text.CalAngle:0000000000000f00 $d
+     /tmp/ccbnG7lh.s:1748   .text.CalAngle:0000000000000f2c $t
+     /tmp/ccbnG7lh.s:2121   .text.CalAngle:0000000000001288 $d
+     /tmp/ccbnG7lh.s:2131   .text.CalAngle:00000000000012ac $t
+     /tmp/ccbnG7lh.s:2212   .text.CalAngle:0000000000001360 $d
+     /tmp/ccbnG7lh.s:2223   .bss.Xoffset:0000000000000000 Xoffset
+     /tmp/ccbnG7lh.s:2220   .bss.Xoffset:0000000000000000 $d
+     /tmp/ccbnG7lh.s:2230   .bss.Yoffset:0000000000000000 Yoffset
+     /tmp/ccbnG7lh.s:2227   .bss.Yoffset:0000000000000000 $d
+     /tmp/ccbnG7lh.s:2237   .bss.Zoffset:0000000000000000 Zoffset
+     /tmp/ccbnG7lh.s:2234   .bss.Zoffset:0000000000000000 $d
+ARM GAS  /tmp/ccbnG7lh.s 			page 48
+
+
+     /tmp/ccbnG7lh.s:2244   .bss.Kmx:0000000000000000 Kmx
+     /tmp/ccbnG7lh.s:2241   .bss.Kmx:0000000000000000 $d
+     /tmp/ccbnG7lh.s:2251   .bss.Kmy:0000000000000000 Kmy
+     /tmp/ccbnG7lh.s:2248   .bss.Kmy:0000000000000000 $d
+     /tmp/ccbnG7lh.s:2258   .bss.Kmz:0000000000000000 Kmz
+     /tmp/ccbnG7lh.s:2255   .bss.Kmz:0000000000000000 $d
+     /tmp/ccbnG7lh.s:2261   .text.HMC5883L_Motify:0000000000000000 $t
+     /tmp/ccbnG7lh.s:2267   .text.HMC5883L_Motify:0000000000000000 HMC5883L_Motify
+     /tmp/ccbnG7lh.s:2510   .text.HMC5883L_Motify:0000000000000218 $d
+
+UNDEFINED SYMBOLS
+__aeabi_f2d
+__aeabi_dadd
+__aeabi_d2f
+__aeabi_dmul
+__aeabi_dsub
+__aeabi_ddiv
+pow
+sqrt
+HMC5883L_data
+Ox
+Rx
+Oy
+Ry
+Oz
+Rz
+MPU6050_data
+asin
+atan
+HMC588CL_ReadData
+Delay_ms

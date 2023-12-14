@@ -18,6 +18,7 @@
 #include "Receiver.h"
 #include "Motor.h"
 #include "HMC5883L.h"
+#include "Pid.h"
 
 //#include "ucos_ii.h"
 //#include "os_trace_events.h"
@@ -31,26 +32,17 @@ int main(){
 	SystemInit();
 	SysTick->LOAD = 0xffffff;
 	SysTick->CTRL|=SysTick_CTRL_ENABLE_Msk; 
-	//  int16_t MPU6050_data[7] = {0};
 	I2CInit();
-	// Delay_ms(5);
-	// I2C_Configuration();
 	MPU6050_Init();
 	HMC5883L_Init();
 	Delay_ms(5);
 	//HMC5883L_Motify();
 	get_MPU6050err();
 	for(int i=0;i<5;i++) HMC588CL_ReadData(HMC5883L_data);
-	// float a = (int)fabsf(HMC5883L_data[0]);
-	// Ellipsoid_Fitting();
 	uart_init();
 	My_Receiver_Init();
 	Motor_Init();
-	// ESC_Calibration();
 	PoseData_Init();
-	// Delay_ms(5);
-    //   USART_SendData(USART1,a);
-	// MPU6050_READ(MPU6050_data)
 	 betime = SysTick->VAL;
 	 betick = SysTick->VAL;
 	while(1){
@@ -62,10 +54,14 @@ int main(){
 		betime = aftime;
 		CalAngle(&angle, intertime);
 		aftick = SysTick->VAL;
+		 
 		 if((betick- aftick)<0) betick += SysTick->LOAD;
-		 if(betick-aftick>100000){
+		//姿态上传和PID反馈控制的时间控制在0.025s/次
+		 
+		 if(betick-aftick>50000){
 			// Send_PPM();
 			  Send_Elua();
+			  PID_Controller_DL();
 			// Send_Pose();
 			betick = aftick;
 		//  }

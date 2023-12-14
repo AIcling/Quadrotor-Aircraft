@@ -1,0 +1,62 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/arm-none-eabi-gcc",
+      "-c",
+      "-mcpu=cortex-m4",
+      "-mthumb",
+      "-mfpu=fpv4-sp-d16",
+      "-mfloat-abi=hard",
+      "-DSTM32F401xx",
+      "-DUSE_STDPERIPH_DRIVER",
+      "-I./Start",
+      "-I./Hardware/Inc",
+      "-I./User/Inc",
+      "-I./Tools/Inc",
+      "-I./Lib/inc",
+      "-Og",
+      "-Wall",
+      "-fdata-sections",
+      "-ffunction-sections",
+      "-g",
+      "-O0",
+      "-Wa,-a,-ad,-alms=build/AHRS.lst",
+      "-o",
+      "build/AHRS.o",
+      "./Hardware/Src/AHRS.c"
+    ],
+    "directory": "/mnt/e/Flyer/MyFlyer/Quadrotor-Aircraft",
+    "file": "/mnt/e/Flyer/MyFlyer/Quadrotor-Aircraft/Hardware/Src/AHRS.c",
+    "output": "/mnt/e/Flyer/MyFlyer/Quadrotor-Aircraft/build/AHRS.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/arm-none-eabi-gcc",
+      "-c",
+      "-mcpu=cortex-m4",
+      "-mthumb",
+      "-mfpu=fpv4-sp-d16",
+      "-mfloat-abi=hard",
+      "-DSTM32F401xx",
+      "-DUSE_STDPERIPH_DRIVER",
+      "-I./Start",
+      "-I./Hardware/Inc",
+      "-I./User/Inc",
+      "-I./Tools/Inc",
+      "-I./Lib/inc",
+      "-Og",
+      "-Wall",
+      "-fdata-sections",
+      "-ffunction-sections",
+      "-g",
+      "-O0",
+      "-Wa,-a,-ad,-alms=build/Receiver.lst",
+      "-o",
+      "build/Receiver.o",
+      "./Hardware/Src/Receiver.c"
+    ],
+    "directory": "/mnt/e/Flyer/MyFlyer/Quadrotor-Aircraft",
+    "file": "/mnt/e/Flyer/MyFlyer/Quadrotor-Aircraft/Hardware/Src/Receiver.c",
+    "output": "/mnt/e/Flyer/MyFlyer/Quadrotor-Aircraft/build/Receiver.o"
+  }
+]

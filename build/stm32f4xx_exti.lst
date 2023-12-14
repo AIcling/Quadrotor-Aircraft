@@ -1,0 +1,965 @@
+ARM GAS  /tmp/ccPEY4C1.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 6
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"stm32f4xx_exti.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "./Lib/Src/stm32f4xx_exti.c"
+  20              		.section	.text.EXTI_DeInit,"ax",%progbits
+  21              		.align	1
+  22              		.global	EXTI_DeInit
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	EXTI_DeInit:
+  28              	.LFB123:
+   1:./Lib/Src/stm32f4xx_exti.c **** /**
+   2:./Lib/Src/stm32f4xx_exti.c ****   ******************************************************************************
+   3:./Lib/Src/stm32f4xx_exti.c ****   * @file    stm32f4xx_exti.c
+   4:./Lib/Src/stm32f4xx_exti.c ****   * @author  MCD Application Team
+   5:./Lib/Src/stm32f4xx_exti.c ****   * @version V1.8.1
+   6:./Lib/Src/stm32f4xx_exti.c ****   * @date    27-January-2022
+   7:./Lib/Src/stm32f4xx_exti.c ****   * @brief   This file provides firmware functions to manage the following 
+   8:./Lib/Src/stm32f4xx_exti.c ****   *          functionalities of the EXTI peripheral:
+   9:./Lib/Src/stm32f4xx_exti.c ****   *           + Initialization and Configuration
+  10:./Lib/Src/stm32f4xx_exti.c ****   *           + Interrupts and flags management
+  11:./Lib/Src/stm32f4xx_exti.c ****   *
+  12:./Lib/Src/stm32f4xx_exti.c **** @verbatim  
+  13:./Lib/Src/stm32f4xx_exti.c **** 
+  14:./Lib/Src/stm32f4xx_exti.c ****  ===============================================================================
+  15:./Lib/Src/stm32f4xx_exti.c ****                               ##### EXTI features #####
+  16:./Lib/Src/stm32f4xx_exti.c ****  ===============================================================================
+  17:./Lib/Src/stm32f4xx_exti.c **** 
+  18:./Lib/Src/stm32f4xx_exti.c ****  [..] External interrupt/event lines are mapped as following:
+  19:./Lib/Src/stm32f4xx_exti.c ****    (#) All available GPIO pins are connected to the 16 external 
+  20:./Lib/Src/stm32f4xx_exti.c ****        interrupt/event lines from EXTI0 to EXTI15.
+  21:./Lib/Src/stm32f4xx_exti.c ****    (#) EXTI line 16 is connected to the PVD Output
+  22:./Lib/Src/stm32f4xx_exti.c ****    (#) EXTI line 17 is connected to the RTC Alarm event
+  23:./Lib/Src/stm32f4xx_exti.c ****    (#) EXTI line 18 is connected to the USB OTG FS Wakeup from suspend event
+  24:./Lib/Src/stm32f4xx_exti.c ****    (#) EXTI line 19 is connected to the Ethernet Wakeup event
+  25:./Lib/Src/stm32f4xx_exti.c ****    (#) EXTI line 20 is connected to the USB OTG HS (configured in FS) Wakeup event 
+  26:./Lib/Src/stm32f4xx_exti.c ****    (#) EXTI line 21 is connected to the RTC Tamper and Time Stamp events
+  27:./Lib/Src/stm32f4xx_exti.c ****    (#) EXTI line 22 is connected to the RTC Wakeup event
+  28:./Lib/Src/stm32f4xx_exti.c ****    (#) EXTI line 23 is connected to the LPTIM Wakeup event 
+  29:./Lib/Src/stm32f4xx_exti.c **** 
+  30:./Lib/Src/stm32f4xx_exti.c ****                        ##### How to use this driver #####
+ARM GAS  /tmp/ccPEY4C1.s 			page 2
+
+
+  31:./Lib/Src/stm32f4xx_exti.c ****  ===============================================================================
+  32:./Lib/Src/stm32f4xx_exti.c ****  
+  33:./Lib/Src/stm32f4xx_exti.c ****  [..] In order to use an I/O pin as an external interrupt source, follow steps 
+  34:./Lib/Src/stm32f4xx_exti.c ****       below:
+  35:./Lib/Src/stm32f4xx_exti.c ****    (#) Configure the I/O in input mode using GPIO_Init()
+  36:./Lib/Src/stm32f4xx_exti.c ****    (#) Select the input source pin for the EXTI line using SYSCFG_EXTILineConfig()
+  37:./Lib/Src/stm32f4xx_exti.c ****    (#) Select the mode(interrupt, event) and configure the trigger 
+  38:./Lib/Src/stm32f4xx_exti.c ****        selection (Rising, falling or both) using EXTI_Init()
+  39:./Lib/Src/stm32f4xx_exti.c ****    (#) Configure NVIC IRQ channel mapped to the EXTI line using NVIC_Init()
+  40:./Lib/Src/stm32f4xx_exti.c **** 
+  41:./Lib/Src/stm32f4xx_exti.c ****  [..]     
+  42:./Lib/Src/stm32f4xx_exti.c ****    (@) SYSCFG APB clock must be enabled to get write access to SYSCFG_EXTICRx
+  43:./Lib/Src/stm32f4xx_exti.c ****        registers using RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
+  44:./Lib/Src/stm32f4xx_exti.c **** 
+  45:./Lib/Src/stm32f4xx_exti.c **** @endverbatim
+  46:./Lib/Src/stm32f4xx_exti.c ****   *
+  47:./Lib/Src/stm32f4xx_exti.c ****   ******************************************************************************
+  48:./Lib/Src/stm32f4xx_exti.c ****   * @attention
+  49:./Lib/Src/stm32f4xx_exti.c ****   *
+  50:./Lib/Src/stm32f4xx_exti.c ****   * Copyright (c) 2016 STMicroelectronics.
+  51:./Lib/Src/stm32f4xx_exti.c ****   * All rights reserved.
+  52:./Lib/Src/stm32f4xx_exti.c ****   *
+  53:./Lib/Src/stm32f4xx_exti.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  54:./Lib/Src/stm32f4xx_exti.c ****   * in the root directory of this software component.
+  55:./Lib/Src/stm32f4xx_exti.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  56:./Lib/Src/stm32f4xx_exti.c ****   *
+  57:./Lib/Src/stm32f4xx_exti.c ****   ******************************************************************************
+  58:./Lib/Src/stm32f4xx_exti.c ****   */
+  59:./Lib/Src/stm32f4xx_exti.c **** 
+  60:./Lib/Src/stm32f4xx_exti.c **** /* Includes ------------------------------------------------------------------*/
+  61:./Lib/Src/stm32f4xx_exti.c **** #include "stm32f4xx_exti.h"
+  62:./Lib/Src/stm32f4xx_exti.c **** 
+  63:./Lib/Src/stm32f4xx_exti.c **** /** @addtogroup STM32F4xx_StdPeriph_Driver
+  64:./Lib/Src/stm32f4xx_exti.c ****   * @{
+  65:./Lib/Src/stm32f4xx_exti.c ****   */
+  66:./Lib/Src/stm32f4xx_exti.c **** 
+  67:./Lib/Src/stm32f4xx_exti.c **** /** @defgroup EXTI 
+  68:./Lib/Src/stm32f4xx_exti.c ****   * @brief EXTI driver modules
+  69:./Lib/Src/stm32f4xx_exti.c ****   * @{
+  70:./Lib/Src/stm32f4xx_exti.c ****   */
+  71:./Lib/Src/stm32f4xx_exti.c **** 
+  72:./Lib/Src/stm32f4xx_exti.c **** /* Private typedef -----------------------------------------------------------*/
+  73:./Lib/Src/stm32f4xx_exti.c **** /* Private define ------------------------------------------------------------*/
+  74:./Lib/Src/stm32f4xx_exti.c **** 
+  75:./Lib/Src/stm32f4xx_exti.c **** #define EXTI_LINENONE    ((uint32_t)0x00000)  /* No interrupt selected */
+  76:./Lib/Src/stm32f4xx_exti.c **** 
+  77:./Lib/Src/stm32f4xx_exti.c **** /* Private macro -------------------------------------------------------------*/
+  78:./Lib/Src/stm32f4xx_exti.c **** /* Private variables ---------------------------------------------------------*/
+  79:./Lib/Src/stm32f4xx_exti.c **** /* Private function prototypes -----------------------------------------------*/
+  80:./Lib/Src/stm32f4xx_exti.c **** /* Private functions ---------------------------------------------------------*/
+  81:./Lib/Src/stm32f4xx_exti.c **** 
+  82:./Lib/Src/stm32f4xx_exti.c **** /** @defgroup EXTI_Private_Functions
+  83:./Lib/Src/stm32f4xx_exti.c ****   * @{
+  84:./Lib/Src/stm32f4xx_exti.c ****   */
+  85:./Lib/Src/stm32f4xx_exti.c **** 
+  86:./Lib/Src/stm32f4xx_exti.c **** /** @defgroup EXTI_Group1 Initialization and Configuration functions
+  87:./Lib/Src/stm32f4xx_exti.c ****  *  @brief   Initialization and Configuration functions 
+ARM GAS  /tmp/ccPEY4C1.s 			page 3
+
+
+  88:./Lib/Src/stm32f4xx_exti.c ****  *
+  89:./Lib/Src/stm32f4xx_exti.c **** @verbatim   
+  90:./Lib/Src/stm32f4xx_exti.c ****  ===============================================================================
+  91:./Lib/Src/stm32f4xx_exti.c ****              ##### Initialization and Configuration functions #####
+  92:./Lib/Src/stm32f4xx_exti.c ****  ===============================================================================
+  93:./Lib/Src/stm32f4xx_exti.c **** 
+  94:./Lib/Src/stm32f4xx_exti.c **** @endverbatim
+  95:./Lib/Src/stm32f4xx_exti.c ****   * @{
+  96:./Lib/Src/stm32f4xx_exti.c ****   */
+  97:./Lib/Src/stm32f4xx_exti.c **** 
+  98:./Lib/Src/stm32f4xx_exti.c **** /**
+  99:./Lib/Src/stm32f4xx_exti.c ****   * @brief  Deinitializes the EXTI peripheral registers to their default reset values.
+ 100:./Lib/Src/stm32f4xx_exti.c ****   * @param  None
+ 101:./Lib/Src/stm32f4xx_exti.c ****   * @retval None
+ 102:./Lib/Src/stm32f4xx_exti.c ****   */
+ 103:./Lib/Src/stm32f4xx_exti.c **** void EXTI_DeInit(void)
+ 104:./Lib/Src/stm32f4xx_exti.c **** {
+  29              		.loc 1 104 1
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 1, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  34 0000 80B4     		push	{r7}
+  35              		.cfi_def_cfa_offset 4
+  36              		.cfi_offset 7, -4
+  37 0002 00AF     		add	r7, sp, #0
+  38              		.cfi_def_cfa_register 7
+ 105:./Lib/Src/stm32f4xx_exti.c ****   EXTI->IMR = 0x00000000;
+  39              		.loc 1 105 7
+  40 0004 094B     		ldr	r3, .L2
+  41              		.loc 1 105 13
+  42 0006 0022     		movs	r2, #0
+  43 0008 1A60     		str	r2, [r3]
+ 106:./Lib/Src/stm32f4xx_exti.c ****   EXTI->EMR = 0x00000000;
+  44              		.loc 1 106 7
+  45 000a 084B     		ldr	r3, .L2
+  46              		.loc 1 106 13
+  47 000c 0022     		movs	r2, #0
+  48 000e 5A60     		str	r2, [r3, #4]
+ 107:./Lib/Src/stm32f4xx_exti.c ****   EXTI->RTSR = 0x00000000;
+  49              		.loc 1 107 7
+  50 0010 064B     		ldr	r3, .L2
+  51              		.loc 1 107 14
+  52 0012 0022     		movs	r2, #0
+  53 0014 9A60     		str	r2, [r3, #8]
+ 108:./Lib/Src/stm32f4xx_exti.c ****   EXTI->FTSR = 0x00000000;
+  54              		.loc 1 108 7
+  55 0016 054B     		ldr	r3, .L2
+  56              		.loc 1 108 14
+  57 0018 0022     		movs	r2, #0
+  58 001a DA60     		str	r2, [r3, #12]
+ 109:./Lib/Src/stm32f4xx_exti.c ****   EXTI->PR = 0x007FFFFF;
+  59              		.loc 1 109 7
+  60 001c 034B     		ldr	r3, .L2
+  61              		.loc 1 109 12
+  62 001e 044A     		ldr	r2, .L2+4
+  63 0020 5A61     		str	r2, [r3, #20]
+ARM GAS  /tmp/ccPEY4C1.s 			page 4
+
+
+ 110:./Lib/Src/stm32f4xx_exti.c **** }
+  64              		.loc 1 110 1
+  65 0022 00BF     		nop
+  66 0024 BD46     		mov	sp, r7
+  67              		.cfi_def_cfa_register 13
+  68              		@ sp needed
+  69 0026 5DF8047B 		ldr	r7, [sp], #4
+  70              		.cfi_restore 7
+  71              		.cfi_def_cfa_offset 0
+  72 002a 7047     		bx	lr
+  73              	.L3:
+  74              		.align	2
+  75              	.L2:
+  76 002c 003C0140 		.word	1073822720
+  77 0030 FFFF7F00 		.word	8388607
+  78              		.cfi_endproc
+  79              	.LFE123:
+  81              		.section	.text.EXTI_Init,"ax",%progbits
+  82              		.align	1
+  83              		.global	EXTI_Init
+  84              		.syntax unified
+  85              		.thumb
+  86              		.thumb_func
+  88              	EXTI_Init:
+  89              	.LFB124:
+ 111:./Lib/Src/stm32f4xx_exti.c **** 
+ 112:./Lib/Src/stm32f4xx_exti.c **** /**
+ 113:./Lib/Src/stm32f4xx_exti.c ****   * @brief  Initializes the EXTI peripheral according to the specified
+ 114:./Lib/Src/stm32f4xx_exti.c ****   *         parameters in the EXTI_InitStruct.
+ 115:./Lib/Src/stm32f4xx_exti.c ****   * @param  EXTI_InitStruct: pointer to a EXTI_InitTypeDef structure
+ 116:./Lib/Src/stm32f4xx_exti.c ****   *         that contains the configuration information for the EXTI peripheral.
+ 117:./Lib/Src/stm32f4xx_exti.c ****   * @retval None
+ 118:./Lib/Src/stm32f4xx_exti.c ****   */
+ 119:./Lib/Src/stm32f4xx_exti.c **** void EXTI_Init(EXTI_InitTypeDef* EXTI_InitStruct)
+ 120:./Lib/Src/stm32f4xx_exti.c **** {
+  90              		.loc 1 120 1
+  91              		.cfi_startproc
+  92              		@ args = 0, pretend = 0, frame = 16
+  93              		@ frame_needed = 1, uses_anonymous_args = 0
+  94              		@ link register save eliminated.
+  95 0000 80B4     		push	{r7}
+  96              		.cfi_def_cfa_offset 4
+  97              		.cfi_offset 7, -4
+  98 0002 85B0     		sub	sp, sp, #20
+  99              		.cfi_def_cfa_offset 24
+ 100 0004 00AF     		add	r7, sp, #0
+ 101              		.cfi_def_cfa_register 7
+ 102 0006 7860     		str	r0, [r7, #4]
+ 121:./Lib/Src/stm32f4xx_exti.c ****   uint32_t tmp = 0;
+ 103              		.loc 1 121 12
+ 104 0008 0023     		movs	r3, #0
+ 105 000a FB60     		str	r3, [r7, #12]
+ 122:./Lib/Src/stm32f4xx_exti.c **** 
+ 123:./Lib/Src/stm32f4xx_exti.c ****   /* Check the parameters */
+ 124:./Lib/Src/stm32f4xx_exti.c ****   assert_param(IS_EXTI_MODE(EXTI_InitStruct->EXTI_Mode));
+ 125:./Lib/Src/stm32f4xx_exti.c ****   assert_param(IS_EXTI_TRIGGER(EXTI_InitStruct->EXTI_Trigger));
+ 126:./Lib/Src/stm32f4xx_exti.c ****   assert_param(IS_EXTI_LINE(EXTI_InitStruct->EXTI_Line));  
+ARM GAS  /tmp/ccPEY4C1.s 			page 5
+
+
+ 127:./Lib/Src/stm32f4xx_exti.c ****   assert_param(IS_FUNCTIONAL_STATE(EXTI_InitStruct->EXTI_LineCmd));
+ 128:./Lib/Src/stm32f4xx_exti.c **** 
+ 129:./Lib/Src/stm32f4xx_exti.c ****   tmp = (uint32_t)EXTI_BASE;
+ 106              		.loc 1 129 7
+ 107 000c 344B     		ldr	r3, .L9
+ 108 000e FB60     		str	r3, [r7, #12]
+ 130:./Lib/Src/stm32f4xx_exti.c ****      
+ 131:./Lib/Src/stm32f4xx_exti.c ****   if (EXTI_InitStruct->EXTI_LineCmd != DISABLE)
+ 109              		.loc 1 131 22
+ 110 0010 7B68     		ldr	r3, [r7, #4]
+ 111 0012 9B79     		ldrb	r3, [r3, #6]	@ zero_extendqisi2
+ 112              		.loc 1 131 6
+ 113 0014 002B     		cmp	r3, #0
+ 114 0016 4FD0     		beq	.L5
+ 132:./Lib/Src/stm32f4xx_exti.c ****   {
+ 133:./Lib/Src/stm32f4xx_exti.c ****     /* Clear EXTI line configuration */
+ 134:./Lib/Src/stm32f4xx_exti.c ****     EXTI->IMR &= ~EXTI_InitStruct->EXTI_Line;
+ 115              		.loc 1 134 9
+ 116 0018 314B     		ldr	r3, .L9
+ 117 001a 1A68     		ldr	r2, [r3]
+ 118              		.loc 1 134 34
+ 119 001c 7B68     		ldr	r3, [r7, #4]
+ 120 001e 1B68     		ldr	r3, [r3]
+ 121              		.loc 1 134 18
+ 122 0020 DB43     		mvns	r3, r3
+ 123              		.loc 1 134 9
+ 124 0022 2F49     		ldr	r1, .L9
+ 125              		.loc 1 134 15
+ 126 0024 1340     		ands	r3, r3, r2
+ 127 0026 0B60     		str	r3, [r1]
+ 135:./Lib/Src/stm32f4xx_exti.c ****     EXTI->EMR &= ~EXTI_InitStruct->EXTI_Line;
+ 128              		.loc 1 135 9
+ 129 0028 2D4B     		ldr	r3, .L9
+ 130 002a 5A68     		ldr	r2, [r3, #4]
+ 131              		.loc 1 135 34
+ 132 002c 7B68     		ldr	r3, [r7, #4]
+ 133 002e 1B68     		ldr	r3, [r3]
+ 134              		.loc 1 135 18
+ 135 0030 DB43     		mvns	r3, r3
+ 136              		.loc 1 135 9
+ 137 0032 2B49     		ldr	r1, .L9
+ 138              		.loc 1 135 15
+ 139 0034 1340     		ands	r3, r3, r2
+ 140 0036 4B60     		str	r3, [r1, #4]
+ 136:./Lib/Src/stm32f4xx_exti.c ****     
+ 137:./Lib/Src/stm32f4xx_exti.c ****     tmp += EXTI_InitStruct->EXTI_Mode;
+ 141              		.loc 1 137 27
+ 142 0038 7B68     		ldr	r3, [r7, #4]
+ 143 003a 1B79     		ldrb	r3, [r3, #4]	@ zero_extendqisi2
+ 144 003c 1A46     		mov	r2, r3
+ 145              		.loc 1 137 9
+ 146 003e FB68     		ldr	r3, [r7, #12]
+ 147 0040 1344     		add	r3, r3, r2
+ 148 0042 FB60     		str	r3, [r7, #12]
+ 138:./Lib/Src/stm32f4xx_exti.c **** 
+ 139:./Lib/Src/stm32f4xx_exti.c ****     *(__IO uint32_t *) tmp |= EXTI_InitStruct->EXTI_Line;
+ 149              		.loc 1 139 5
+ARM GAS  /tmp/ccPEY4C1.s 			page 6
+
+
+ 150 0044 FB68     		ldr	r3, [r7, #12]
+ 151 0046 1968     		ldr	r1, [r3]
+ 152              		.loc 1 139 46
+ 153 0048 7B68     		ldr	r3, [r7, #4]
+ 154 004a 1A68     		ldr	r2, [r3]
+ 155              		.loc 1 139 5
+ 156 004c FB68     		ldr	r3, [r7, #12]
+ 157              		.loc 1 139 28
+ 158 004e 0A43     		orrs	r2, r2, r1
+ 159 0050 1A60     		str	r2, [r3]
+ 140:./Lib/Src/stm32f4xx_exti.c **** 
+ 141:./Lib/Src/stm32f4xx_exti.c ****     /* Clear Rising Falling edge configuration */
+ 142:./Lib/Src/stm32f4xx_exti.c ****     EXTI->RTSR &= ~EXTI_InitStruct->EXTI_Line;
+ 160              		.loc 1 142 9
+ 161 0052 234B     		ldr	r3, .L9
+ 162 0054 9A68     		ldr	r2, [r3, #8]
+ 163              		.loc 1 142 35
+ 164 0056 7B68     		ldr	r3, [r7, #4]
+ 165 0058 1B68     		ldr	r3, [r3]
+ 166              		.loc 1 142 19
+ 167 005a DB43     		mvns	r3, r3
+ 168              		.loc 1 142 9
+ 169 005c 2049     		ldr	r1, .L9
+ 170              		.loc 1 142 16
+ 171 005e 1340     		ands	r3, r3, r2
+ 172 0060 8B60     		str	r3, [r1, #8]
+ 143:./Lib/Src/stm32f4xx_exti.c ****     EXTI->FTSR &= ~EXTI_InitStruct->EXTI_Line;
+ 173              		.loc 1 143 9
+ 174 0062 1F4B     		ldr	r3, .L9
+ 175 0064 DA68     		ldr	r2, [r3, #12]
+ 176              		.loc 1 143 35
+ 177 0066 7B68     		ldr	r3, [r7, #4]
+ 178 0068 1B68     		ldr	r3, [r3]
+ 179              		.loc 1 143 19
+ 180 006a DB43     		mvns	r3, r3
+ 181              		.loc 1 143 9
+ 182 006c 1C49     		ldr	r1, .L9
+ 183              		.loc 1 143 16
+ 184 006e 1340     		ands	r3, r3, r2
+ 185 0070 CB60     		str	r3, [r1, #12]
+ 144:./Lib/Src/stm32f4xx_exti.c ****     
+ 145:./Lib/Src/stm32f4xx_exti.c ****     /* Select the trigger for the selected external interrupts */
+ 146:./Lib/Src/stm32f4xx_exti.c ****     if (EXTI_InitStruct->EXTI_Trigger == EXTI_Trigger_Rising_Falling)
+ 186              		.loc 1 146 24
+ 187 0072 7B68     		ldr	r3, [r7, #4]
+ 188 0074 5B79     		ldrb	r3, [r3, #5]	@ zero_extendqisi2
+ 189              		.loc 1 146 8
+ 190 0076 102B     		cmp	r3, #16
+ 191 0078 0ED1     		bne	.L6
+ 147:./Lib/Src/stm32f4xx_exti.c ****     {
+ 148:./Lib/Src/stm32f4xx_exti.c ****       /* Rising Falling edge */
+ 149:./Lib/Src/stm32f4xx_exti.c ****       EXTI->RTSR |= EXTI_InitStruct->EXTI_Line;
+ 192              		.loc 1 149 11
+ 193 007a 194B     		ldr	r3, .L9
+ 194 007c 9A68     		ldr	r2, [r3, #8]
+ 195              		.loc 1 149 36
+ 196 007e 7B68     		ldr	r3, [r7, #4]
+ARM GAS  /tmp/ccPEY4C1.s 			page 7
+
+
+ 197 0080 1B68     		ldr	r3, [r3]
+ 198              		.loc 1 149 11
+ 199 0082 1749     		ldr	r1, .L9
+ 200              		.loc 1 149 18
+ 201 0084 1343     		orrs	r3, r3, r2
+ 202 0086 8B60     		str	r3, [r1, #8]
+ 150:./Lib/Src/stm32f4xx_exti.c ****       EXTI->FTSR |= EXTI_InitStruct->EXTI_Line;
+ 203              		.loc 1 150 11
+ 204 0088 154B     		ldr	r3, .L9
+ 205 008a DA68     		ldr	r2, [r3, #12]
+ 206              		.loc 1 150 36
+ 207 008c 7B68     		ldr	r3, [r7, #4]
+ 208 008e 1B68     		ldr	r3, [r3]
+ 209              		.loc 1 150 11
+ 210 0090 1349     		ldr	r1, .L9
+ 211              		.loc 1 150 18
+ 212 0092 1343     		orrs	r3, r3, r2
+ 213 0094 CB60     		str	r3, [r1, #12]
+ 151:./Lib/Src/stm32f4xx_exti.c ****     }
+ 152:./Lib/Src/stm32f4xx_exti.c ****     else
+ 153:./Lib/Src/stm32f4xx_exti.c ****     {
+ 154:./Lib/Src/stm32f4xx_exti.c ****       tmp = (uint32_t)EXTI_BASE;
+ 155:./Lib/Src/stm32f4xx_exti.c ****       tmp += EXTI_InitStruct->EXTI_Trigger;
+ 156:./Lib/Src/stm32f4xx_exti.c **** 
+ 157:./Lib/Src/stm32f4xx_exti.c ****       *(__IO uint32_t *) tmp |= EXTI_InitStruct->EXTI_Line;
+ 158:./Lib/Src/stm32f4xx_exti.c ****     }
+ 159:./Lib/Src/stm32f4xx_exti.c ****   }
+ 160:./Lib/Src/stm32f4xx_exti.c ****   else
+ 161:./Lib/Src/stm32f4xx_exti.c ****   {
+ 162:./Lib/Src/stm32f4xx_exti.c ****     tmp += EXTI_InitStruct->EXTI_Mode;
+ 163:./Lib/Src/stm32f4xx_exti.c **** 
+ 164:./Lib/Src/stm32f4xx_exti.c ****     /* Disable the selected external lines */
+ 165:./Lib/Src/stm32f4xx_exti.c ****     *(__IO uint32_t *) tmp &= ~EXTI_InitStruct->EXTI_Line;
+ 166:./Lib/Src/stm32f4xx_exti.c ****   }
+ 167:./Lib/Src/stm32f4xx_exti.c **** }
+ 214              		.loc 1 167 1
+ 215 0096 1DE0     		b	.L8
+ 216              	.L6:
+ 154:./Lib/Src/stm32f4xx_exti.c ****       tmp += EXTI_InitStruct->EXTI_Trigger;
+ 217              		.loc 1 154 11
+ 218 0098 114B     		ldr	r3, .L9
+ 219 009a FB60     		str	r3, [r7, #12]
+ 155:./Lib/Src/stm32f4xx_exti.c **** 
+ 220              		.loc 1 155 29
+ 221 009c 7B68     		ldr	r3, [r7, #4]
+ 222 009e 5B79     		ldrb	r3, [r3, #5]	@ zero_extendqisi2
+ 223 00a0 1A46     		mov	r2, r3
+ 155:./Lib/Src/stm32f4xx_exti.c **** 
+ 224              		.loc 1 155 11
+ 225 00a2 FB68     		ldr	r3, [r7, #12]
+ 226 00a4 1344     		add	r3, r3, r2
+ 227 00a6 FB60     		str	r3, [r7, #12]
+ 157:./Lib/Src/stm32f4xx_exti.c ****     }
+ 228              		.loc 1 157 7
+ 229 00a8 FB68     		ldr	r3, [r7, #12]
+ 230 00aa 1968     		ldr	r1, [r3]
+ 157:./Lib/Src/stm32f4xx_exti.c ****     }
+ARM GAS  /tmp/ccPEY4C1.s 			page 8
+
+
+ 231              		.loc 1 157 48
+ 232 00ac 7B68     		ldr	r3, [r7, #4]
+ 233 00ae 1A68     		ldr	r2, [r3]
+ 157:./Lib/Src/stm32f4xx_exti.c ****     }
+ 234              		.loc 1 157 7
+ 235 00b0 FB68     		ldr	r3, [r7, #12]
+ 157:./Lib/Src/stm32f4xx_exti.c ****     }
+ 236              		.loc 1 157 30
+ 237 00b2 0A43     		orrs	r2, r2, r1
+ 238 00b4 1A60     		str	r2, [r3]
+ 239              		.loc 1 167 1
+ 240 00b6 0DE0     		b	.L8
+ 241              	.L5:
+ 162:./Lib/Src/stm32f4xx_exti.c **** 
+ 242              		.loc 1 162 27
+ 243 00b8 7B68     		ldr	r3, [r7, #4]
+ 244 00ba 1B79     		ldrb	r3, [r3, #4]	@ zero_extendqisi2
+ 245 00bc 1A46     		mov	r2, r3
+ 162:./Lib/Src/stm32f4xx_exti.c **** 
+ 246              		.loc 1 162 9
+ 247 00be FB68     		ldr	r3, [r7, #12]
+ 248 00c0 1344     		add	r3, r3, r2
+ 249 00c2 FB60     		str	r3, [r7, #12]
+ 165:./Lib/Src/stm32f4xx_exti.c ****   }
+ 250              		.loc 1 165 5
+ 251 00c4 FB68     		ldr	r3, [r7, #12]
+ 252 00c6 1968     		ldr	r1, [r3]
+ 165:./Lib/Src/stm32f4xx_exti.c ****   }
+ 253              		.loc 1 165 47
+ 254 00c8 7B68     		ldr	r3, [r7, #4]
+ 255 00ca 1B68     		ldr	r3, [r3]
+ 165:./Lib/Src/stm32f4xx_exti.c ****   }
+ 256              		.loc 1 165 31
+ 257 00cc DA43     		mvns	r2, r3
+ 165:./Lib/Src/stm32f4xx_exti.c ****   }
+ 258              		.loc 1 165 5
+ 259 00ce FB68     		ldr	r3, [r7, #12]
+ 165:./Lib/Src/stm32f4xx_exti.c ****   }
+ 260              		.loc 1 165 28
+ 261 00d0 0A40     		ands	r2, r2, r1
+ 262 00d2 1A60     		str	r2, [r3]
+ 263              	.L8:
+ 264              		.loc 1 167 1
+ 265 00d4 00BF     		nop
+ 266 00d6 1437     		adds	r7, r7, #20
+ 267              		.cfi_def_cfa_offset 4
+ 268 00d8 BD46     		mov	sp, r7
+ 269              		.cfi_def_cfa_register 13
+ 270              		@ sp needed
+ 271 00da 5DF8047B 		ldr	r7, [sp], #4
+ 272              		.cfi_restore 7
+ 273              		.cfi_def_cfa_offset 0
+ 274 00de 7047     		bx	lr
+ 275              	.L10:
+ 276              		.align	2
+ 277              	.L9:
+ 278 00e0 003C0140 		.word	1073822720
+ARM GAS  /tmp/ccPEY4C1.s 			page 9
+
+
+ 279              		.cfi_endproc
+ 280              	.LFE124:
+ 282              		.section	.text.EXTI_StructInit,"ax",%progbits
+ 283              		.align	1
+ 284              		.global	EXTI_StructInit
+ 285              		.syntax unified
+ 286              		.thumb
+ 287              		.thumb_func
+ 289              	EXTI_StructInit:
+ 290              	.LFB125:
+ 168:./Lib/Src/stm32f4xx_exti.c **** 
+ 169:./Lib/Src/stm32f4xx_exti.c **** /**
+ 170:./Lib/Src/stm32f4xx_exti.c ****   * @brief  Fills each EXTI_InitStruct member with its reset value.
+ 171:./Lib/Src/stm32f4xx_exti.c ****   * @param  EXTI_InitStruct: pointer to a EXTI_InitTypeDef structure which will
+ 172:./Lib/Src/stm32f4xx_exti.c ****   *         be initialized.
+ 173:./Lib/Src/stm32f4xx_exti.c ****   * @retval None
+ 174:./Lib/Src/stm32f4xx_exti.c ****   */
+ 175:./Lib/Src/stm32f4xx_exti.c **** void EXTI_StructInit(EXTI_InitTypeDef* EXTI_InitStruct)
+ 176:./Lib/Src/stm32f4xx_exti.c **** {
+ 291              		.loc 1 176 1
+ 292              		.cfi_startproc
+ 293              		@ args = 0, pretend = 0, frame = 8
+ 294              		@ frame_needed = 1, uses_anonymous_args = 0
+ 295              		@ link register save eliminated.
+ 296 0000 80B4     		push	{r7}
+ 297              		.cfi_def_cfa_offset 4
+ 298              		.cfi_offset 7, -4
+ 299 0002 83B0     		sub	sp, sp, #12
+ 300              		.cfi_def_cfa_offset 16
+ 301 0004 00AF     		add	r7, sp, #0
+ 302              		.cfi_def_cfa_register 7
+ 303 0006 7860     		str	r0, [r7, #4]
+ 177:./Lib/Src/stm32f4xx_exti.c ****   EXTI_InitStruct->EXTI_Line = EXTI_LINENONE;
+ 304              		.loc 1 177 30
+ 305 0008 7B68     		ldr	r3, [r7, #4]
+ 306 000a 0022     		movs	r2, #0
+ 307 000c 1A60     		str	r2, [r3]
+ 178:./Lib/Src/stm32f4xx_exti.c ****   EXTI_InitStruct->EXTI_Mode = EXTI_Mode_Interrupt;
+ 308              		.loc 1 178 30
+ 309 000e 7B68     		ldr	r3, [r7, #4]
+ 310 0010 0022     		movs	r2, #0
+ 311 0012 1A71     		strb	r2, [r3, #4]
+ 179:./Lib/Src/stm32f4xx_exti.c ****   EXTI_InitStruct->EXTI_Trigger = EXTI_Trigger_Falling;
+ 312              		.loc 1 179 33
+ 313 0014 7B68     		ldr	r3, [r7, #4]
+ 314 0016 0C22     		movs	r2, #12
+ 315 0018 5A71     		strb	r2, [r3, #5]
+ 180:./Lib/Src/stm32f4xx_exti.c ****   EXTI_InitStruct->EXTI_LineCmd = DISABLE;
+ 316              		.loc 1 180 33
+ 317 001a 7B68     		ldr	r3, [r7, #4]
+ 318 001c 0022     		movs	r2, #0
+ 319 001e 9A71     		strb	r2, [r3, #6]
+ 181:./Lib/Src/stm32f4xx_exti.c **** }
+ 320              		.loc 1 181 1
+ 321 0020 00BF     		nop
+ 322 0022 0C37     		adds	r7, r7, #12
+ 323              		.cfi_def_cfa_offset 4
+ARM GAS  /tmp/ccPEY4C1.s 			page 10
+
+
+ 324 0024 BD46     		mov	sp, r7
+ 325              		.cfi_def_cfa_register 13
+ 326              		@ sp needed
+ 327 0026 5DF8047B 		ldr	r7, [sp], #4
+ 328              		.cfi_restore 7
+ 329              		.cfi_def_cfa_offset 0
+ 330 002a 7047     		bx	lr
+ 331              		.cfi_endproc
+ 332              	.LFE125:
+ 334              		.section	.text.EXTI_GenerateSWInterrupt,"ax",%progbits
+ 335              		.align	1
+ 336              		.global	EXTI_GenerateSWInterrupt
+ 337              		.syntax unified
+ 338              		.thumb
+ 339              		.thumb_func
+ 341              	EXTI_GenerateSWInterrupt:
+ 342              	.LFB126:
+ 182:./Lib/Src/stm32f4xx_exti.c **** 
+ 183:./Lib/Src/stm32f4xx_exti.c **** /**
+ 184:./Lib/Src/stm32f4xx_exti.c ****   * @brief  Generates a Software interrupt on selected EXTI line.
+ 185:./Lib/Src/stm32f4xx_exti.c ****   * @param  EXTI_Line: specifies the EXTI line on which the software interrupt
+ 186:./Lib/Src/stm32f4xx_exti.c ****   *         will be generated.
+ 187:./Lib/Src/stm32f4xx_exti.c ****   *         This parameter can be any combination of EXTI_Linex where x can be (0..22)
+ 188:./Lib/Src/stm32f4xx_exti.c ****   * @retval None
+ 189:./Lib/Src/stm32f4xx_exti.c ****   */
+ 190:./Lib/Src/stm32f4xx_exti.c **** void EXTI_GenerateSWInterrupt(uint32_t EXTI_Line)
+ 191:./Lib/Src/stm32f4xx_exti.c **** {
+ 343              		.loc 1 191 1
+ 344              		.cfi_startproc
+ 345              		@ args = 0, pretend = 0, frame = 8
+ 346              		@ frame_needed = 1, uses_anonymous_args = 0
+ 347              		@ link register save eliminated.
+ 348 0000 80B4     		push	{r7}
+ 349              		.cfi_def_cfa_offset 4
+ 350              		.cfi_offset 7, -4
+ 351 0002 83B0     		sub	sp, sp, #12
+ 352              		.cfi_def_cfa_offset 16
+ 353 0004 00AF     		add	r7, sp, #0
+ 354              		.cfi_def_cfa_register 7
+ 355 0006 7860     		str	r0, [r7, #4]
+ 192:./Lib/Src/stm32f4xx_exti.c ****   /* Check the parameters */
+ 193:./Lib/Src/stm32f4xx_exti.c ****   assert_param(IS_EXTI_LINE(EXTI_Line));
+ 194:./Lib/Src/stm32f4xx_exti.c ****   
+ 195:./Lib/Src/stm32f4xx_exti.c ****   EXTI->SWIER |= EXTI_Line;
+ 356              		.loc 1 195 7
+ 357 0008 054B     		ldr	r3, .L13
+ 358 000a 1A69     		ldr	r2, [r3, #16]
+ 359 000c 0449     		ldr	r1, .L13
+ 360              		.loc 1 195 15
+ 361 000e 7B68     		ldr	r3, [r7, #4]
+ 362 0010 1343     		orrs	r3, r3, r2
+ 363 0012 0B61     		str	r3, [r1, #16]
+ 196:./Lib/Src/stm32f4xx_exti.c **** }
+ 364              		.loc 1 196 1
+ 365 0014 00BF     		nop
+ 366 0016 0C37     		adds	r7, r7, #12
+ 367              		.cfi_def_cfa_offset 4
+ARM GAS  /tmp/ccPEY4C1.s 			page 11
+
+
+ 368 0018 BD46     		mov	sp, r7
+ 369              		.cfi_def_cfa_register 13
+ 370              		@ sp needed
+ 371 001a 5DF8047B 		ldr	r7, [sp], #4
+ 372              		.cfi_restore 7
+ 373              		.cfi_def_cfa_offset 0
+ 374 001e 7047     		bx	lr
+ 375              	.L14:
+ 376              		.align	2
+ 377              	.L13:
+ 378 0020 003C0140 		.word	1073822720
+ 379              		.cfi_endproc
+ 380              	.LFE126:
+ 382              		.section	.text.EXTI_GetFlagStatus,"ax",%progbits
+ 383              		.align	1
+ 384              		.global	EXTI_GetFlagStatus
+ 385              		.syntax unified
+ 386              		.thumb
+ 387              		.thumb_func
+ 389              	EXTI_GetFlagStatus:
+ 390              	.LFB127:
+ 197:./Lib/Src/stm32f4xx_exti.c **** 
+ 198:./Lib/Src/stm32f4xx_exti.c **** /**
+ 199:./Lib/Src/stm32f4xx_exti.c ****   * @}
+ 200:./Lib/Src/stm32f4xx_exti.c ****   */
+ 201:./Lib/Src/stm32f4xx_exti.c **** 
+ 202:./Lib/Src/stm32f4xx_exti.c **** /** @defgroup EXTI_Group2 Interrupts and flags management functions
+ 203:./Lib/Src/stm32f4xx_exti.c ****  *  @brief   Interrupts and flags management functions 
+ 204:./Lib/Src/stm32f4xx_exti.c ****  *
+ 205:./Lib/Src/stm32f4xx_exti.c **** @verbatim   
+ 206:./Lib/Src/stm32f4xx_exti.c ****  ===============================================================================
+ 207:./Lib/Src/stm32f4xx_exti.c ****              ##### Interrupts and flags management functions #####
+ 208:./Lib/Src/stm32f4xx_exti.c ****  ===============================================================================
+ 209:./Lib/Src/stm32f4xx_exti.c **** 
+ 210:./Lib/Src/stm32f4xx_exti.c **** @endverbatim
+ 211:./Lib/Src/stm32f4xx_exti.c ****   * @{
+ 212:./Lib/Src/stm32f4xx_exti.c ****   */
+ 213:./Lib/Src/stm32f4xx_exti.c **** 
+ 214:./Lib/Src/stm32f4xx_exti.c **** /**
+ 215:./Lib/Src/stm32f4xx_exti.c ****   * @brief  Checks whether the specified EXTI line flag is set or not.
+ 216:./Lib/Src/stm32f4xx_exti.c ****   * @param  EXTI_Line: specifies the EXTI line flag to check.
+ 217:./Lib/Src/stm32f4xx_exti.c ****   *          This parameter can be EXTI_Linex where x can be(0..22)
+ 218:./Lib/Src/stm32f4xx_exti.c ****   * @retval The new state of EXTI_Line (SET or RESET).
+ 219:./Lib/Src/stm32f4xx_exti.c ****   */
+ 220:./Lib/Src/stm32f4xx_exti.c **** FlagStatus EXTI_GetFlagStatus(uint32_t EXTI_Line)
+ 221:./Lib/Src/stm32f4xx_exti.c **** {
+ 391              		.loc 1 221 1
+ 392              		.cfi_startproc
+ 393              		@ args = 0, pretend = 0, frame = 16
+ 394              		@ frame_needed = 1, uses_anonymous_args = 0
+ 395              		@ link register save eliminated.
+ 396 0000 80B4     		push	{r7}
+ 397              		.cfi_def_cfa_offset 4
+ 398              		.cfi_offset 7, -4
+ 399 0002 85B0     		sub	sp, sp, #20
+ 400              		.cfi_def_cfa_offset 24
+ 401 0004 00AF     		add	r7, sp, #0
+ARM GAS  /tmp/ccPEY4C1.s 			page 12
+
+
+ 402              		.cfi_def_cfa_register 7
+ 403 0006 7860     		str	r0, [r7, #4]
+ 222:./Lib/Src/stm32f4xx_exti.c ****   FlagStatus bitstatus = RESET;
+ 404              		.loc 1 222 14
+ 405 0008 0023     		movs	r3, #0
+ 406 000a FB73     		strb	r3, [r7, #15]
+ 223:./Lib/Src/stm32f4xx_exti.c ****   /* Check the parameters */
+ 224:./Lib/Src/stm32f4xx_exti.c ****   assert_param(IS_GET_EXTI_LINE(EXTI_Line));
+ 225:./Lib/Src/stm32f4xx_exti.c ****   
+ 226:./Lib/Src/stm32f4xx_exti.c ****   if ((EXTI->PR & EXTI_Line) != (uint32_t)RESET)
+ 407              		.loc 1 226 12
+ 408 000c 084B     		ldr	r3, .L19
+ 409 000e 5A69     		ldr	r2, [r3, #20]
+ 410              		.loc 1 226 17
+ 411 0010 7B68     		ldr	r3, [r7, #4]
+ 412 0012 1340     		ands	r3, r3, r2
+ 413              		.loc 1 226 6
+ 414 0014 002B     		cmp	r3, #0
+ 415 0016 02D0     		beq	.L16
+ 227:./Lib/Src/stm32f4xx_exti.c ****   {
+ 228:./Lib/Src/stm32f4xx_exti.c ****     bitstatus = SET;
+ 416              		.loc 1 228 15
+ 417 0018 0123     		movs	r3, #1
+ 418 001a FB73     		strb	r3, [r7, #15]
+ 419 001c 01E0     		b	.L17
+ 420              	.L16:
+ 229:./Lib/Src/stm32f4xx_exti.c ****   }
+ 230:./Lib/Src/stm32f4xx_exti.c ****   else
+ 231:./Lib/Src/stm32f4xx_exti.c ****   {
+ 232:./Lib/Src/stm32f4xx_exti.c ****     bitstatus = RESET;
+ 421              		.loc 1 232 15
+ 422 001e 0023     		movs	r3, #0
+ 423 0020 FB73     		strb	r3, [r7, #15]
+ 424              	.L17:
+ 233:./Lib/Src/stm32f4xx_exti.c ****   }
+ 234:./Lib/Src/stm32f4xx_exti.c ****   return bitstatus;
+ 425              		.loc 1 234 10
+ 426 0022 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 235:./Lib/Src/stm32f4xx_exti.c **** }
+ 427              		.loc 1 235 1
+ 428 0024 1846     		mov	r0, r3
+ 429 0026 1437     		adds	r7, r7, #20
+ 430              		.cfi_def_cfa_offset 4
+ 431 0028 BD46     		mov	sp, r7
+ 432              		.cfi_def_cfa_register 13
+ 433              		@ sp needed
+ 434 002a 5DF8047B 		ldr	r7, [sp], #4
+ 435              		.cfi_restore 7
+ 436              		.cfi_def_cfa_offset 0
+ 437 002e 7047     		bx	lr
+ 438              	.L20:
+ 439              		.align	2
+ 440              	.L19:
+ 441 0030 003C0140 		.word	1073822720
+ 442              		.cfi_endproc
+ 443              	.LFE127:
+ 445              		.section	.text.EXTI_ClearFlag,"ax",%progbits
+ARM GAS  /tmp/ccPEY4C1.s 			page 13
+
+
+ 446              		.align	1
+ 447              		.global	EXTI_ClearFlag
+ 448              		.syntax unified
+ 449              		.thumb
+ 450              		.thumb_func
+ 452              	EXTI_ClearFlag:
+ 453              	.LFB128:
+ 236:./Lib/Src/stm32f4xx_exti.c **** 
+ 237:./Lib/Src/stm32f4xx_exti.c **** /**
+ 238:./Lib/Src/stm32f4xx_exti.c ****   * @brief  Clears the EXTI's line pending flags.
+ 239:./Lib/Src/stm32f4xx_exti.c ****   * @param  EXTI_Line: specifies the EXTI lines flags to clear.
+ 240:./Lib/Src/stm32f4xx_exti.c ****   *          This parameter can be any combination of EXTI_Linex where x can be (0..22)
+ 241:./Lib/Src/stm32f4xx_exti.c ****   * @retval None
+ 242:./Lib/Src/stm32f4xx_exti.c ****   */
+ 243:./Lib/Src/stm32f4xx_exti.c **** void EXTI_ClearFlag(uint32_t EXTI_Line)
+ 244:./Lib/Src/stm32f4xx_exti.c **** {
+ 454              		.loc 1 244 1
+ 455              		.cfi_startproc
+ 456              		@ args = 0, pretend = 0, frame = 8
+ 457              		@ frame_needed = 1, uses_anonymous_args = 0
+ 458              		@ link register save eliminated.
+ 459 0000 80B4     		push	{r7}
+ 460              		.cfi_def_cfa_offset 4
+ 461              		.cfi_offset 7, -4
+ 462 0002 83B0     		sub	sp, sp, #12
+ 463              		.cfi_def_cfa_offset 16
+ 464 0004 00AF     		add	r7, sp, #0
+ 465              		.cfi_def_cfa_register 7
+ 466 0006 7860     		str	r0, [r7, #4]
+ 245:./Lib/Src/stm32f4xx_exti.c ****   /* Check the parameters */
+ 246:./Lib/Src/stm32f4xx_exti.c ****   assert_param(IS_EXTI_LINE(EXTI_Line));
+ 247:./Lib/Src/stm32f4xx_exti.c ****   
+ 248:./Lib/Src/stm32f4xx_exti.c ****   EXTI->PR = EXTI_Line;
+ 467              		.loc 1 248 7
+ 468 0008 044A     		ldr	r2, .L22
+ 469              		.loc 1 248 12
+ 470 000a 7B68     		ldr	r3, [r7, #4]
+ 471 000c 5361     		str	r3, [r2, #20]
+ 249:./Lib/Src/stm32f4xx_exti.c **** }
+ 472              		.loc 1 249 1
+ 473 000e 00BF     		nop
+ 474 0010 0C37     		adds	r7, r7, #12
+ 475              		.cfi_def_cfa_offset 4
+ 476 0012 BD46     		mov	sp, r7
+ 477              		.cfi_def_cfa_register 13
+ 478              		@ sp needed
+ 479 0014 5DF8047B 		ldr	r7, [sp], #4
+ 480              		.cfi_restore 7
+ 481              		.cfi_def_cfa_offset 0
+ 482 0018 7047     		bx	lr
+ 483              	.L23:
+ 484 001a 00BF     		.align	2
+ 485              	.L22:
+ 486 001c 003C0140 		.word	1073822720
+ 487              		.cfi_endproc
+ 488              	.LFE128:
+ 490              		.section	.text.EXTI_GetITStatus,"ax",%progbits
+ARM GAS  /tmp/ccPEY4C1.s 			page 14
+
+
+ 491              		.align	1
+ 492              		.global	EXTI_GetITStatus
+ 493              		.syntax unified
+ 494              		.thumb
+ 495              		.thumb_func
+ 497              	EXTI_GetITStatus:
+ 498              	.LFB129:
+ 250:./Lib/Src/stm32f4xx_exti.c **** 
+ 251:./Lib/Src/stm32f4xx_exti.c **** /**
+ 252:./Lib/Src/stm32f4xx_exti.c ****   * @brief  Checks whether the specified EXTI line is asserted or not.
+ 253:./Lib/Src/stm32f4xx_exti.c ****   * @param  EXTI_Line: specifies the EXTI line to check.
+ 254:./Lib/Src/stm32f4xx_exti.c ****   *          This parameter can be EXTI_Linex where x can be(0..22)
+ 255:./Lib/Src/stm32f4xx_exti.c ****   * @retval The new state of EXTI_Line (SET or RESET).
+ 256:./Lib/Src/stm32f4xx_exti.c ****   */
+ 257:./Lib/Src/stm32f4xx_exti.c **** ITStatus EXTI_GetITStatus(uint32_t EXTI_Line)
+ 258:./Lib/Src/stm32f4xx_exti.c **** {
+ 499              		.loc 1 258 1
+ 500              		.cfi_startproc
+ 501              		@ args = 0, pretend = 0, frame = 16
+ 502              		@ frame_needed = 1, uses_anonymous_args = 0
+ 503              		@ link register save eliminated.
+ 504 0000 80B4     		push	{r7}
+ 505              		.cfi_def_cfa_offset 4
+ 506              		.cfi_offset 7, -4
+ 507 0002 85B0     		sub	sp, sp, #20
+ 508              		.cfi_def_cfa_offset 24
+ 509 0004 00AF     		add	r7, sp, #0
+ 510              		.cfi_def_cfa_register 7
+ 511 0006 7860     		str	r0, [r7, #4]
+ 259:./Lib/Src/stm32f4xx_exti.c ****   FlagStatus bitstatus = RESET;
+ 512              		.loc 1 259 14
+ 513 0008 0023     		movs	r3, #0
+ 514 000a FB73     		strb	r3, [r7, #15]
+ 260:./Lib/Src/stm32f4xx_exti.c ****   /* Check the parameters */
+ 261:./Lib/Src/stm32f4xx_exti.c ****   assert_param(IS_GET_EXTI_LINE(EXTI_Line));
+ 262:./Lib/Src/stm32f4xx_exti.c ****   
+ 263:./Lib/Src/stm32f4xx_exti.c ****   if ((EXTI->PR & EXTI_Line) != (uint32_t)RESET)
+ 515              		.loc 1 263 12
+ 516 000c 084B     		ldr	r3, .L28
+ 517 000e 5A69     		ldr	r2, [r3, #20]
+ 518              		.loc 1 263 17
+ 519 0010 7B68     		ldr	r3, [r7, #4]
+ 520 0012 1340     		ands	r3, r3, r2
+ 521              		.loc 1 263 6
+ 522 0014 002B     		cmp	r3, #0
+ 523 0016 02D0     		beq	.L25
+ 264:./Lib/Src/stm32f4xx_exti.c ****   {
+ 265:./Lib/Src/stm32f4xx_exti.c ****     bitstatus = SET;
+ 524              		.loc 1 265 15
+ 525 0018 0123     		movs	r3, #1
+ 526 001a FB73     		strb	r3, [r7, #15]
+ 527 001c 01E0     		b	.L26
+ 528              	.L25:
+ 266:./Lib/Src/stm32f4xx_exti.c ****   }
+ 267:./Lib/Src/stm32f4xx_exti.c ****   else
+ 268:./Lib/Src/stm32f4xx_exti.c ****   {
+ 269:./Lib/Src/stm32f4xx_exti.c ****     bitstatus = RESET;
+ARM GAS  /tmp/ccPEY4C1.s 			page 15
+
+
+ 529              		.loc 1 269 15
+ 530 001e 0023     		movs	r3, #0
+ 531 0020 FB73     		strb	r3, [r7, #15]
+ 532              	.L26:
+ 270:./Lib/Src/stm32f4xx_exti.c ****   }
+ 271:./Lib/Src/stm32f4xx_exti.c ****   return bitstatus;
+ 533              		.loc 1 271 10
+ 534 0022 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 272:./Lib/Src/stm32f4xx_exti.c ****   
+ 273:./Lib/Src/stm32f4xx_exti.c **** }
+ 535              		.loc 1 273 1
+ 536 0024 1846     		mov	r0, r3
+ 537 0026 1437     		adds	r7, r7, #20
+ 538              		.cfi_def_cfa_offset 4
+ 539 0028 BD46     		mov	sp, r7
+ 540              		.cfi_def_cfa_register 13
+ 541              		@ sp needed
+ 542 002a 5DF8047B 		ldr	r7, [sp], #4
+ 543              		.cfi_restore 7
+ 544              		.cfi_def_cfa_offset 0
+ 545 002e 7047     		bx	lr
+ 546              	.L29:
+ 547              		.align	2
+ 548              	.L28:
+ 549 0030 003C0140 		.word	1073822720
+ 550              		.cfi_endproc
+ 551              	.LFE129:
+ 553              		.section	.text.EXTI_ClearITPendingBit,"ax",%progbits
+ 554              		.align	1
+ 555              		.global	EXTI_ClearITPendingBit
+ 556              		.syntax unified
+ 557              		.thumb
+ 558              		.thumb_func
+ 560              	EXTI_ClearITPendingBit:
+ 561              	.LFB130:
+ 274:./Lib/Src/stm32f4xx_exti.c **** 
+ 275:./Lib/Src/stm32f4xx_exti.c **** /**
+ 276:./Lib/Src/stm32f4xx_exti.c ****   * @brief  Clears the EXTI's line pending bits.
+ 277:./Lib/Src/stm32f4xx_exti.c ****   * @param  EXTI_Line: specifies the EXTI lines to clear.
+ 278:./Lib/Src/stm32f4xx_exti.c ****   *          This parameter can be any combination of EXTI_Linex where x can be (0..22)
+ 279:./Lib/Src/stm32f4xx_exti.c ****   * @retval None
+ 280:./Lib/Src/stm32f4xx_exti.c ****   */
+ 281:./Lib/Src/stm32f4xx_exti.c **** void EXTI_ClearITPendingBit(uint32_t EXTI_Line)
+ 282:./Lib/Src/stm32f4xx_exti.c **** {
+ 562              		.loc 1 282 1
+ 563              		.cfi_startproc
+ 564              		@ args = 0, pretend = 0, frame = 8
+ 565              		@ frame_needed = 1, uses_anonymous_args = 0
+ 566              		@ link register save eliminated.
+ 567 0000 80B4     		push	{r7}
+ 568              		.cfi_def_cfa_offset 4
+ 569              		.cfi_offset 7, -4
+ 570 0002 83B0     		sub	sp, sp, #12
+ 571              		.cfi_def_cfa_offset 16
+ 572 0004 00AF     		add	r7, sp, #0
+ 573              		.cfi_def_cfa_register 7
+ 574 0006 7860     		str	r0, [r7, #4]
+ARM GAS  /tmp/ccPEY4C1.s 			page 16
+
+
+ 283:./Lib/Src/stm32f4xx_exti.c ****   /* Check the parameters */
+ 284:./Lib/Src/stm32f4xx_exti.c ****   assert_param(IS_EXTI_LINE(EXTI_Line));
+ 285:./Lib/Src/stm32f4xx_exti.c ****   
+ 286:./Lib/Src/stm32f4xx_exti.c ****   EXTI->PR = EXTI_Line;
+ 575              		.loc 1 286 7
+ 576 0008 044A     		ldr	r2, .L31
+ 577              		.loc 1 286 12
+ 578 000a 7B68     		ldr	r3, [r7, #4]
+ 579 000c 5361     		str	r3, [r2, #20]
+ 287:./Lib/Src/stm32f4xx_exti.c **** }
+ 580              		.loc 1 287 1
+ 581 000e 00BF     		nop
+ 582 0010 0C37     		adds	r7, r7, #12
+ 583              		.cfi_def_cfa_offset 4
+ 584 0012 BD46     		mov	sp, r7
+ 585              		.cfi_def_cfa_register 13
+ 586              		@ sp needed
+ 587 0014 5DF8047B 		ldr	r7, [sp], #4
+ 588              		.cfi_restore 7
+ 589              		.cfi_def_cfa_offset 0
+ 590 0018 7047     		bx	lr
+ 591              	.L32:
+ 592 001a 00BF     		.align	2
+ 593              	.L31:
+ 594 001c 003C0140 		.word	1073822720
+ 595              		.cfi_endproc
+ 596              	.LFE130:
+ 598              		.text
+ 599              	.Letext0:
+ 600              		.file 2 "/usr/lib/gcc/arm-none-eabi/12.2.1/include/stdint.h"
+ 601              		.file 3 "./Start/stm32f4xx.h"
+ 602              		.file 4 "./Lib/inc/stm32f4xx_exti.h"
+ARM GAS  /tmp/ccPEY4C1.s 			page 17
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 stm32f4xx_exti.c
+     /tmp/ccPEY4C1.s:21     .text.EXTI_DeInit:0000000000000000 $t
+     /tmp/ccPEY4C1.s:27     .text.EXTI_DeInit:0000000000000000 EXTI_DeInit
+     /tmp/ccPEY4C1.s:76     .text.EXTI_DeInit:000000000000002c $d
+     /tmp/ccPEY4C1.s:82     .text.EXTI_Init:0000000000000000 $t
+     /tmp/ccPEY4C1.s:88     .text.EXTI_Init:0000000000000000 EXTI_Init
+     /tmp/ccPEY4C1.s:278    .text.EXTI_Init:00000000000000e0 $d
+     /tmp/ccPEY4C1.s:283    .text.EXTI_StructInit:0000000000000000 $t
+     /tmp/ccPEY4C1.s:289    .text.EXTI_StructInit:0000000000000000 EXTI_StructInit
+     /tmp/ccPEY4C1.s:335    .text.EXTI_GenerateSWInterrupt:0000000000000000 $t
+     /tmp/ccPEY4C1.s:341    .text.EXTI_GenerateSWInterrupt:0000000000000000 EXTI_GenerateSWInterrupt
+     /tmp/ccPEY4C1.s:378    .text.EXTI_GenerateSWInterrupt:0000000000000020 $d
+     /tmp/ccPEY4C1.s:383    .text.EXTI_GetFlagStatus:0000000000000000 $t
+     /tmp/ccPEY4C1.s:389    .text.EXTI_GetFlagStatus:0000000000000000 EXTI_GetFlagStatus
+     /tmp/ccPEY4C1.s:441    .text.EXTI_GetFlagStatus:0000000000000030 $d
+     /tmp/ccPEY4C1.s:446    .text.EXTI_ClearFlag:0000000000000000 $t
+     /tmp/ccPEY4C1.s:452    .text.EXTI_ClearFlag:0000000000000000 EXTI_ClearFlag
+     /tmp/ccPEY4C1.s:486    .text.EXTI_ClearFlag:000000000000001c $d
+     /tmp/ccPEY4C1.s:491    .text.EXTI_GetITStatus:0000000000000000 $t
+     /tmp/ccPEY4C1.s:497    .text.EXTI_GetITStatus:0000000000000000 EXTI_GetITStatus
+     /tmp/ccPEY4C1.s:549    .text.EXTI_GetITStatus:0000000000000030 $d
+     /tmp/ccPEY4C1.s:554    .text.EXTI_ClearITPendingBit:0000000000000000 $t
+     /tmp/ccPEY4C1.s:560    .text.EXTI_ClearITPendingBit:0000000000000000 EXTI_ClearITPendingBit
+     /tmp/ccPEY4C1.s:594    .text.EXTI_ClearITPendingBit:000000000000001c $d
+
+NO UNDEFINED SYMBOLS

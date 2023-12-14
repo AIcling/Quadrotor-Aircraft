@@ -21,6 +21,7 @@ extern struct Angle angle;
 extern float Gyro_Xerr,Gyro_Yerr,Gyro_Zerr;
 extern float Acc_Xerr,Acc_Yerr,Acc_Yerr;
 extern float Xoffset,Yoffset,Zoffset,Kmx,Kmy,Kmz;
+extern float Wx,Wy,Wz;
 void get_MPU6050err(void);
 void HMC5883L_Motify(void);
 #define Use_Mag 1

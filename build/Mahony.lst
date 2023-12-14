@@ -1,0 +1,2384 @@
+ARM GAS  /tmp/cczAStci.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 6
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"Mahony.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "./Hardware/Src/Mahony.c"
+  20              		.global	MyAngle
+  21              		.section	.bss.MyAngle,"aw",%nobits
+  22              		.align	2
+  25              	MyAngle:
+  26 0000 00000000 		.space	12
+  26      00000000 
+  26      00000000 
+  27              		.global	MPU6050
+  28              		.section	.bss.MPU6050,"aw",%nobits
+  29              		.align	2
+  32              	MPU6050:
+  33 0000 00000000 		.space	24
+  33      00000000 
+  33      00000000 
+  33      00000000 
+  33      00000000 
+  34              		.section	.text.Prepare_RawData,"ax",%progbits
+  35              		.align	1
+  36              		.global	Prepare_RawData
+  37              		.syntax unified
+  38              		.thumb
+  39              		.thumb_func
+  41              	Prepare_RawData:
+  42              	.LFB126:
+   1:./Hardware/Src/Mahony.c **** #include "stm32f4xx.h"
+   2:./Hardware/Src/Mahony.c **** 
+   3:./Hardware/Src/Mahony.c **** #include "Mahony.h"
+   4:./Hardware/Src/Mahony.c **** // #include "Gy86.h"  //引入原始数据的头文件
+   5:./Hardware/Src/Mahony.c **** #include <stdio.h>
+   6:./Hardware/Src/Mahony.c **** #include <math.h>
+   7:./Hardware/Src/Mahony.c **** 
+   8:./Hardware/Src/Mahony.c **** #define  ACC_RANGE 2.0f
+   9:./Hardware/Src/Mahony.c **** #define  GYRO_RANGE 2000.0f
+  10:./Hardware/Src/Mahony.c **** #define  GRAVITY   9.8f
+  11:./Hardware/Src/Mahony.c **** #define  RAD 0.0174f
+  12:./Hardware/Src/Mahony.c **** 
+  13:./Hardware/Src/Mahony.c **** Angle MyAngle={0};
+  14:./Hardware/Src/Mahony.c **** IMU MPU6050={0};
+ARM GAS  /tmp/cczAStci.s 			page 2
+
+
+  15:./Hardware/Src/Mahony.c **** 
+  16:./Hardware/Src/Mahony.c **** void Prepare_RawData(IMU *Trans_Data)
+  17:./Hardware/Src/Mahony.c **** {
+  43              		.loc 1 17 1
+  44              		.cfi_startproc
+  45              		@ args = 0, pretend = 0, frame = 8
+  46              		@ frame_needed = 1, uses_anonymous_args = 0
+  47              		@ link register save eliminated.
+  48 0000 80B4     		push	{r7}
+  49              		.cfi_def_cfa_offset 4
+  50              		.cfi_offset 7, -4
+  51 0002 83B0     		sub	sp, sp, #12
+  52              		.cfi_def_cfa_offset 16
+  53 0004 00AF     		add	r7, sp, #0
+  54              		.cfi_def_cfa_register 7
+  55 0006 7860     		str	r0, [r7, #4]
+  18:./Hardware/Src/Mahony.c **** 	Trans_Data->Acc_X=(float)MPU6050_data[0]-906.4f;
+  56              		.loc 1 18 39
+  57 0008 3E4B     		ldr	r3, .L3
+  58 000a B3F90030 		ldrsh	r3, [r3]
+  59              		.loc 1 18 20
+  60 000e 07EE903A 		vmov	s15, r3	@ int
+  61 0012 F8EEE77A 		vcvt.f32.s32	s15, s15
+  62              		.loc 1 18 42
+  63 0016 9FED3C7A 		vldr.32	s14, .L3+4
+  64 001a 77EEC77A 		vsub.f32	s15, s15, s14
+  65              		.loc 1 18 19
+  66 001e 7B68     		ldr	r3, [r7, #4]
+  67 0020 C3ED007A 		vstr.32	s15, [r3]
+  19:./Hardware/Src/Mahony.c **** 	Trans_Data->Acc_Y=(float)MPU6050_data[1]+187.6f;
+  68              		.loc 1 19 39
+  69 0024 374B     		ldr	r3, .L3
+  70 0026 B3F90230 		ldrsh	r3, [r3, #2]
+  71              		.loc 1 19 20
+  72 002a 07EE903A 		vmov	s15, r3	@ int
+  73 002e F8EEE77A 		vcvt.f32.s32	s15, s15
+  74              		.loc 1 19 42
+  75 0032 9FED367A 		vldr.32	s14, .L3+8
+  76 0036 77EE877A 		vadd.f32	s15, s15, s14
+  77              		.loc 1 19 19
+  78 003a 7B68     		ldr	r3, [r7, #4]
+  79 003c C3ED017A 		vstr.32	s15, [r3, #4]
+  20:./Hardware/Src/Mahony.c **** 	Trans_Data->Acc_Z=(float)MPU6050_data[2]+1295.4f;
+  80              		.loc 1 20 39
+  81 0040 304B     		ldr	r3, .L3
+  82 0042 B3F90430 		ldrsh	r3, [r3, #4]
+  83              		.loc 1 20 20
+  84 0046 07EE903A 		vmov	s15, r3	@ int
+  85 004a F8EEE77A 		vcvt.f32.s32	s15, s15
+  86              		.loc 1 20 42
+  87 004e 9FED307A 		vldr.32	s14, .L3+12
+  88 0052 77EE877A 		vadd.f32	s15, s15, s14
+  89              		.loc 1 20 19
+  90 0056 7B68     		ldr	r3, [r7, #4]
+  91 0058 C3ED027A 		vstr.32	s15, [r3, #8]
+  21:./Hardware/Src/Mahony.c **** 	Trans_Data->Gyro_X=(((float)MPU6050_data[4]+49.59f)*GYRO_RANGE*RAD)/32768;
+  92              		.loc 1 21 42
+ARM GAS  /tmp/cczAStci.s 			page 3
+
+
+  93 005c 294B     		ldr	r3, .L3
+  94 005e B3F90830 		ldrsh	r3, [r3, #8]
+  95              		.loc 1 21 23
+  96 0062 07EE903A 		vmov	s15, r3	@ int
+  97 0066 F8EEE77A 		vcvt.f32.s32	s15, s15
+  98              		.loc 1 21 45
+  99 006a 9FED2A7A 		vldr.32	s14, .L3+16
+ 100 006e 77EE877A 		vadd.f32	s15, s15, s14
+ 101              		.loc 1 21 53
+ 102 0072 9FED297A 		vldr.32	s14, .L3+20
+ 103 0076 67EE877A 		vmul.f32	s15, s15, s14
+ 104              		.loc 1 21 64
+ 105 007a 9FED287A 		vldr.32	s14, .L3+24
+ 106 007e 27EE877A 		vmul.f32	s14, s15, s14
+ 107              		.loc 1 21 69
+ 108 0082 DFED276A 		vldr.32	s13, .L3+28
+ 109 0086 C7EE267A 		vdiv.f32	s15, s14, s13
+ 110              		.loc 1 21 20
+ 111 008a 7B68     		ldr	r3, [r7, #4]
+ 112 008c C3ED037A 		vstr.32	s15, [r3, #12]
+  22:./Hardware/Src/Mahony.c **** 	Trans_Data->Gyro_Y=(((float)MPU6050_data[5]-27.71f)*GYRO_RANGE*RAD)/32768;
+ 113              		.loc 1 22 42
+ 114 0090 1C4B     		ldr	r3, .L3
+ 115 0092 B3F90A30 		ldrsh	r3, [r3, #10]
+ 116              		.loc 1 22 23
+ 117 0096 07EE903A 		vmov	s15, r3	@ int
+ 118 009a F8EEE77A 		vcvt.f32.s32	s15, s15
+ 119              		.loc 1 22 45
+ 120 009e 9FED217A 		vldr.32	s14, .L3+32
+ 121 00a2 77EEC77A 		vsub.f32	s15, s15, s14
+ 122              		.loc 1 22 53
+ 123 00a6 9FED1C7A 		vldr.32	s14, .L3+20
+ 124 00aa 67EE877A 		vmul.f32	s15, s15, s14
+ 125              		.loc 1 22 64
+ 126 00ae 9FED1B7A 		vldr.32	s14, .L3+24
+ 127 00b2 27EE877A 		vmul.f32	s14, s15, s14
+ 128              		.loc 1 22 69
+ 129 00b6 DFED1A6A 		vldr.32	s13, .L3+28
+ 130 00ba C7EE267A 		vdiv.f32	s15, s14, s13
+ 131              		.loc 1 22 20
+ 132 00be 7B68     		ldr	r3, [r7, #4]
+ 133 00c0 C3ED047A 		vstr.32	s15, [r3, #16]
+  23:./Hardware/Src/Mahony.c **** 	Trans_Data->Gyro_Z=(((float)MPU6050_data[6]-18.70f)*GYRO_RANGE*RAD)/32768;
+ 134              		.loc 1 23 42
+ 135 00c4 0F4B     		ldr	r3, .L3
+ 136 00c6 B3F90C30 		ldrsh	r3, [r3, #12]
+ 137              		.loc 1 23 23
+ 138 00ca 07EE903A 		vmov	s15, r3	@ int
+ 139 00ce F8EEE77A 		vcvt.f32.s32	s15, s15
+ 140              		.loc 1 23 45
+ 141 00d2 9FED157A 		vldr.32	s14, .L3+36
+ 142 00d6 77EEC77A 		vsub.f32	s15, s15, s14
+ 143              		.loc 1 23 53
+ 144 00da 9FED0F7A 		vldr.32	s14, .L3+20
+ 145 00de 67EE877A 		vmul.f32	s15, s15, s14
+ 146              		.loc 1 23 64
+ 147 00e2 9FED0E7A 		vldr.32	s14, .L3+24
+ARM GAS  /tmp/cczAStci.s 			page 4
+
+
+ 148 00e6 27EE877A 		vmul.f32	s14, s15, s14
+ 149              		.loc 1 23 69
+ 150 00ea DFED0D6A 		vldr.32	s13, .L3+28
+ 151 00ee C7EE267A 		vdiv.f32	s15, s14, s13
+ 152              		.loc 1 23 20
+ 153 00f2 7B68     		ldr	r3, [r7, #4]
+ 154 00f4 C3ED057A 		vstr.32	s15, [r3, #20]
+  24:./Hardware/Src/Mahony.c **** 	return ;
+ 155              		.loc 1 24 2
+ 156 00f8 00BF     		nop
+  25:./Hardware/Src/Mahony.c **** }
+ 157              		.loc 1 25 1
+ 158 00fa 0C37     		adds	r7, r7, #12
+ 159              		.cfi_def_cfa_offset 4
+ 160 00fc BD46     		mov	sp, r7
+ 161              		.cfi_def_cfa_register 13
+ 162              		@ sp needed
+ 163 00fe 5DF8047B 		ldr	r7, [sp], #4
+ 164              		.cfi_restore 7
+ 165              		.cfi_def_cfa_offset 0
+ 166 0102 7047     		bx	lr
+ 167              	.L4:
+ 168              		.align	2
+ 169              	.L3:
+ 170 0104 00000000 		.word	MPU6050_data
+ 171 0108 9A996244 		.word	1147312538
+ 172 010c 9A993B43 		.word	1127979418
+ 173 0110 CDECA144 		.word	1151462605
+ 174 0114 295C4642 		.word	1111907369
+ 175 0118 0000FA44 		.word	1157234688
+ 176 011c 728A8E3C 		.word	1015974514
+ 177 0120 00000047 		.word	1191182336
+ 178 0124 14AEDD41 		.word	1105047060
+ 179 0128 9A999541 		.word	1100323226
+ 180              		.cfi_endproc
+ 181              	.LFE126:
+ 183              		.global	__aeabi_f2d
+ 184              		.global	__aeabi_ddiv
+ 185              		.global	__aeabi_d2f
+ 186              		.section	.text.GetInvSqrt,"ax",%progbits
+ 187              		.align	1
+ 188              		.global	GetInvSqrt
+ 189              		.syntax unified
+ 190              		.thumb
+ 191              		.thumb_func
+ 193              	GetInvSqrt:
+ 194              	.LFB127:
+  26:./Hardware/Src/Mahony.c **** 
+  27:./Hardware/Src/Mahony.c **** float GetInvSqrt(float Sum)
+  28:./Hardware/Src/Mahony.c **** {
+ 195              		.loc 1 28 1
+ 196              		.cfi_startproc
+ 197              		@ args = 0, pretend = 0, frame = 8
+ 198              		@ frame_needed = 1, uses_anonymous_args = 0
+ 199 0000 80B5     		push	{r7, lr}
+ 200              		.cfi_def_cfa_offset 8
+ 201              		.cfi_offset 7, -8
+ARM GAS  /tmp/cczAStci.s 			page 5
+
+
+ 202              		.cfi_offset 14, -4
+ 203 0002 82B0     		sub	sp, sp, #8
+ 204              		.cfi_def_cfa_offset 16
+ 205 0004 00AF     		add	r7, sp, #0
+ 206              		.cfi_def_cfa_register 7
+ 207 0006 87ED010A 		vstr.32	s0, [r7, #4]
+  29:./Hardware/Src/Mahony.c **** 	return 1.0f/sqrt(Sum);
+ 208              		.loc 1 29 14
+ 209 000a 7868     		ldr	r0, [r7, #4]	@ float
+ 210 000c FFF7FEFF 		bl	__aeabi_f2d
+ 211 0010 0246     		mov	r2, r0
+ 212 0012 0B46     		mov	r3, r1
+ 213 0014 43EC102B 		vmov	d0, r2, r3
+ 214 0018 FFF7FEFF 		bl	sqrt
+ 215 001c 53EC102B 		vmov	r2, r3, d0
+ 216              		.loc 1 29 13
+ 217 0020 4FF00000 		mov	r0, #0
+ 218 0024 0849     		ldr	r1, .L7
+ 219 0026 FFF7FEFF 		bl	__aeabi_ddiv
+ 220 002a 0246     		mov	r2, r0
+ 221 002c 0B46     		mov	r3, r1
+ 222 002e 1046     		mov	r0, r2
+ 223 0030 1946     		mov	r1, r3
+ 224 0032 FFF7FEFF 		bl	__aeabi_d2f
+ 225 0036 0346     		mov	r3, r0	@ float
+ 226 0038 07EE903A 		vmov	s15, r3
+  30:./Hardware/Src/Mahony.c **** }
+ 227              		.loc 1 30 1
+ 228 003c B0EE670A 		vmov.f32	s0, s15
+ 229 0040 0837     		adds	r7, r7, #8
+ 230              		.cfi_def_cfa_offset 8
+ 231 0042 BD46     		mov	sp, r7
+ 232              		.cfi_def_cfa_register 13
+ 233              		@ sp needed
+ 234 0044 80BD     		pop	{r7, pc}
+ 235              	.L8:
+ 236 0046 00BF     		.align	2
+ 237              	.L7:
+ 238 0048 0000F03F 		.word	1072693248
+ 239              		.cfi_endproc
+ 240              	.LFE127:
+ 242              		.global	exInt
+ 243              		.section	.bss.exInt,"aw",%nobits
+ 244              		.align	2
+ 247              	exInt:
+ 248 0000 00000000 		.space	4
+ 249              		.global	eyInt
+ 250              		.section	.bss.eyInt,"aw",%nobits
+ 251              		.align	2
+ 254              	eyInt:
+ 255 0000 00000000 		.space	4
+ 256              		.global	ezInt
+ 257              		.section	.bss.ezInt,"aw",%nobits
+ 258              		.align	2
+ 261              	ezInt:
+ 262 0000 00000000 		.space	4
+ 263              		.global	q0
+ARM GAS  /tmp/cczAStci.s 			page 6
+
+
+ 264              		.section	.data.q0,"aw"
+ 265              		.align	2
+ 268              	q0:
+ 269 0000 0000803F 		.word	1065353216
+ 270              		.global	q1
+ 271              		.section	.bss.q1,"aw",%nobits
+ 272              		.align	2
+ 275              	q1:
+ 276 0000 00000000 		.space	4
+ 277              		.global	q2
+ 278              		.section	.bss.q2,"aw",%nobits
+ 279              		.align	2
+ 282              	q2:
+ 283 0000 00000000 		.space	4
+ 284              		.global	q3
+ 285              		.section	.bss.q3,"aw",%nobits
+ 286              		.align	2
+ 289              	q3:
+ 290 0000 00000000 		.space	4
+ 291              		.global	__aeabi_dmul
+ 292              		.section	.rodata
+ 293              		.align	2
+ 294              	.LC0:
+ 295 0000 0000803F 		.word	1065353216
+ 296 0004 00000000 		.word	0
+ 297 0008 00000000 		.word	0
+ 298 000c 00000000 		.word	0
+ 299 0010 0000803F 		.word	1065353216
+ 300 0014 00000000 		.word	0
+ 301 0018 00000000 		.word	0
+ 302 001c 00000000 		.word	0
+ 303 0020 0000803F 		.word	1065353216
+ 304              		.section	.text.Mahony_Update_Attitude,"ax",%progbits
+ 305              		.align	1
+ 306              		.global	Mahony_Update_Attitude
+ 307              		.syntax unified
+ 308              		.thumb
+ 309              		.thumb_func
+ 311              	Mahony_Update_Attitude:
+ 312              	.LFB128:
+  31:./Hardware/Src/Mahony.c **** 
+  32:./Hardware/Src/Mahony.c **** #define KP 0.8f
+  33:./Hardware/Src/Mahony.c **** #define KI 0.001f
+  34:./Hardware/Src/Mahony.c **** #define T 0.02f
+  35:./Hardware/Src/Mahony.c **** #define HALF_T 0.01f
+  36:./Hardware/Src/Mahony.c **** 
+  37:./Hardware/Src/Mahony.c **** float exInt=0.0f ,eyInt=0.0f,ezInt=0.0f;
+  38:./Hardware/Src/Mahony.c **** float q0=1.0f, q1=0.0f, q2=0.0f, q3=0.0f;
+  39:./Hardware/Src/Mahony.c **** 
+  40:./Hardware/Src/Mahony.c **** 
+  41:./Hardware/Src/Mahony.c **** void Mahony_Update_Attitude(IMU *Trans_Data,Angle *Att_Data)
+  42:./Hardware/Src/Mahony.c **** {
+ 313              		.loc 1 42 1
+ 314              		.cfi_startproc
+ 315              		@ args = 0, pretend = 0, frame = 160
+ 316              		@ frame_needed = 1, uses_anonymous_args = 0
+ 317 0000 2DE9B043 		push	{r4, r5, r7, r8, r9, lr}
+ARM GAS  /tmp/cczAStci.s 			page 7
+
+
+ 318              		.cfi_def_cfa_offset 24
+ 319              		.cfi_offset 4, -24
+ 320              		.cfi_offset 5, -20
+ 321              		.cfi_offset 7, -16
+ 322              		.cfi_offset 8, -12
+ 323              		.cfi_offset 9, -8
+ 324              		.cfi_offset 14, -4
+ 325 0004 A8B0     		sub	sp, sp, #160
+ 326              		.cfi_def_cfa_offset 184
+ 327 0006 00AF     		add	r7, sp, #0
+ 328              		.cfi_def_cfa_register 7
+ 329 0008 7860     		str	r0, [r7, #4]
+ 330 000a 3960     		str	r1, [r7]
+  43:./Hardware/Src/Mahony.c **** 	float Matrix[9]={1,0,0,0,1,0,0,0,1};
+ 331              		.loc 1 43 8
+ 332 000c DE4B     		ldr	r3, .L11
+ 333 000e 07F10C04 		add	r4, r7, #12
+ 334 0012 1D46     		mov	r5, r3
+ 335 0014 0FCD     		ldmia	r5!, {r0, r1, r2, r3}
+ 336 0016 0FC4     		stmia	r4!, {r0, r1, r2, r3}
+ 337 0018 0FCD     		ldmia	r5!, {r0, r1, r2, r3}
+ 338 001a 0FC4     		stmia	r4!, {r0, r1, r2, r3}
+ 339 001c 2B68     		ldr	r3, [r5]
+ 340 001e 2360     		str	r3, [r4]
+  44:./Hardware/Src/Mahony.c **** 	float ax= Trans_Data->Acc_X ,ay=Trans_Data->Acc_Y, az=Trans_Data->Acc_Z;
+ 341              		.loc 1 44 8
+ 342 0020 7B68     		ldr	r3, [r7, #4]
+ 343 0022 1B68     		ldr	r3, [r3]	@ float
+ 344 0024 C7F89C30 		str	r3, [r7, #156]	@ float
+ 345              		.loc 1 44 31
+ 346 0028 7B68     		ldr	r3, [r7, #4]
+ 347 002a 5B68     		ldr	r3, [r3, #4]	@ float
+ 348 002c C7F89830 		str	r3, [r7, #152]	@ float
+ 349              		.loc 1 44 53
+ 350 0030 7B68     		ldr	r3, [r7, #4]
+ 351 0032 9B68     		ldr	r3, [r3, #8]	@ float
+ 352 0034 C7F89430 		str	r3, [r7, #148]	@ float
+  45:./Hardware/Src/Mahony.c **** 	float gx= Trans_Data->Gyro_X,gy=Trans_Data->Gyro_Y,gz=Trans_Data->Gyro_Z;
+ 353              		.loc 1 45 8
+ 354 0038 7B68     		ldr	r3, [r7, #4]
+ 355 003a DB68     		ldr	r3, [r3, #12]	@ float
+ 356 003c C7F89030 		str	r3, [r7, #144]	@ float
+ 357              		.loc 1 45 31
+ 358 0040 7B68     		ldr	r3, [r7, #4]
+ 359 0042 1B69     		ldr	r3, [r3, #16]	@ float
+ 360 0044 C7F88C30 		str	r3, [r7, #140]	@ float
+ 361              		.loc 1 45 53
+ 362 0048 7B68     		ldr	r3, [r7, #4]
+ 363 004a 5B69     		ldr	r3, [r3, #20]	@ float
+ 364 004c C7F88830 		str	r3, [r7, #136]	@ float
+  46:./Hardware/Src/Mahony.c **** 	float vx,vy,vz;
+  47:./Hardware/Src/Mahony.c **** 	float ex,ey,ez;
+  48:./Hardware/Src/Mahony.c **** 	float norm;
+  49:./Hardware/Src/Mahony.c **** 	
+  50:./Hardware/Src/Mahony.c **** 	//先提前计算出来，避免在表达式那一块再次计算，提高效率
+  51:./Hardware/Src/Mahony.c **** 	float q0q0=q0*q0;
+ 365              		.loc 1 51 15
+ARM GAS  /tmp/cczAStci.s 			page 8
+
+
+ 366 0050 CE4B     		ldr	r3, .L11+4
+ 367 0052 93ED007A 		vldr.32	s14, [r3]
+ 368 0056 CD4B     		ldr	r3, .L11+4
+ 369 0058 D3ED007A 		vldr.32	s15, [r3]
+ 370              		.loc 1 51 8
+ 371 005c 67EE277A 		vmul.f32	s15, s14, s15
+ 372 0060 C7ED217A 		vstr.32	s15, [r7, #132]
+  52:./Hardware/Src/Mahony.c **** 	float q0q1=q0*q1;
+ 373              		.loc 1 52 15
+ 374 0064 C94B     		ldr	r3, .L11+4
+ 375 0066 93ED007A 		vldr.32	s14, [r3]
+ 376 006a C94B     		ldr	r3, .L11+8
+ 377 006c D3ED007A 		vldr.32	s15, [r3]
+ 378              		.loc 1 52 8
+ 379 0070 67EE277A 		vmul.f32	s15, s14, s15
+ 380 0074 C7ED207A 		vstr.32	s15, [r7, #128]
+  53:./Hardware/Src/Mahony.c **** 	float q0q2=q0*q2;
+ 381              		.loc 1 53 15
+ 382 0078 C44B     		ldr	r3, .L11+4
+ 383 007a 93ED007A 		vldr.32	s14, [r3]
+ 384 007e C54B     		ldr	r3, .L11+12
+ 385 0080 D3ED007A 		vldr.32	s15, [r3]
+ 386              		.loc 1 53 8
+ 387 0084 67EE277A 		vmul.f32	s15, s14, s15
+ 388 0088 C7ED1F7A 		vstr.32	s15, [r7, #124]
+  54:./Hardware/Src/Mahony.c **** 	float q0q3=q0*q3;
+ 389              		.loc 1 54 15
+ 390 008c BF4B     		ldr	r3, .L11+4
+ 391 008e 93ED007A 		vldr.32	s14, [r3]
+ 392 0092 C14B     		ldr	r3, .L11+16
+ 393 0094 D3ED007A 		vldr.32	s15, [r3]
+ 394              		.loc 1 54 8
+ 395 0098 67EE277A 		vmul.f32	s15, s14, s15
+ 396 009c C7ED1E7A 		vstr.32	s15, [r7, #120]
+  55:./Hardware/Src/Mahony.c **** 	float q1q1=q1*q1;
+ 397              		.loc 1 55 15
+ 398 00a0 BB4B     		ldr	r3, .L11+8
+ 399 00a2 93ED007A 		vldr.32	s14, [r3]
+ 400 00a6 BA4B     		ldr	r3, .L11+8
+ 401 00a8 D3ED007A 		vldr.32	s15, [r3]
+ 402              		.loc 1 55 8
+ 403 00ac 67EE277A 		vmul.f32	s15, s14, s15
+ 404 00b0 C7ED1D7A 		vstr.32	s15, [r7, #116]
+  56:./Hardware/Src/Mahony.c **** 	float q1q2=q1*q2;
+ 405              		.loc 1 56 15
+ 406 00b4 B64B     		ldr	r3, .L11+8
+ 407 00b6 93ED007A 		vldr.32	s14, [r3]
+ 408 00ba B64B     		ldr	r3, .L11+12
+ 409 00bc D3ED007A 		vldr.32	s15, [r3]
+ 410              		.loc 1 56 8
+ 411 00c0 67EE277A 		vmul.f32	s15, s14, s15
+ 412 00c4 C7ED1C7A 		vstr.32	s15, [r7, #112]
+  57:./Hardware/Src/Mahony.c **** 	float q1q3=q1*q3;
+ 413              		.loc 1 57 15
+ 414 00c8 B14B     		ldr	r3, .L11+8
+ 415 00ca 93ED007A 		vldr.32	s14, [r3]
+ 416 00ce B24B     		ldr	r3, .L11+16
+ARM GAS  /tmp/cczAStci.s 			page 9
+
+
+ 417 00d0 D3ED007A 		vldr.32	s15, [r3]
+ 418              		.loc 1 57 8
+ 419 00d4 67EE277A 		vmul.f32	s15, s14, s15
+ 420 00d8 C7ED1B7A 		vstr.32	s15, [r7, #108]
+  58:./Hardware/Src/Mahony.c **** 	float q2q2=q2*q2;
+ 421              		.loc 1 58 15
+ 422 00dc AD4B     		ldr	r3, .L11+12
+ 423 00de 93ED007A 		vldr.32	s14, [r3]
+ 424 00e2 AC4B     		ldr	r3, .L11+12
+ 425 00e4 D3ED007A 		vldr.32	s15, [r3]
+ 426              		.loc 1 58 8
+ 427 00e8 67EE277A 		vmul.f32	s15, s14, s15
+ 428 00ec C7ED1A7A 		vstr.32	s15, [r7, #104]
+  59:./Hardware/Src/Mahony.c **** 	float q2q3=q2*q3;
+ 429              		.loc 1 59 15
+ 430 00f0 A84B     		ldr	r3, .L11+12
+ 431 00f2 93ED007A 		vldr.32	s14, [r3]
+ 432 00f6 A84B     		ldr	r3, .L11+16
+ 433 00f8 D3ED007A 		vldr.32	s15, [r3]
+ 434              		.loc 1 59 8
+ 435 00fc 67EE277A 		vmul.f32	s15, s14, s15
+ 436 0100 C7ED197A 		vstr.32	s15, [r7, #100]
+  60:./Hardware/Src/Mahony.c **** 	float q3q3=q3*q3;
+ 437              		.loc 1 60 15
+ 438 0104 A44B     		ldr	r3, .L11+16
+ 439 0106 93ED007A 		vldr.32	s14, [r3]
+ 440 010a A34B     		ldr	r3, .L11+16
+ 441 010c D3ED007A 		vldr.32	s15, [r3]
+ 442              		.loc 1 60 8
+ 443 0110 67EE277A 		vmul.f32	s15, s14, s15
+ 444 0114 C7ED187A 		vstr.32	s15, [r7, #96]
+  61:./Hardware/Src/Mahony.c **** 	
+  62:./Hardware/Src/Mahony.c **** 	//重力加速度归一化
+  63:./Hardware/Src/Mahony.c **** 	norm=GetInvSqrt(ax*ax + ay*ay + az*az);
+ 445              		.loc 1 63 20
+ 446 0118 D7ED277A 		vldr.32	s15, [r7, #156]
+ 447 011c 27EEA77A 		vmul.f32	s14, s15, s15
+ 448              		.loc 1 63 28
+ 449 0120 D7ED267A 		vldr.32	s15, [r7, #152]
+ 450 0124 67EEA77A 		vmul.f32	s15, s15, s15
+ 451              		.loc 1 63 24
+ 452 0128 37EE277A 		vadd.f32	s14, s14, s15
+ 453              		.loc 1 63 36
+ 454 012c D7ED257A 		vldr.32	s15, [r7, #148]
+ 455 0130 67EEA77A 		vmul.f32	s15, s15, s15
+ 456              		.loc 1 63 7
+ 457 0134 77EE277A 		vadd.f32	s15, s14, s15
+ 458 0138 B0EE670A 		vmov.f32	s0, s15
+ 459 013c FFF7FEFF 		bl	GetInvSqrt
+ 460 0140 87ED170A 		vstr.32	s0, [r7, #92]
+  64:./Hardware/Src/Mahony.c **** 	ax=ax * norm;
+ 461              		.loc 1 64 4
+ 462 0144 97ED277A 		vldr.32	s14, [r7, #156]
+ 463 0148 D7ED177A 		vldr.32	s15, [r7, #92]
+ 464 014c 67EE277A 		vmul.f32	s15, s14, s15
+ 465 0150 C7ED277A 		vstr.32	s15, [r7, #156]
+  65:./Hardware/Src/Mahony.c **** 	ay=ay * norm;
+ARM GAS  /tmp/cczAStci.s 			page 10
+
+
+ 466              		.loc 1 65 4
+ 467 0154 97ED267A 		vldr.32	s14, [r7, #152]
+ 468 0158 D7ED177A 		vldr.32	s15, [r7, #92]
+ 469 015c 67EE277A 		vmul.f32	s15, s14, s15
+ 470 0160 C7ED267A 		vstr.32	s15, [r7, #152]
+  66:./Hardware/Src/Mahony.c **** 	az=az * norm;
+ 471              		.loc 1 66 4
+ 472 0164 97ED257A 		vldr.32	s14, [r7, #148]
+ 473 0168 D7ED177A 		vldr.32	s15, [r7, #92]
+ 474 016c 67EE277A 		vmul.f32	s15, s14, s15
+ 475 0170 C7ED257A 		vstr.32	s15, [r7, #148]
+  67:./Hardware/Src/Mahony.c **** 	
+  68:./Hardware/Src/Mahony.c **** 	//printf("ACC:%.2f %.2f %.2f\r\n",ax,ay,az);
+  69:./Hardware/Src/Mahony.c **** 	
+  70:./Hardware/Src/Mahony.c **** 	//这是归一化之后的结果
+  71:./Hardware/Src/Mahony.c **** 	vx = 2*(q1q3 - q0q2);
+ 476              		.loc 1 71 15
+ 477 0174 97ED1B7A 		vldr.32	s14, [r7, #108]
+ 478 0178 D7ED1F7A 		vldr.32	s15, [r7, #124]
+ 479 017c 77EE677A 		vsub.f32	s15, s14, s15
+ 480              		.loc 1 71 5
+ 481 0180 77EEA77A 		vadd.f32	s15, s15, s15
+ 482 0184 C7ED167A 		vstr.32	s15, [r7, #88]
+  72:./Hardware/Src/Mahony.c **** 	vy = 2*(q0q1 + q2q3);
+ 483              		.loc 1 72 15
+ 484 0188 97ED207A 		vldr.32	s14, [r7, #128]
+ 485 018c D7ED197A 		vldr.32	s15, [r7, #100]
+ 486 0190 77EE277A 		vadd.f32	s15, s14, s15
+ 487              		.loc 1 72 5
+ 488 0194 77EEA77A 		vadd.f32	s15, s15, s15
+ 489 0198 C7ED157A 		vstr.32	s15, [r7, #84]
+  73:./Hardware/Src/Mahony.c **** 	vz = 1-2*q1q1-2*q2q2;
+ 490              		.loc 1 73 10
+ 491 019c D7ED1D7A 		vldr.32	s15, [r7, #116]
+ 492 01a0 77EEA77A 		vadd.f32	s15, s15, s15
+ 493              		.loc 1 73 8
+ 494 01a4 B7EE007A 		vmov.f32	s14, #1.0e+0
+ 495 01a8 37EE677A 		vsub.f32	s14, s14, s15
+ 496              		.loc 1 73 17
+ 497 01ac D7ED1A7A 		vldr.32	s15, [r7, #104]
+ 498 01b0 77EEA77A 		vadd.f32	s15, s15, s15
+ 499              		.loc 1 73 5
+ 500 01b4 77EE677A 		vsub.f32	s15, s14, s15
+ 501 01b8 C7ED147A 		vstr.32	s15, [r7, #80]
+  74:./Hardware/Src/Mahony.c **** 	//vz = q0q0-q1q1-q2q2+q3q3;//这两种写法是等价的
+  75:./Hardware/Src/Mahony.c **** 	
+  76:./Hardware/Src/Mahony.c **** 	//printf("GYR:%.2f %.2f %.2f\r\n",gx,gy,gz);
+  77:./Hardware/Src/Mahony.c **** 	//printf("four:%.2f %.2f %.2f %.2f\r\n",q0,q1,q2,q3);
+  78:./Hardware/Src/Mahony.c **** 	
+  79:./Hardware/Src/Mahony.c **** 	//利用叉乘算出误差
+  80:./Hardware/Src/Mahony.c **** 	ex = (ay*vz - az*vy);
+ 502              		.loc 1 80 10
+ 503 01bc 97ED267A 		vldr.32	s14, [r7, #152]
+ 504 01c0 D7ED147A 		vldr.32	s15, [r7, #80]
+ 505 01c4 27EE277A 		vmul.f32	s14, s14, s15
+ 506              		.loc 1 80 18
+ 507 01c8 D7ED256A 		vldr.32	s13, [r7, #148]
+ARM GAS  /tmp/cczAStci.s 			page 11
+
+
+ 508 01cc D7ED157A 		vldr.32	s15, [r7, #84]
+ 509 01d0 66EEA77A 		vmul.f32	s15, s13, s15
+ 510              		.loc 1 80 5
+ 511 01d4 77EE677A 		vsub.f32	s15, s14, s15
+ 512 01d8 C7ED137A 		vstr.32	s15, [r7, #76]
+  81:./Hardware/Src/Mahony.c **** 	ey = (az*vx - ax*vz);
+ 513              		.loc 1 81 10
+ 514 01dc 97ED257A 		vldr.32	s14, [r7, #148]
+ 515 01e0 D7ED167A 		vldr.32	s15, [r7, #88]
+ 516 01e4 27EE277A 		vmul.f32	s14, s14, s15
+ 517              		.loc 1 81 18
+ 518 01e8 D7ED276A 		vldr.32	s13, [r7, #156]
+ 519 01ec D7ED147A 		vldr.32	s15, [r7, #80]
+ 520 01f0 66EEA77A 		vmul.f32	s15, s13, s15
+ 521              		.loc 1 81 5
+ 522 01f4 77EE677A 		vsub.f32	s15, s14, s15
+ 523 01f8 C7ED127A 		vstr.32	s15, [r7, #72]
+  82:./Hardware/Src/Mahony.c **** 	ez = (ax*vy - ay*vx);
+ 524              		.loc 1 82 10
+ 525 01fc 97ED277A 		vldr.32	s14, [r7, #156]
+ 526 0200 D7ED157A 		vldr.32	s15, [r7, #84]
+ 527 0204 27EE277A 		vmul.f32	s14, s14, s15
+ 528              		.loc 1 82 18
+ 529 0208 D7ED266A 		vldr.32	s13, [r7, #152]
+ 530 020c D7ED167A 		vldr.32	s15, [r7, #88]
+ 531 0210 66EEA77A 		vmul.f32	s15, s13, s15
+ 532              		.loc 1 82 5
+ 533 0214 77EE677A 		vsub.f32	s15, s14, s15
+ 534 0218 C7ED117A 		vstr.32	s15, [r7, #68]
+  83:./Hardware/Src/Mahony.c **** 	//printf("ERR:%.2f %.2f %.2f\r\n",ex,ey,ez);
+  84:./Hardware/Src/Mahony.c **** 	
+  85:./Hardware/Src/Mahony.c **** 	//对误差进行积分
+  86:./Hardware/Src/Mahony.c **** 	exInt = exInt + ex * KI ;
+ 535              		.loc 1 86 21
+ 536 021c D7ED137A 		vldr.32	s15, [r7, #76]
+ 537 0220 9FED5E7A 		vldr.32	s14, .L11+20
+ 538 0224 27EE877A 		vmul.f32	s14, s15, s14
+ 539              		.loc 1 86 16
+ 540 0228 5D4B     		ldr	r3, .L11+24
+ 541 022a D3ED007A 		vldr.32	s15, [r3]
+ 542 022e 77EE277A 		vadd.f32	s15, s14, s15
+ 543              		.loc 1 86 8
+ 544 0232 5B4B     		ldr	r3, .L11+24
+ 545 0234 C3ED007A 		vstr.32	s15, [r3]
+  87:./Hardware/Src/Mahony.c **** 	eyInt = eyInt + ey * KI ;
+ 546              		.loc 1 87 21
+ 547 0238 D7ED127A 		vldr.32	s15, [r7, #72]
+ 548 023c 9FED577A 		vldr.32	s14, .L11+20
+ 549 0240 27EE877A 		vmul.f32	s14, s15, s14
+ 550              		.loc 1 87 16
+ 551 0244 574B     		ldr	r3, .L11+28
+ 552 0246 D3ED007A 		vldr.32	s15, [r3]
+ 553 024a 77EE277A 		vadd.f32	s15, s14, s15
+ 554              		.loc 1 87 8
+ 555 024e 554B     		ldr	r3, .L11+28
+ 556 0250 C3ED007A 		vstr.32	s15, [r3]
+  88:./Hardware/Src/Mahony.c **** 	ezInt = ezInt + ez * KI ;
+ARM GAS  /tmp/cczAStci.s 			page 12
+
+
+ 557              		.loc 1 88 21
+ 558 0254 D7ED117A 		vldr.32	s15, [r7, #68]
+ 559 0258 9FED507A 		vldr.32	s14, .L11+20
+ 560 025c 27EE877A 		vmul.f32	s14, s15, s14
+ 561              		.loc 1 88 16
+ 562 0260 514B     		ldr	r3, .L11+32
+ 563 0262 D3ED007A 		vldr.32	s15, [r3]
+ 564 0266 77EE277A 		vadd.f32	s15, s14, s15
+ 565              		.loc 1 88 8
+ 566 026a 4F4B     		ldr	r3, .L11+32
+ 567 026c C3ED007A 		vstr.32	s15, [r3]
+  89:./Hardware/Src/Mahony.c **** 	
+  90:./Hardware/Src/Mahony.c **** 	//将误差补偿至角速度上
+  91:./Hardware/Src/Mahony.c **** 	gx = gx + KP*ex + exInt;
+ 568              		.loc 1 91 14
+ 569 0270 D7ED137A 		vldr.32	s15, [r7, #76]
+ 570 0274 9FED4D7A 		vldr.32	s14, .L11+36
+ 571 0278 27EE877A 		vmul.f32	s14, s15, s14
+ 572              		.loc 1 91 10
+ 573 027c D7ED247A 		vldr.32	s15, [r7, #144]
+ 574 0280 37EE277A 		vadd.f32	s14, s14, s15
+ 575              		.loc 1 91 18
+ 576 0284 464B     		ldr	r3, .L11+24
+ 577 0286 D3ED007A 		vldr.32	s15, [r3]
+ 578              		.loc 1 91 5
+ 579 028a 77EE277A 		vadd.f32	s15, s14, s15
+ 580 028e C7ED247A 		vstr.32	s15, [r7, #144]
+  92:./Hardware/Src/Mahony.c **** 	gy = gy + KP*ey + eyInt;
+ 581              		.loc 1 92 14
+ 582 0292 D7ED127A 		vldr.32	s15, [r7, #72]
+ 583 0296 9FED457A 		vldr.32	s14, .L11+36
+ 584 029a 27EE877A 		vmul.f32	s14, s15, s14
+ 585              		.loc 1 92 10
+ 586 029e D7ED237A 		vldr.32	s15, [r7, #140]
+ 587 02a2 37EE277A 		vadd.f32	s14, s14, s15
+ 588              		.loc 1 92 18
+ 589 02a6 3F4B     		ldr	r3, .L11+28
+ 590 02a8 D3ED007A 		vldr.32	s15, [r3]
+ 591              		.loc 1 92 5
+ 592 02ac 77EE277A 		vadd.f32	s15, s14, s15
+ 593 02b0 C7ED237A 		vstr.32	s15, [r7, #140]
+  93:./Hardware/Src/Mahony.c **** 	gz = gz + KP*ez + ezInt;
+ 594              		.loc 1 93 14
+ 595 02b4 D7ED117A 		vldr.32	s15, [r7, #68]
+ 596 02b8 9FED3C7A 		vldr.32	s14, .L11+36
+ 597 02bc 27EE877A 		vmul.f32	s14, s15, s14
+ 598              		.loc 1 93 10
+ 599 02c0 D7ED227A 		vldr.32	s15, [r7, #136]
+ 600 02c4 37EE277A 		vadd.f32	s14, s14, s15
+ 601              		.loc 1 93 18
+ 602 02c8 374B     		ldr	r3, .L11+32
+ 603 02ca D3ED007A 		vldr.32	s15, [r3]
+ 604              		.loc 1 93 5
+ 605 02ce 77EE277A 		vadd.f32	s15, s14, s15
+ 606 02d2 C7ED227A 		vstr.32	s15, [r7, #136]
+  94:./Hardware/Src/Mahony.c **** 	
+  95:./Hardware/Src/Mahony.c **** 	//printf("GYR2:%.2f %.2f %.2f\r\n",gx,gy,gz);
+ARM GAS  /tmp/cczAStci.s 			page 13
+
+
+  96:./Hardware/Src/Mahony.c **** 	//printf("\r\n\r\n\r\n");
+  97:./Hardware/Src/Mahony.c **** 	
+  98:./Hardware/Src/Mahony.c **** 	//更新四元数
+  99:./Hardware/Src/Mahony.c **** 	q0 = q0 + (-q1*gx - q2*gy - q3*gz)*HALF_T;
+ 607              		.loc 1 99 13
+ 608 02d6 2E4B     		ldr	r3, .L11+8
+ 609 02d8 D3ED007A 		vldr.32	s15, [r3]
+ 610 02dc B1EE677A 		vneg.f32	s14, s15
+ 611              		.loc 1 99 16
+ 612 02e0 D7ED247A 		vldr.32	s15, [r7, #144]
+ 613 02e4 27EE277A 		vmul.f32	s14, s14, s15
+ 614              		.loc 1 99 24
+ 615 02e8 2A4B     		ldr	r3, .L11+12
+ 616 02ea D3ED006A 		vldr.32	s13, [r3]
+ 617 02ee D7ED237A 		vldr.32	s15, [r7, #140]
+ 618 02f2 66EEA77A 		vmul.f32	s15, s13, s15
+ 619              		.loc 1 99 20
+ 620 02f6 37EE677A 		vsub.f32	s14, s14, s15
+ 621              		.loc 1 99 32
+ 622 02fa 274B     		ldr	r3, .L11+16
+ 623 02fc D3ED006A 		vldr.32	s13, [r3]
+ 624 0300 D7ED227A 		vldr.32	s15, [r7, #136]
+ 625 0304 66EEA77A 		vmul.f32	s15, s13, s15
+ 626              		.loc 1 99 28
+ 627 0308 77EE677A 		vsub.f32	s15, s14, s15
+ 628              		.loc 1 99 36
+ 629 030c 9FED287A 		vldr.32	s14, .L11+40
+ 630 0310 27EE877A 		vmul.f32	s14, s15, s14
+ 631              		.loc 1 99 10
+ 632 0314 1D4B     		ldr	r3, .L11+4
+ 633 0316 D3ED007A 		vldr.32	s15, [r3]
+ 634 031a 77EE277A 		vadd.f32	s15, s14, s15
+ 635              		.loc 1 99 5
+ 636 031e 1B4B     		ldr	r3, .L11+4
+ 637 0320 C3ED007A 		vstr.32	s15, [r3]
+ 100:./Hardware/Src/Mahony.c **** 	q1 = q1 + ( q0*gx + q2*gz - q3*gy)*HALF_T;
+ 638              		.loc 1 100 16
+ 639 0324 194B     		ldr	r3, .L11+4
+ 640 0326 93ED007A 		vldr.32	s14, [r3]
+ 641 032a D7ED247A 		vldr.32	s15, [r7, #144]
+ 642 032e 27EE277A 		vmul.f32	s14, s14, s15
+ 643              		.loc 1 100 24
+ 644 0332 184B     		ldr	r3, .L11+12
+ 645 0334 D3ED006A 		vldr.32	s13, [r3]
+ 646 0338 D7ED227A 		vldr.32	s15, [r7, #136]
+ 647 033c 66EEA77A 		vmul.f32	s15, s13, s15
+ 648              		.loc 1 100 20
+ 649 0340 37EE277A 		vadd.f32	s14, s14, s15
+ 650              		.loc 1 100 32
+ 651 0344 144B     		ldr	r3, .L11+16
+ 652 0346 D3ED006A 		vldr.32	s13, [r3]
+ 653 034a D7ED237A 		vldr.32	s15, [r7, #140]
+ 654 034e 66EEA77A 		vmul.f32	s15, s13, s15
+ 655              		.loc 1 100 28
+ 656 0352 77EE677A 		vsub.f32	s15, s14, s15
+ 657              		.loc 1 100 36
+ 658 0356 9FED167A 		vldr.32	s14, .L11+40
+ARM GAS  /tmp/cczAStci.s 			page 14
+
+
+ 659 035a 27EE877A 		vmul.f32	s14, s15, s14
+ 660              		.loc 1 100 10
+ 661 035e 0C4B     		ldr	r3, .L11+8
+ 662 0360 D3ED007A 		vldr.32	s15, [r3]
+ 663 0364 77EE277A 		vadd.f32	s15, s14, s15
+ 664              		.loc 1 100 5
+ 665 0368 094B     		ldr	r3, .L11+8
+ 666 036a C3ED007A 		vstr.32	s15, [r3]
+ 101:./Hardware/Src/Mahony.c **** 	q2 = q2 + ( q0*gy - q1*gz + q3*gx)*HALF_T;
+ 667              		.loc 1 101 16
+ 668 036e 074B     		ldr	r3, .L11+4
+ 669 0370 93ED007A 		vldr.32	s14, [r3]
+ 670 0374 D7ED237A 		vldr.32	s15, [r7, #140]
+ 671 0378 27EE277A 		vmul.f32	s14, s14, s15
+ 672              		.loc 1 101 24
+ 673 037c 044B     		ldr	r3, .L11+8
+ 674 037e D3ED006A 		vldr.32	s13, [r3]
+ 675 0382 D7ED227A 		vldr.32	s15, [r7, #136]
+ 676 0386 15E0     		b	.L12
+ 677              	.L13:
+ 678              		.align	2
+ 679              	.L11:
+ 680 0388 00000000 		.word	.LC0
+ 681 038c 00000000 		.word	q0
+ 682 0390 00000000 		.word	q1
+ 683 0394 00000000 		.word	q2
+ 684 0398 00000000 		.word	q3
+ 685 039c 6F12833A 		.word	981668463
+ 686 03a0 00000000 		.word	exInt
+ 687 03a4 00000000 		.word	eyInt
+ 688 03a8 00000000 		.word	ezInt
+ 689 03ac CDCC4C3F 		.word	1061997773
+ 690 03b0 0AD7233C 		.word	1008981770
+ 691              	.L12:
+ 692 03b4 66EEA77A 		vmul.f32	s15, s13, s15
+ 693              		.loc 1 101 20
+ 694 03b8 37EE677A 		vsub.f32	s14, s14, s15
+ 695              		.loc 1 101 32
+ 696 03bc E04B     		ldr	r3, .L14+8
+ 697 03be D3ED006A 		vldr.32	s13, [r3]
+ 698 03c2 D7ED247A 		vldr.32	s15, [r7, #144]
+ 699 03c6 66EEA77A 		vmul.f32	s15, s13, s15
+ 700              		.loc 1 101 28
+ 701 03ca 77EE277A 		vadd.f32	s15, s14, s15
+ 702              		.loc 1 101 36
+ 703 03ce 9FEDDD7A 		vldr.32	s14, .L14+12
+ 704 03d2 27EE877A 		vmul.f32	s14, s15, s14
+ 705              		.loc 1 101 10
+ 706 03d6 DC4B     		ldr	r3, .L14+16
+ 707 03d8 D3ED007A 		vldr.32	s15, [r3]
+ 708 03dc 77EE277A 		vadd.f32	s15, s14, s15
+ 709              		.loc 1 101 5
+ 710 03e0 D94B     		ldr	r3, .L14+16
+ 711 03e2 C3ED007A 		vstr.32	s15, [r3]
+ 102:./Hardware/Src/Mahony.c **** 	q3 = q3 + ( q0*gz + q1*gy - q2*gx)*HALF_T;
+ 712              		.loc 1 102 16
+ 713 03e6 D94B     		ldr	r3, .L14+20
+ARM GAS  /tmp/cczAStci.s 			page 15
+
+
+ 714 03e8 93ED007A 		vldr.32	s14, [r3]
+ 715 03ec D7ED227A 		vldr.32	s15, [r7, #136]
+ 716 03f0 27EE277A 		vmul.f32	s14, s14, s15
+ 717              		.loc 1 102 24
+ 718 03f4 D64B     		ldr	r3, .L14+24
+ 719 03f6 D3ED006A 		vldr.32	s13, [r3]
+ 720 03fa D7ED237A 		vldr.32	s15, [r7, #140]
+ 721 03fe 66EEA77A 		vmul.f32	s15, s13, s15
+ 722              		.loc 1 102 20
+ 723 0402 37EE277A 		vadd.f32	s14, s14, s15
+ 724              		.loc 1 102 32
+ 725 0406 D04B     		ldr	r3, .L14+16
+ 726 0408 D3ED006A 		vldr.32	s13, [r3]
+ 727 040c D7ED247A 		vldr.32	s15, [r7, #144]
+ 728 0410 66EEA77A 		vmul.f32	s15, s13, s15
+ 729              		.loc 1 102 28
+ 730 0414 77EE677A 		vsub.f32	s15, s14, s15
+ 731              		.loc 1 102 36
+ 732 0418 9FEDCA7A 		vldr.32	s14, .L14+12
+ 733 041c 27EE877A 		vmul.f32	s14, s15, s14
+ 734              		.loc 1 102 10
+ 735 0420 C74B     		ldr	r3, .L14+8
+ 736 0422 D3ED007A 		vldr.32	s15, [r3]
+ 737 0426 77EE277A 		vadd.f32	s15, s14, s15
+ 738              		.loc 1 102 5
+ 739 042a C54B     		ldr	r3, .L14+8
+ 740 042c C3ED007A 		vstr.32	s15, [r3]
+ 103:./Hardware/Src/Mahony.c **** 	
+ 104:./Hardware/Src/Mahony.c **** 	//由于计算精度问题，原本被归一化的数据会越来越不规范（偏离了归一化
+ 105:./Hardware/Src/Mahony.c **** 	//所以需要在每次更新四元数过后再手动归一化一次
+ 106:./Hardware/Src/Mahony.c **** 	norm = GetInvSqrt(q0*q0 + q1*q1 + q2*q2 + q3*q3);
+ 741              		.loc 1 106 22
+ 742 0430 C64B     		ldr	r3, .L14+20
+ 743 0432 93ED007A 		vldr.32	s14, [r3]
+ 744 0436 C54B     		ldr	r3, .L14+20
+ 745 0438 D3ED007A 		vldr.32	s15, [r3]
+ 746 043c 27EE277A 		vmul.f32	s14, s14, s15
+ 747              		.loc 1 106 30
+ 748 0440 C34B     		ldr	r3, .L14+24
+ 749 0442 D3ED006A 		vldr.32	s13, [r3]
+ 750 0446 C24B     		ldr	r3, .L14+24
+ 751 0448 D3ED007A 		vldr.32	s15, [r3]
+ 752 044c 66EEA77A 		vmul.f32	s15, s13, s15
+ 753              		.loc 1 106 26
+ 754 0450 37EE277A 		vadd.f32	s14, s14, s15
+ 755              		.loc 1 106 38
+ 756 0454 BC4B     		ldr	r3, .L14+16
+ 757 0456 D3ED006A 		vldr.32	s13, [r3]
+ 758 045a BB4B     		ldr	r3, .L14+16
+ 759 045c D3ED007A 		vldr.32	s15, [r3]
+ 760 0460 66EEA77A 		vmul.f32	s15, s13, s15
+ 761              		.loc 1 106 34
+ 762 0464 37EE277A 		vadd.f32	s14, s14, s15
+ 763              		.loc 1 106 46
+ 764 0468 B54B     		ldr	r3, .L14+8
+ 765 046a D3ED006A 		vldr.32	s13, [r3]
+ 766 046e B44B     		ldr	r3, .L14+8
+ARM GAS  /tmp/cczAStci.s 			page 16
+
+
+ 767 0470 D3ED007A 		vldr.32	s15, [r3]
+ 768 0474 66EEA77A 		vmul.f32	s15, s13, s15
+ 769              		.loc 1 106 9
+ 770 0478 77EE277A 		vadd.f32	s15, s14, s15
+ 771 047c B0EE670A 		vmov.f32	s0, s15
+ 772 0480 FFF7FEFF 		bl	GetInvSqrt
+ 773 0484 87ED170A 		vstr.32	s0, [r7, #92]
+ 107:./Hardware/Src/Mahony.c **** 	q0 = q0 * norm;
+ 774              		.loc 1 107 10
+ 775 0488 B04B     		ldr	r3, .L14+20
+ 776 048a 93ED007A 		vldr.32	s14, [r3]
+ 777 048e D7ED177A 		vldr.32	s15, [r7, #92]
+ 778 0492 67EE277A 		vmul.f32	s15, s14, s15
+ 779              		.loc 1 107 5
+ 780 0496 AD4B     		ldr	r3, .L14+20
+ 781 0498 C3ED007A 		vstr.32	s15, [r3]
+ 108:./Hardware/Src/Mahony.c **** 	q1 = q1 * norm;
+ 782              		.loc 1 108 10
+ 783 049c AC4B     		ldr	r3, .L14+24
+ 784 049e 93ED007A 		vldr.32	s14, [r3]
+ 785 04a2 D7ED177A 		vldr.32	s15, [r7, #92]
+ 786 04a6 67EE277A 		vmul.f32	s15, s14, s15
+ 787              		.loc 1 108 5
+ 788 04aa A94B     		ldr	r3, .L14+24
+ 789 04ac C3ED007A 		vstr.32	s15, [r3]
+ 109:./Hardware/Src/Mahony.c **** 	q2 = q2 * norm;
+ 790              		.loc 1 109 10
+ 791 04b0 A54B     		ldr	r3, .L14+16
+ 792 04b2 93ED007A 		vldr.32	s14, [r3]
+ 793 04b6 D7ED177A 		vldr.32	s15, [r7, #92]
+ 794 04ba 67EE277A 		vmul.f32	s15, s14, s15
+ 795              		.loc 1 109 5
+ 796 04be A24B     		ldr	r3, .L14+16
+ 797 04c0 C3ED007A 		vstr.32	s15, [r3]
+ 110:./Hardware/Src/Mahony.c **** 	q3 = q3 * norm;
+ 798              		.loc 1 110 10
+ 799 04c4 9E4B     		ldr	r3, .L14+8
+ 800 04c6 93ED007A 		vldr.32	s14, [r3]
+ 801 04ca D7ED177A 		vldr.32	s15, [r7, #92]
+ 802 04ce 67EE277A 		vmul.f32	s15, s14, s15
+ 803              		.loc 1 110 5
+ 804 04d2 9B4B     		ldr	r3, .L14+8
+ 805 04d4 C3ED007A 		vstr.32	s15, [r3]
+ 111:./Hardware/Src/Mahony.c **** 	
+ 112:./Hardware/Src/Mahony.c **** 	//更新旋转矩阵
+ 113:./Hardware/Src/Mahony.c **** 	Matrix[0]=q0q0 + q1q1 - q2q2 - q3q3;
+ 806              		.loc 1 113 17
+ 807 04d8 97ED217A 		vldr.32	s14, [r7, #132]
+ 808 04dc D7ED1D7A 		vldr.32	s15, [r7, #116]
+ 809 04e0 37EE277A 		vadd.f32	s14, s14, s15
+ 810              		.loc 1 113 24
+ 811 04e4 D7ED1A7A 		vldr.32	s15, [r7, #104]
+ 812 04e8 37EE677A 		vsub.f32	s14, s14, s15
+ 813              		.loc 1 113 31
+ 814 04ec D7ED187A 		vldr.32	s15, [r7, #96]
+ 815 04f0 77EE677A 		vsub.f32	s15, s14, s15
+ 816              		.loc 1 113 11
+ARM GAS  /tmp/cczAStci.s 			page 17
+
+
+ 817 04f4 C7ED037A 		vstr.32	s15, [r7, #12]
+ 114:./Hardware/Src/Mahony.c **** 	Matrix[1]=2.0f*(q1q2 + q0q3);
+ 818              		.loc 1 114 23
+ 819 04f8 97ED1C7A 		vldr.32	s14, [r7, #112]
+ 820 04fc D7ED1E7A 		vldr.32	s15, [r7, #120]
+ 821 0500 77EE277A 		vadd.f32	s15, s14, s15
+ 822              		.loc 1 114 16
+ 823 0504 77EEA77A 		vadd.f32	s15, s15, s15
+ 824              		.loc 1 114 11
+ 825 0508 C7ED047A 		vstr.32	s15, [r7, #16]
+ 115:./Hardware/Src/Mahony.c **** 	Matrix[2]=2.0f*(q1q3 - q0q2);
+ 826              		.loc 1 115 23
+ 827 050c 97ED1B7A 		vldr.32	s14, [r7, #108]
+ 828 0510 D7ED1F7A 		vldr.32	s15, [r7, #124]
+ 829 0514 77EE677A 		vsub.f32	s15, s14, s15
+ 830              		.loc 1 115 16
+ 831 0518 77EEA77A 		vadd.f32	s15, s15, s15
+ 832              		.loc 1 115 11
+ 833 051c C7ED057A 		vstr.32	s15, [r7, #20]
+ 116:./Hardware/Src/Mahony.c **** 	Matrix[3]=2.0f*(q1q2 - q0q3);
+ 834              		.loc 1 116 23
+ 835 0520 97ED1C7A 		vldr.32	s14, [r7, #112]
+ 836 0524 D7ED1E7A 		vldr.32	s15, [r7, #120]
+ 837 0528 77EE677A 		vsub.f32	s15, s14, s15
+ 838              		.loc 1 116 16
+ 839 052c 77EEA77A 		vadd.f32	s15, s15, s15
+ 840              		.loc 1 116 11
+ 841 0530 C7ED067A 		vstr.32	s15, [r7, #24]
+ 117:./Hardware/Src/Mahony.c **** 	Matrix[4]=q0q0 - q1q1 + q2q2 - q3q3;
+ 842              		.loc 1 117 17
+ 843 0534 97ED217A 		vldr.32	s14, [r7, #132]
+ 844 0538 D7ED1D7A 		vldr.32	s15, [r7, #116]
+ 845 053c 37EE677A 		vsub.f32	s14, s14, s15
+ 846              		.loc 1 117 24
+ 847 0540 D7ED1A7A 		vldr.32	s15, [r7, #104]
+ 848 0544 37EE277A 		vadd.f32	s14, s14, s15
+ 849              		.loc 1 117 31
+ 850 0548 D7ED187A 		vldr.32	s15, [r7, #96]
+ 851 054c 77EE677A 		vsub.f32	s15, s14, s15
+ 852              		.loc 1 117 11
+ 853 0550 C7ED077A 		vstr.32	s15, [r7, #28]
+ 118:./Hardware/Src/Mahony.c **** 	Matrix[5]=2.0f*(q2q3 + q0q1);
+ 854              		.loc 1 118 23
+ 855 0554 97ED197A 		vldr.32	s14, [r7, #100]
+ 856 0558 D7ED207A 		vldr.32	s15, [r7, #128]
+ 857 055c 77EE277A 		vadd.f32	s15, s14, s15
+ 858              		.loc 1 118 16
+ 859 0560 77EEA77A 		vadd.f32	s15, s15, s15
+ 860              		.loc 1 118 11
+ 861 0564 C7ED087A 		vstr.32	s15, [r7, #32]
+ 119:./Hardware/Src/Mahony.c **** 	Matrix[6]=2.0f*(q1q3 + q0q2);
+ 862              		.loc 1 119 23
+ 863 0568 97ED1B7A 		vldr.32	s14, [r7, #108]
+ 864 056c D7ED1F7A 		vldr.32	s15, [r7, #124]
+ 865 0570 77EE277A 		vadd.f32	s15, s14, s15
+ 866              		.loc 1 119 16
+ 867 0574 77EEA77A 		vadd.f32	s15, s15, s15
+ARM GAS  /tmp/cczAStci.s 			page 18
+
+
+ 868              		.loc 1 119 11
+ 869 0578 C7ED097A 		vstr.32	s15, [r7, #36]
+ 120:./Hardware/Src/Mahony.c **** 	Matrix[7]=2.0f*(q2q3 - q0q1);
+ 870              		.loc 1 120 23
+ 871 057c 97ED197A 		vldr.32	s14, [r7, #100]
+ 872 0580 D7ED207A 		vldr.32	s15, [r7, #128]
+ 873 0584 77EE677A 		vsub.f32	s15, s14, s15
+ 874              		.loc 1 120 16
+ 875 0588 77EEA77A 		vadd.f32	s15, s15, s15
+ 876              		.loc 1 120 11
+ 877 058c C7ED0A7A 		vstr.32	s15, [r7, #40]
+ 121:./Hardware/Src/Mahony.c **** 	Matrix[8]=q0q0-q1q1-q2q2+q3q3;
+ 878              		.loc 1 121 16
+ 879 0590 97ED217A 		vldr.32	s14, [r7, #132]
+ 880 0594 D7ED1D7A 		vldr.32	s15, [r7, #116]
+ 881 0598 37EE677A 		vsub.f32	s14, s14, s15
+ 882              		.loc 1 121 21
+ 883 059c D7ED1A7A 		vldr.32	s15, [r7, #104]
+ 884 05a0 37EE677A 		vsub.f32	s14, s14, s15
+ 885              		.loc 1 121 26
+ 886 05a4 D7ED187A 		vldr.32	s15, [r7, #96]
+ 887 05a8 77EE277A 		vadd.f32	s15, s14, s15
+ 888              		.loc 1 121 11
+ 889 05ac C7ED0B7A 		vstr.32	s15, [r7, #44]
+ 122:./Hardware/Src/Mahony.c **** 	
+ 123:./Hardware/Src/Mahony.c **** 	Matrix[0]-=0.001f;//消除编译后的警告
+ 890              		.loc 1 123 8
+ 891 05b0 D7ED037A 		vldr.32	s15, [r7, #12]
+ 892              		.loc 1 123 11
+ 893 05b4 9FED677A 		vldr.32	s14, .L14+28
+ 894 05b8 77EEC77A 		vsub.f32	s15, s15, s14
+ 895 05bc C7ED037A 		vstr.32	s15, [r7, #12]
+ 124:./Hardware/Src/Mahony.c **** 	
+ 125:./Hardware/Src/Mahony.c **** 	//提取旋转矩阵中我们需要的数据，进行解算
+ 126:./Hardware/Src/Mahony.c **** 	float g1,g2,g3,g4,g5;
+ 127:./Hardware/Src/Mahony.c **** 	g1=2.0f * (q1*q3 - q0*q2);
+ 896              		.loc 1 127 15
+ 897 05c0 634B     		ldr	r3, .L14+24
+ 898 05c2 93ED007A 		vldr.32	s14, [r3]
+ 899 05c6 5E4B     		ldr	r3, .L14+8
+ 900 05c8 D3ED007A 		vldr.32	s15, [r3]
+ 901 05cc 27EE277A 		vmul.f32	s14, s14, s15
+ 902              		.loc 1 127 23
+ 903 05d0 5E4B     		ldr	r3, .L14+20
+ 904 05d2 D3ED006A 		vldr.32	s13, [r3]
+ 905 05d6 5C4B     		ldr	r3, .L14+16
+ 906 05d8 D3ED007A 		vldr.32	s15, [r3]
+ 907 05dc 66EEA77A 		vmul.f32	s15, s13, s15
+ 908              		.loc 1 127 19
+ 909 05e0 77EE677A 		vsub.f32	s15, s14, s15
+ 910              		.loc 1 127 4
+ 911 05e4 77EEA77A 		vadd.f32	s15, s15, s15
+ 912 05e8 C7ED107A 		vstr.32	s15, [r7, #64]
+ 128:./Hardware/Src/Mahony.c **** 	g2=2.0f * (q0*q1 + q2*q3);
+ 913              		.loc 1 128 15
+ 914 05ec 574B     		ldr	r3, .L14+20
+ 915 05ee 93ED007A 		vldr.32	s14, [r3]
+ARM GAS  /tmp/cczAStci.s 			page 19
+
+
+ 916 05f2 574B     		ldr	r3, .L14+24
+ 917 05f4 D3ED007A 		vldr.32	s15, [r3]
+ 918 05f8 27EE277A 		vmul.f32	s14, s14, s15
+ 919              		.loc 1 128 23
+ 920 05fc 524B     		ldr	r3, .L14+16
+ 921 05fe D3ED006A 		vldr.32	s13, [r3]
+ 922 0602 4F4B     		ldr	r3, .L14+8
+ 923 0604 D3ED007A 		vldr.32	s15, [r3]
+ 924 0608 66EEA77A 		vmul.f32	s15, s13, s15
+ 925              		.loc 1 128 19
+ 926 060c 77EE277A 		vadd.f32	s15, s14, s15
+ 927              		.loc 1 128 4
+ 928 0610 77EEA77A 		vadd.f32	s15, s15, s15
+ 929 0614 C7ED0F7A 		vstr.32	s15, [r7, #60]
+ 129:./Hardware/Src/Mahony.c **** 	g3=(q0*q0-q1*q1-q2*q2+q3*q3);
+ 930              		.loc 1 129 8
+ 931 0618 4C4B     		ldr	r3, .L14+20
+ 932 061a 93ED007A 		vldr.32	s14, [r3]
+ 933 061e 4B4B     		ldr	r3, .L14+20
+ 934 0620 D3ED007A 		vldr.32	s15, [r3]
+ 935 0624 27EE277A 		vmul.f32	s14, s14, s15
+ 936              		.loc 1 129 14
+ 937 0628 494B     		ldr	r3, .L14+24
+ 938 062a D3ED006A 		vldr.32	s13, [r3]
+ 939 062e 484B     		ldr	r3, .L14+24
+ 940 0630 D3ED007A 		vldr.32	s15, [r3]
+ 941 0634 66EEA77A 		vmul.f32	s15, s13, s15
+ 942              		.loc 1 129 11
+ 943 0638 37EE677A 		vsub.f32	s14, s14, s15
+ 944              		.loc 1 129 20
+ 945 063c 424B     		ldr	r3, .L14+16
+ 946 063e D3ED006A 		vldr.32	s13, [r3]
+ 947 0642 414B     		ldr	r3, .L14+16
+ 948 0644 D3ED007A 		vldr.32	s15, [r3]
+ 949 0648 66EEA77A 		vmul.f32	s15, s13, s15
+ 950              		.loc 1 129 17
+ 951 064c 37EE677A 		vsub.f32	s14, s14, s15
+ 952              		.loc 1 129 26
+ 953 0650 3B4B     		ldr	r3, .L14+8
+ 954 0652 D3ED006A 		vldr.32	s13, [r3]
+ 955 0656 3A4B     		ldr	r3, .L14+8
+ 956 0658 D3ED007A 		vldr.32	s15, [r3]
+ 957 065c 66EEA77A 		vmul.f32	s15, s13, s15
+ 958              		.loc 1 129 4
+ 959 0660 77EE277A 		vadd.f32	s15, s14, s15
+ 960 0664 C7ED0E7A 		vstr.32	s15, [r7, #56]
+ 130:./Hardware/Src/Mahony.c **** 	g4=2.0f * (q1*q2 + q0*q3);
+ 961              		.loc 1 130 15
+ 962 0668 394B     		ldr	r3, .L14+24
+ 963 066a 93ED007A 		vldr.32	s14, [r3]
+ 964 066e 364B     		ldr	r3, .L14+16
+ 965 0670 D3ED007A 		vldr.32	s15, [r3]
+ 966 0674 27EE277A 		vmul.f32	s14, s14, s15
+ 967              		.loc 1 130 23
+ 968 0678 344B     		ldr	r3, .L14+20
+ 969 067a D3ED006A 		vldr.32	s13, [r3]
+ 970 067e 304B     		ldr	r3, .L14+8
+ARM GAS  /tmp/cczAStci.s 			page 20
+
+
+ 971 0680 D3ED007A 		vldr.32	s15, [r3]
+ 972 0684 66EEA77A 		vmul.f32	s15, s13, s15
+ 973              		.loc 1 130 19
+ 974 0688 77EE277A 		vadd.f32	s15, s14, s15
+ 975              		.loc 1 130 4
+ 976 068c 77EEA77A 		vadd.f32	s15, s15, s15
+ 977 0690 C7ED0D7A 		vstr.32	s15, [r7, #52]
+ 131:./Hardware/Src/Mahony.c **** 	g5=q0*q0 + q1*q1 -q2*q2 - q3*q3;
+ 978              		.loc 1 131 7
+ 979 0694 2D4B     		ldr	r3, .L14+20
+ 980 0696 93ED007A 		vldr.32	s14, [r3]
+ 981 069a 2C4B     		ldr	r3, .L14+20
+ 982 069c D3ED007A 		vldr.32	s15, [r3]
+ 983 06a0 27EE277A 		vmul.f32	s14, s14, s15
+ 984              		.loc 1 131 15
+ 985 06a4 2A4B     		ldr	r3, .L14+24
+ 986 06a6 D3ED006A 		vldr.32	s13, [r3]
+ 987 06aa 294B     		ldr	r3, .L14+24
+ 988 06ac D3ED007A 		vldr.32	s15, [r3]
+ 989 06b0 66EEA77A 		vmul.f32	s15, s13, s15
+ 990              		.loc 1 131 11
+ 991 06b4 37EE277A 		vadd.f32	s14, s14, s15
+ 992              		.loc 1 131 22
+ 993 06b8 234B     		ldr	r3, .L14+16
+ 994 06ba D3ED006A 		vldr.32	s13, [r3]
+ 995 06be 224B     		ldr	r3, .L14+16
+ 996 06c0 D3ED007A 		vldr.32	s15, [r3]
+ 997 06c4 66EEA77A 		vmul.f32	s15, s13, s15
+ 998              		.loc 1 131 19
+ 999 06c8 37EE677A 		vsub.f32	s14, s14, s15
+ 1000              		.loc 1 131 30
+ 1001 06cc 1C4B     		ldr	r3, .L14+8
+ 1002 06ce D3ED006A 		vldr.32	s13, [r3]
+ 1003 06d2 1B4B     		ldr	r3, .L14+8
+ 1004 06d4 D3ED007A 		vldr.32	s15, [r3]
+ 1005 06d8 66EEA77A 		vmul.f32	s15, s13, s15
+ 1006              		.loc 1 131 4
+ 1007 06dc 77EE677A 		vsub.f32	s15, s14, s15
+ 1008 06e0 C7ED0C7A 		vstr.32	s15, [r7, #48]
+ 132:./Hardware/Src/Mahony.c **** 	
+ 133:./Hardware/Src/Mahony.c **** 	Att_Data->pitch  = -asin(g1)    * 57.296f;
+ 1009              		.loc 1 133 22
+ 1010 06e4 386C     		ldr	r0, [r7, #64]	@ float
+ 1011 06e6 FFF7FEFF 		bl	__aeabi_f2d
+ 1012 06ea 0246     		mov	r2, r0
+ 1013 06ec 0B46     		mov	r3, r1
+ 1014 06ee 43EC102B 		vmov	d0, r2, r3
+ 1015 06f2 FFF7FEFF 		bl	asin
+ 1016 06f6 53EC102B 		vmov	r2, r3, d0
+ 1017              		.loc 1 133 21
+ 1018 06fa 9046     		mov	r8, r2
+ 1019 06fc 83F00049 		eor	r9, r3, #-2147483648
+ 1020              		.loc 1 133 34
+ 1021 0700 0DA3     		adr	r3, .L14
+ 1022 0702 D3E90023 		ldrd	r2, [r3]
+ 1023 0706 4046     		mov	r0, r8
+ 1024 0708 4946     		mov	r1, r9
+ARM GAS  /tmp/cczAStci.s 			page 21
+
+
+ 1025 070a FFF7FEFF 		bl	__aeabi_dmul
+ 1026 070e 0246     		mov	r2, r0
+ 1027 0710 0B46     		mov	r3, r1
+ 1028 0712 1046     		mov	r0, r2
+ 1029 0714 1946     		mov	r1, r3
+ 1030 0716 FFF7FEFF 		bl	__aeabi_d2f
+ 1031 071a 0246     		mov	r2, r0	@ float
+ 1032              		.loc 1 133 19
+ 1033 071c 3B68     		ldr	r3, [r7]
+ 1034 071e 1A60     		str	r2, [r3]	@ float
+ 134:./Hardware/Src/Mahony.c **** 	Att_Data->roll = atan2(g2,g3) * 57.296f;
+ 1035              		.loc 1 134 19
+ 1036 0720 F86B     		ldr	r0, [r7, #60]	@ float
+ 1037 0722 FFF7FEFF 		bl	__aeabi_f2d
+ 1038 0726 0446     		mov	r4, r0
+ 1039 0728 0D46     		mov	r5, r1
+ 1040 072a B86B     		ldr	r0, [r7, #56]	@ float
+ 1041 072c FFF7FEFF 		bl	__aeabi_f2d
+ 1042 0730 0246     		mov	r2, r0
+ 1043 0732 11E0     		b	.L15
+ 1044              	.L16:
+ 1045 0734 AFF30080 		.align	3
+ 1046              	.L14:
+ 1047 0738 00000060 		.word	1610612736
+ 1048 073c E3A54C40 		.word	1078765027
+ 1049 0740 00000000 		.word	q3
+ 1050 0744 0AD7233C 		.word	1008981770
+ 1051 0748 00000000 		.word	q2
+ 1052 074c 00000000 		.word	q0
+ 1053 0750 00000000 		.word	q1
+ 1054 0754 6F12833A 		.word	981668463
+ 1055              	.L15:
+ 1056 0758 0B46     		mov	r3, r1
+ 1057 075a 43EC112B 		vmov	d1, r2, r3
+ 1058 075e 45EC104B 		vmov	d0, r4, r5
+ 1059 0762 FFF7FEFF 		bl	atan2
+ 1060 0766 51EC100B 		vmov	r0, r1, d0
+ 1061              		.loc 1 134 32
+ 1062 076a 19A3     		adr	r3, .L17
+ 1063 076c D3E90023 		ldrd	r2, [r3]
+ 1064 0770 FFF7FEFF 		bl	__aeabi_dmul
+ 1065 0774 0246     		mov	r2, r0
+ 1066 0776 0B46     		mov	r3, r1
+ 1067 0778 1046     		mov	r0, r2
+ 1068 077a 1946     		mov	r1, r3
+ 1069 077c FFF7FEFF 		bl	__aeabi_d2f
+ 1070 0780 0246     		mov	r2, r0	@ float
+ 1071              		.loc 1 134 17
+ 1072 0782 3B68     		ldr	r3, [r7]
+ 1073 0784 5A60     		str	r2, [r3, #4]	@ float
+ 135:./Hardware/Src/Mahony.c **** 	Att_Data->yaw   = atan2(g4,g5) * 57.296f;
+ 1074              		.loc 1 135 20
+ 1075 0786 786B     		ldr	r0, [r7, #52]	@ float
+ 1076 0788 FFF7FEFF 		bl	__aeabi_f2d
+ 1077 078c 0446     		mov	r4, r0
+ 1078 078e 0D46     		mov	r5, r1
+ 1079 0790 386B     		ldr	r0, [r7, #48]	@ float
+ARM GAS  /tmp/cczAStci.s 			page 22
+
+
+ 1080 0792 FFF7FEFF 		bl	__aeabi_f2d
+ 1081 0796 0246     		mov	r2, r0
+ 1082 0798 0B46     		mov	r3, r1
+ 1083 079a 43EC112B 		vmov	d1, r2, r3
+ 1084 079e 45EC104B 		vmov	d0, r4, r5
+ 1085 07a2 FFF7FEFF 		bl	atan2
+ 1086 07a6 51EC100B 		vmov	r0, r1, d0
+ 1087              		.loc 1 135 33
+ 1088 07aa 09A3     		adr	r3, .L17
+ 1089 07ac D3E90023 		ldrd	r2, [r3]
+ 1090 07b0 FFF7FEFF 		bl	__aeabi_dmul
+ 1091 07b4 0246     		mov	r2, r0
+ 1092 07b6 0B46     		mov	r3, r1
+ 1093 07b8 1046     		mov	r0, r2
+ 1094 07ba 1946     		mov	r1, r3
+ 1095 07bc FFF7FEFF 		bl	__aeabi_d2f
+ 1096 07c0 0246     		mov	r2, r0	@ float
+ 1097              		.loc 1 135 18
+ 1098 07c2 3B68     		ldr	r3, [r7]
+ 1099 07c4 9A60     		str	r2, [r3, #8]	@ float
+ 136:./Hardware/Src/Mahony.c **** 	
+ 137:./Hardware/Src/Mahony.c **** 	return ;
+ 1100              		.loc 1 137 2
+ 1101 07c6 00BF     		nop
+ 138:./Hardware/Src/Mahony.c **** }
+ 1102              		.loc 1 138 1
+ 1103 07c8 A037     		adds	r7, r7, #160
+ 1104              		.cfi_def_cfa_offset 24
+ 1105 07ca BD46     		mov	sp, r7
+ 1106              		.cfi_def_cfa_register 13
+ 1107              		@ sp needed
+ 1108 07cc BDE8B083 		pop	{r4, r5, r7, r8, r9, pc}
+ 1109              	.L18:
+ 1110              		.align	3
+ 1111              	.L17:
+ 1112 07d0 00000060 		.word	1610612736
+ 1113 07d4 E3A54C40 		.word	1078765027
+ 1114              		.cfi_endproc
+ 1115              	.LFE128:
+ 1117              		.global	__aeabi_dsub
+ 1118              		.section	.text.Madgwick_Update_Attitude,"ax",%progbits
+ 1119              		.align	1
+ 1120              		.global	Madgwick_Update_Attitude
+ 1121              		.syntax unified
+ 1122              		.thumb
+ 1123              		.thumb_func
+ 1125              	Madgwick_Update_Attitude:
+ 1126              	.LFB129:
+ 139:./Hardware/Src/Mahony.c **** 
+ 140:./Hardware/Src/Mahony.c **** 
+ 141:./Hardware/Src/Mahony.c **** #define BETA  0.02
+ 142:./Hardware/Src/Mahony.c **** 
+ 143:./Hardware/Src/Mahony.c **** 
+ 144:./Hardware/Src/Mahony.c **** void Madgwick_Update_Attitude(IMU *Trans_Data,Angle *Att_Data)
+ 145:./Hardware/Src/Mahony.c **** {
+ 1127              		.loc 1 145 1
+ 1128              		.cfi_startproc
+ARM GAS  /tmp/cczAStci.s 			page 23
+
+
+ 1129              		@ args = 0, pretend = 0, frame = 144
+ 1130              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1131 0000 2DE9B043 		push	{r4, r5, r7, r8, r9, lr}
+ 1132              		.cfi_def_cfa_offset 24
+ 1133              		.cfi_offset 4, -24
+ 1134              		.cfi_offset 5, -20
+ 1135              		.cfi_offset 7, -16
+ 1136              		.cfi_offset 8, -12
+ 1137              		.cfi_offset 9, -8
+ 1138              		.cfi_offset 14, -4
+ 1139 0004 A4B0     		sub	sp, sp, #144
+ 1140              		.cfi_def_cfa_offset 168
+ 1141 0006 00AF     		add	r7, sp, #0
+ 1142              		.cfi_def_cfa_register 7
+ 1143 0008 7860     		str	r0, [r7, #4]
+ 1144 000a 3960     		str	r1, [r7]
+ 146:./Hardware/Src/Mahony.c **** 	float ax = Trans_Data->Acc_X ,ay=Trans_Data->Acc_Y, az=Trans_Data->Acc_Z;
+ 1145              		.loc 1 146 8
+ 1146 000c 7B68     		ldr	r3, [r7, #4]
+ 1147 000e 1B68     		ldr	r3, [r3]	@ float
+ 1148 0010 C7F88C30 		str	r3, [r7, #140]	@ float
+ 1149              		.loc 1 146 32
+ 1150 0014 7B68     		ldr	r3, [r7, #4]
+ 1151 0016 5B68     		ldr	r3, [r3, #4]	@ float
+ 1152 0018 C7F88830 		str	r3, [r7, #136]	@ float
+ 1153              		.loc 1 146 54
+ 1154 001c 7B68     		ldr	r3, [r7, #4]
+ 1155 001e 9B68     		ldr	r3, [r3, #8]	@ float
+ 1156 0020 C7F88430 		str	r3, [r7, #132]	@ float
+ 147:./Hardware/Src/Mahony.c **** 	float gx = Trans_Data->Gyro_X,gy=Trans_Data->Gyro_Y,gz=Trans_Data->Gyro_Z;
+ 1157              		.loc 1 147 8
+ 1158 0024 7B68     		ldr	r3, [r7, #4]
+ 1159 0026 DB68     		ldr	r3, [r3, #12]	@ float
+ 1160 0028 C7F88030 		str	r3, [r7, #128]	@ float
+ 1161              		.loc 1 147 32
+ 1162 002c 7B68     		ldr	r3, [r7, #4]
+ 1163 002e 1B69     		ldr	r3, [r3, #16]	@ float
+ 1164 0030 FB67     		str	r3, [r7, #124]	@ float
+ 1165              		.loc 1 147 54
+ 1166 0032 7B68     		ldr	r3, [r7, #4]
+ 1167 0034 5B69     		ldr	r3, [r3, #20]	@ float
+ 1168 0036 BB67     		str	r3, [r7, #120]	@ float
+ 148:./Hardware/Src/Mahony.c **** 	float qDot1, qDot2, qDot3, qDot4;
+ 149:./Hardware/Src/Mahony.c **** 	float _2q0,_2q1,_2q2,_2q3,_4q0,_4q1,_4q2,_8q1,_8q2,q0q0,q1q1,q2q2,q3q3;
+ 150:./Hardware/Src/Mahony.c **** 	float e0,e1,e2,e3;
+ 151:./Hardware/Src/Mahony.c **** 	float norm;
+ 152:./Hardware/Src/Mahony.c **** 	
+ 153:./Hardware/Src/Mahony.c **** 	qDot1 = 0.5f * (-q1*gx - q2*gy - q3*gz);
+ 1169              		.loc 1 153 18
+ 1170 0038 EC4B     		ldr	r3, .L21
+ 1171 003a D3ED007A 		vldr.32	s15, [r3]
+ 1172 003e B1EE677A 		vneg.f32	s14, s15
+ 1173              		.loc 1 153 21
+ 1174 0042 D7ED207A 		vldr.32	s15, [r7, #128]
+ 1175 0046 27EE277A 		vmul.f32	s14, s14, s15
+ 1176              		.loc 1 153 29
+ 1177 004a E94B     		ldr	r3, .L21+4
+ARM GAS  /tmp/cczAStci.s 			page 24
+
+
+ 1178 004c D3ED006A 		vldr.32	s13, [r3]
+ 1179 0050 D7ED1F7A 		vldr.32	s15, [r7, #124]
+ 1180 0054 66EEA77A 		vmul.f32	s15, s13, s15
+ 1181              		.loc 1 153 25
+ 1182 0058 37EE677A 		vsub.f32	s14, s14, s15
+ 1183              		.loc 1 153 37
+ 1184 005c E54B     		ldr	r3, .L21+8
+ 1185 005e D3ED006A 		vldr.32	s13, [r3]
+ 1186 0062 D7ED1E7A 		vldr.32	s15, [r7, #120]
+ 1187 0066 66EEA77A 		vmul.f32	s15, s13, s15
+ 1188              		.loc 1 153 33
+ 1189 006a 77EE677A 		vsub.f32	s15, s14, s15
+ 1190              		.loc 1 153 8
+ 1191 006e B6EE007A 		vmov.f32	s14, #5.0e-1
+ 1192 0072 67EE877A 		vmul.f32	s15, s15, s14
+ 1193 0076 C7ED1D7A 		vstr.32	s15, [r7, #116]
+ 154:./Hardware/Src/Mahony.c **** 	qDot2 = 0.5f * ( q0*gx + q2*gz - q3*gy);
+ 1194              		.loc 1 154 21
+ 1195 007a DF4B     		ldr	r3, .L21+12
+ 1196 007c 93ED007A 		vldr.32	s14, [r3]
+ 1197 0080 D7ED207A 		vldr.32	s15, [r7, #128]
+ 1198 0084 27EE277A 		vmul.f32	s14, s14, s15
+ 1199              		.loc 1 154 29
+ 1200 0088 D94B     		ldr	r3, .L21+4
+ 1201 008a D3ED006A 		vldr.32	s13, [r3]
+ 1202 008e D7ED1E7A 		vldr.32	s15, [r7, #120]
+ 1203 0092 66EEA77A 		vmul.f32	s15, s13, s15
+ 1204              		.loc 1 154 25
+ 1205 0096 37EE277A 		vadd.f32	s14, s14, s15
+ 1206              		.loc 1 154 37
+ 1207 009a D64B     		ldr	r3, .L21+8
+ 1208 009c D3ED006A 		vldr.32	s13, [r3]
+ 1209 00a0 D7ED1F7A 		vldr.32	s15, [r7, #124]
+ 1210 00a4 66EEA77A 		vmul.f32	s15, s13, s15
+ 1211              		.loc 1 154 33
+ 1212 00a8 77EE677A 		vsub.f32	s15, s14, s15
+ 1213              		.loc 1 154 8
+ 1214 00ac B6EE007A 		vmov.f32	s14, #5.0e-1
+ 1215 00b0 67EE877A 		vmul.f32	s15, s15, s14
+ 1216 00b4 C7ED1C7A 		vstr.32	s15, [r7, #112]
+ 155:./Hardware/Src/Mahony.c **** 	qDot3 = 0.5f * ( q0*gy - q1*gz + q3*gx);
+ 1217              		.loc 1 155 21
+ 1218 00b8 CF4B     		ldr	r3, .L21+12
+ 1219 00ba 93ED007A 		vldr.32	s14, [r3]
+ 1220 00be D7ED1F7A 		vldr.32	s15, [r7, #124]
+ 1221 00c2 27EE277A 		vmul.f32	s14, s14, s15
+ 1222              		.loc 1 155 29
+ 1223 00c6 C94B     		ldr	r3, .L21
+ 1224 00c8 D3ED006A 		vldr.32	s13, [r3]
+ 1225 00cc D7ED1E7A 		vldr.32	s15, [r7, #120]
+ 1226 00d0 66EEA77A 		vmul.f32	s15, s13, s15
+ 1227              		.loc 1 155 25
+ 1228 00d4 37EE677A 		vsub.f32	s14, s14, s15
+ 1229              		.loc 1 155 37
+ 1230 00d8 C64B     		ldr	r3, .L21+8
+ 1231 00da D3ED006A 		vldr.32	s13, [r3]
+ 1232 00de D7ED207A 		vldr.32	s15, [r7, #128]
+ARM GAS  /tmp/cczAStci.s 			page 25
+
+
+ 1233 00e2 66EEA77A 		vmul.f32	s15, s13, s15
+ 1234              		.loc 1 155 33
+ 1235 00e6 77EE277A 		vadd.f32	s15, s14, s15
+ 1236              		.loc 1 155 8
+ 1237 00ea B6EE007A 		vmov.f32	s14, #5.0e-1
+ 1238 00ee 67EE877A 		vmul.f32	s15, s15, s14
+ 1239 00f2 C7ED1B7A 		vstr.32	s15, [r7, #108]
+ 156:./Hardware/Src/Mahony.c **** 	qDot4 = 0.5f * ( q0*gz + q1*gy - q2*gx);
+ 1240              		.loc 1 156 21
+ 1241 00f6 C04B     		ldr	r3, .L21+12
+ 1242 00f8 93ED007A 		vldr.32	s14, [r3]
+ 1243 00fc D7ED1E7A 		vldr.32	s15, [r7, #120]
+ 1244 0100 27EE277A 		vmul.f32	s14, s14, s15
+ 1245              		.loc 1 156 29
+ 1246 0104 B94B     		ldr	r3, .L21
+ 1247 0106 D3ED006A 		vldr.32	s13, [r3]
+ 1248 010a D7ED1F7A 		vldr.32	s15, [r7, #124]
+ 1249 010e 66EEA77A 		vmul.f32	s15, s13, s15
+ 1250              		.loc 1 156 25
+ 1251 0112 37EE277A 		vadd.f32	s14, s14, s15
+ 1252              		.loc 1 156 37
+ 1253 0116 B64B     		ldr	r3, .L21+4
+ 1254 0118 D3ED006A 		vldr.32	s13, [r3]
+ 1255 011c D7ED207A 		vldr.32	s15, [r7, #128]
+ 1256 0120 66EEA77A 		vmul.f32	s15, s13, s15
+ 1257              		.loc 1 156 33
+ 1258 0124 77EE677A 		vsub.f32	s15, s14, s15
+ 1259              		.loc 1 156 8
+ 1260 0128 B6EE007A 		vmov.f32	s14, #5.0e-1
+ 1261 012c 67EE877A 		vmul.f32	s15, s15, s14
+ 1262 0130 C7ED1A7A 		vstr.32	s15, [r7, #104]
+ 157:./Hardware/Src/Mahony.c **** 	
+ 158:./Hardware/Src/Mahony.c **** 	norm = GetInvSqrt(ax*ax + ay*ay + az*az);
+ 1263              		.loc 1 158 22
+ 1264 0134 D7ED237A 		vldr.32	s15, [r7, #140]
+ 1265 0138 27EEA77A 		vmul.f32	s14, s15, s15
+ 1266              		.loc 1 158 30
+ 1267 013c D7ED227A 		vldr.32	s15, [r7, #136]
+ 1268 0140 67EEA77A 		vmul.f32	s15, s15, s15
+ 1269              		.loc 1 158 26
+ 1270 0144 37EE277A 		vadd.f32	s14, s14, s15
+ 1271              		.loc 1 158 38
+ 1272 0148 D7ED217A 		vldr.32	s15, [r7, #132]
+ 1273 014c 67EEA77A 		vmul.f32	s15, s15, s15
+ 1274              		.loc 1 158 9
+ 1275 0150 77EE277A 		vadd.f32	s15, s14, s15
+ 1276 0154 B0EE670A 		vmov.f32	s0, s15
+ 1277 0158 FFF7FEFF 		bl	GetInvSqrt
+ 1278 015c 87ED190A 		vstr.32	s0, [r7, #100]
+ 159:./Hardware/Src/Mahony.c **** 	ax=ax * norm;
+ 1279              		.loc 1 159 4
+ 1280 0160 97ED237A 		vldr.32	s14, [r7, #140]
+ 1281 0164 D7ED197A 		vldr.32	s15, [r7, #100]
+ 1282 0168 67EE277A 		vmul.f32	s15, s14, s15
+ 1283 016c C7ED237A 		vstr.32	s15, [r7, #140]
+ 160:./Hardware/Src/Mahony.c **** 	ay=ay * norm;
+ 1284              		.loc 1 160 4
+ARM GAS  /tmp/cczAStci.s 			page 26
+
+
+ 1285 0170 97ED227A 		vldr.32	s14, [r7, #136]
+ 1286 0174 D7ED197A 		vldr.32	s15, [r7, #100]
+ 1287 0178 67EE277A 		vmul.f32	s15, s14, s15
+ 1288 017c C7ED227A 		vstr.32	s15, [r7, #136]
+ 161:./Hardware/Src/Mahony.c **** 	az=az * norm;
+ 1289              		.loc 1 161 4
+ 1290 0180 97ED217A 		vldr.32	s14, [r7, #132]
+ 1291 0184 D7ED197A 		vldr.32	s15, [r7, #100]
+ 1292 0188 67EE277A 		vmul.f32	s15, s14, s15
+ 1293 018c C7ED217A 		vstr.32	s15, [r7, #132]
+ 162:./Hardware/Src/Mahony.c **** 	
+ 163:./Hardware/Src/Mahony.c **** 	_2q0 = 2.0f * q0;
+ 1294              		.loc 1 163 14
+ 1295 0190 994B     		ldr	r3, .L21+12
+ 1296 0192 D3ED007A 		vldr.32	s15, [r3]
+ 1297              		.loc 1 163 7
+ 1298 0196 77EEA77A 		vadd.f32	s15, s15, s15
+ 1299 019a C7ED187A 		vstr.32	s15, [r7, #96]
+ 164:./Hardware/Src/Mahony.c ****     _2q1 = 2.0f * q1;
+ 1300              		.loc 1 164 17
+ 1301 019e 934B     		ldr	r3, .L21
+ 1302 01a0 D3ED007A 		vldr.32	s15, [r3]
+ 1303              		.loc 1 164 10
+ 1304 01a4 77EEA77A 		vadd.f32	s15, s15, s15
+ 1305 01a8 C7ED177A 		vstr.32	s15, [r7, #92]
+ 165:./Hardware/Src/Mahony.c ****     _2q2 = 2.0f * q2;
+ 1306              		.loc 1 165 17
+ 1307 01ac 904B     		ldr	r3, .L21+4
+ 1308 01ae D3ED007A 		vldr.32	s15, [r3]
+ 1309              		.loc 1 165 10
+ 1310 01b2 77EEA77A 		vadd.f32	s15, s15, s15
+ 1311 01b6 C7ED167A 		vstr.32	s15, [r7, #88]
+ 166:./Hardware/Src/Mahony.c ****     _2q3 = 2.0f * q3;
+ 1312              		.loc 1 166 17
+ 1313 01ba 8E4B     		ldr	r3, .L21+8
+ 1314 01bc D3ED007A 		vldr.32	s15, [r3]
+ 1315              		.loc 1 166 10
+ 1316 01c0 77EEA77A 		vadd.f32	s15, s15, s15
+ 1317 01c4 C7ED157A 		vstr.32	s15, [r7, #84]
+ 167:./Hardware/Src/Mahony.c ****     _4q0 = 4.0f * q0;
+ 1318              		.loc 1 167 17
+ 1319 01c8 8B4B     		ldr	r3, .L21+12
+ 1320 01ca D3ED007A 		vldr.32	s15, [r3]
+ 1321              		.loc 1 167 10
+ 1322 01ce B1EE007A 		vmov.f32	s14, #4.0e+0
+ 1323 01d2 67EE877A 		vmul.f32	s15, s15, s14
+ 1324 01d6 C7ED147A 		vstr.32	s15, [r7, #80]
+ 168:./Hardware/Src/Mahony.c ****     _4q1 = 4.0f * q1;
+ 1325              		.loc 1 168 17
+ 1326 01da 844B     		ldr	r3, .L21
+ 1327 01dc D3ED007A 		vldr.32	s15, [r3]
+ 1328              		.loc 1 168 10
+ 1329 01e0 B1EE007A 		vmov.f32	s14, #4.0e+0
+ 1330 01e4 67EE877A 		vmul.f32	s15, s15, s14
+ 1331 01e8 C7ED137A 		vstr.32	s15, [r7, #76]
+ 169:./Hardware/Src/Mahony.c ****     _4q2 = 4.0f * q2;
+ 1332              		.loc 1 169 17
+ARM GAS  /tmp/cczAStci.s 			page 27
+
+
+ 1333 01ec 804B     		ldr	r3, .L21+4
+ 1334 01ee D3ED007A 		vldr.32	s15, [r3]
+ 1335              		.loc 1 169 10
+ 1336 01f2 B1EE007A 		vmov.f32	s14, #4.0e+0
+ 1337 01f6 67EE877A 		vmul.f32	s15, s15, s14
+ 1338 01fa C7ED127A 		vstr.32	s15, [r7, #72]
+ 170:./Hardware/Src/Mahony.c ****     _8q1 = 8.0f * q1;
+ 1339              		.loc 1 170 17
+ 1340 01fe 7B4B     		ldr	r3, .L21
+ 1341 0200 D3ED007A 		vldr.32	s15, [r3]
+ 1342              		.loc 1 170 10
+ 1343 0204 B2EE007A 		vmov.f32	s14, #8.0e+0
+ 1344 0208 67EE877A 		vmul.f32	s15, s15, s14
+ 1345 020c C7ED117A 		vstr.32	s15, [r7, #68]
+ 171:./Hardware/Src/Mahony.c ****     _8q2 = 8.0f * q2;
+ 1346              		.loc 1 171 17
+ 1347 0210 774B     		ldr	r3, .L21+4
+ 1348 0212 D3ED007A 		vldr.32	s15, [r3]
+ 1349              		.loc 1 171 10
+ 1350 0216 B2EE007A 		vmov.f32	s14, #8.0e+0
+ 1351 021a 67EE877A 		vmul.f32	s15, s15, s14
+ 1352 021e C7ED107A 		vstr.32	s15, [r7, #64]
+ 172:./Hardware/Src/Mahony.c ****     q0q0 = q0 * q0;
+ 1353              		.loc 1 172 15
+ 1354 0222 754B     		ldr	r3, .L21+12
+ 1355 0224 93ED007A 		vldr.32	s14, [r3]
+ 1356 0228 734B     		ldr	r3, .L21+12
+ 1357 022a D3ED007A 		vldr.32	s15, [r3]
+ 1358              		.loc 1 172 10
+ 1359 022e 67EE277A 		vmul.f32	s15, s14, s15
+ 1360 0232 C7ED0F7A 		vstr.32	s15, [r7, #60]
+ 173:./Hardware/Src/Mahony.c ****     q1q1 = q1 * q1;
+ 1361              		.loc 1 173 15
+ 1362 0236 6D4B     		ldr	r3, .L21
+ 1363 0238 93ED007A 		vldr.32	s14, [r3]
+ 1364 023c 6B4B     		ldr	r3, .L21
+ 1365 023e D3ED007A 		vldr.32	s15, [r3]
+ 1366              		.loc 1 173 10
+ 1367 0242 67EE277A 		vmul.f32	s15, s14, s15
+ 1368 0246 C7ED0E7A 		vstr.32	s15, [r7, #56]
+ 174:./Hardware/Src/Mahony.c ****     q2q2 = q2 * q2;
+ 1369              		.loc 1 174 15
+ 1370 024a 694B     		ldr	r3, .L21+4
+ 1371 024c 93ED007A 		vldr.32	s14, [r3]
+ 1372 0250 674B     		ldr	r3, .L21+4
+ 1373 0252 D3ED007A 		vldr.32	s15, [r3]
+ 1374              		.loc 1 174 10
+ 1375 0256 67EE277A 		vmul.f32	s15, s14, s15
+ 1376 025a C7ED0D7A 		vstr.32	s15, [r7, #52]
+ 175:./Hardware/Src/Mahony.c ****     q3q3 = q3 * q3;
+ 1377              		.loc 1 175 15
+ 1378 025e 654B     		ldr	r3, .L21+8
+ 1379 0260 93ED007A 		vldr.32	s14, [r3]
+ 1380 0264 634B     		ldr	r3, .L21+8
+ 1381 0266 D3ED007A 		vldr.32	s15, [r3]
+ 1382              		.loc 1 175 10
+ 1383 026a 67EE277A 		vmul.f32	s15, s14, s15
+ARM GAS  /tmp/cczAStci.s 			page 28
+
+
+ 1384 026e C7ED0C7A 		vstr.32	s15, [r7, #48]
+ 176:./Hardware/Src/Mahony.c **** 	
+ 177:./Hardware/Src/Mahony.c **** 	e0 = _4q0 * q2q2 + _2q2 * ax + _4q0 * q1q1 - _2q1 * ay;
+ 1385              		.loc 1 177 12
+ 1386 0272 97ED147A 		vldr.32	s14, [r7, #80]
+ 1387 0276 D7ED0D7A 		vldr.32	s15, [r7, #52]
+ 1388 027a 27EE277A 		vmul.f32	s14, s14, s15
+ 1389              		.loc 1 177 26
+ 1390 027e D7ED166A 		vldr.32	s13, [r7, #88]
+ 1391 0282 D7ED237A 		vldr.32	s15, [r7, #140]
+ 1392 0286 66EEA77A 		vmul.f32	s15, s13, s15
+ 1393              		.loc 1 177 19
+ 1394 028a 37EE277A 		vadd.f32	s14, s14, s15
+ 1395              		.loc 1 177 38
+ 1396 028e D7ED146A 		vldr.32	s13, [r7, #80]
+ 1397 0292 D7ED0E7A 		vldr.32	s15, [r7, #56]
+ 1398 0296 66EEA77A 		vmul.f32	s15, s13, s15
+ 1399              		.loc 1 177 31
+ 1400 029a 37EE277A 		vadd.f32	s14, s14, s15
+ 1401              		.loc 1 177 52
+ 1402 029e D7ED176A 		vldr.32	s13, [r7, #92]
+ 1403 02a2 D7ED227A 		vldr.32	s15, [r7, #136]
+ 1404 02a6 66EEA77A 		vmul.f32	s15, s13, s15
+ 1405              		.loc 1 177 5
+ 1406 02aa 77EE677A 		vsub.f32	s15, s14, s15
+ 1407 02ae C7ED0B7A 		vstr.32	s15, [r7, #44]
+ 178:./Hardware/Src/Mahony.c ****     e1 = _4q1 * q3q3 - _2q3 * ax + 4.0f * q0q0 * q1 - _2q0 * ay - _4q1 + _8q1 * q1q1 + _8q1 * q2q2 
+ 1408              		.loc 1 178 15
+ 1409 02b2 97ED137A 		vldr.32	s14, [r7, #76]
+ 1410 02b6 D7ED0C7A 		vldr.32	s15, [r7, #48]
+ 1411 02ba 27EE277A 		vmul.f32	s14, s14, s15
+ 1412              		.loc 1 178 29
+ 1413 02be D7ED156A 		vldr.32	s13, [r7, #84]
+ 1414 02c2 D7ED237A 		vldr.32	s15, [r7, #140]
+ 1415 02c6 66EEA77A 		vmul.f32	s15, s13, s15
+ 1416              		.loc 1 178 22
+ 1417 02ca 37EE677A 		vsub.f32	s14, s14, s15
+ 1418              		.loc 1 178 41
+ 1419 02ce D7ED0F7A 		vldr.32	s15, [r7, #60]
+ 1420 02d2 F1EE006A 		vmov.f32	s13, #4.0e+0
+ 1421 02d6 67EEA66A 		vmul.f32	s13, s15, s13
+ 1422              		.loc 1 178 48
+ 1423 02da 444B     		ldr	r3, .L21
+ 1424 02dc D3ED007A 		vldr.32	s15, [r3]
+ 1425 02e0 66EEA77A 		vmul.f32	s15, s13, s15
+ 1426              		.loc 1 178 34
+ 1427 02e4 37EE277A 		vadd.f32	s14, s14, s15
+ 1428              		.loc 1 178 60
+ 1429 02e8 D7ED186A 		vldr.32	s13, [r7, #96]
+ 1430 02ec D7ED227A 		vldr.32	s15, [r7, #136]
+ 1431 02f0 66EEA77A 		vmul.f32	s15, s13, s15
+ 1432              		.loc 1 178 53
+ 1433 02f4 37EE677A 		vsub.f32	s14, s14, s15
+ 1434              		.loc 1 178 65
+ 1435 02f8 D7ED137A 		vldr.32	s15, [r7, #76]
+ 1436 02fc 37EE677A 		vsub.f32	s14, s14, s15
+ 1437              		.loc 1 178 79
+ARM GAS  /tmp/cczAStci.s 			page 29
+
+
+ 1438 0300 D7ED116A 		vldr.32	s13, [r7, #68]
+ 1439 0304 D7ED0E7A 		vldr.32	s15, [r7, #56]
+ 1440 0308 66EEA77A 		vmul.f32	s15, s13, s15
+ 1441              		.loc 1 178 72
+ 1442 030c 37EE277A 		vadd.f32	s14, s14, s15
+ 1443              		.loc 1 178 93
+ 1444 0310 D7ED116A 		vldr.32	s13, [r7, #68]
+ 1445 0314 D7ED0D7A 		vldr.32	s15, [r7, #52]
+ 1446 0318 66EEA77A 		vmul.f32	s15, s13, s15
+ 1447              		.loc 1 178 86
+ 1448 031c 37EE277A 		vadd.f32	s14, s14, s15
+ 1449              		.loc 1 178 107
+ 1450 0320 D7ED136A 		vldr.32	s13, [r7, #76]
+ 1451 0324 D7ED217A 		vldr.32	s15, [r7, #132]
+ 1452 0328 66EEA77A 		vmul.f32	s15, s13, s15
+ 1453              		.loc 1 178 8
+ 1454 032c 77EE277A 		vadd.f32	s15, s14, s15
+ 1455 0330 C7ED0A7A 		vstr.32	s15, [r7, #40]
+ 179:./Hardware/Src/Mahony.c ****     e2 = 4.0f * q0q0 * q2 + _2q0 * ax + _4q2 * q3q3 - _2q3 * ay - _4q2 + _8q2 * q1q1 + _8q2 * q2q2 
+ 1456              		.loc 1 179 15
+ 1457 0334 D7ED0F7A 		vldr.32	s15, [r7, #60]
+ 1458 0338 B1EE007A 		vmov.f32	s14, #4.0e+0
+ 1459 033c 27EE877A 		vmul.f32	s14, s15, s14
+ 1460              		.loc 1 179 22
+ 1461 0340 2B4B     		ldr	r3, .L21+4
+ 1462 0342 D3ED007A 		vldr.32	s15, [r3]
+ 1463 0346 27EE277A 		vmul.f32	s14, s14, s15
+ 1464              		.loc 1 179 34
+ 1465 034a D7ED186A 		vldr.32	s13, [r7, #96]
+ 1466 034e D7ED237A 		vldr.32	s15, [r7, #140]
+ 1467 0352 66EEA77A 		vmul.f32	s15, s13, s15
+ 1468              		.loc 1 179 27
+ 1469 0356 37EE277A 		vadd.f32	s14, s14, s15
+ 1470              		.loc 1 179 46
+ 1471 035a D7ED126A 		vldr.32	s13, [r7, #72]
+ 1472 035e D7ED0C7A 		vldr.32	s15, [r7, #48]
+ 1473 0362 66EEA77A 		vmul.f32	s15, s13, s15
+ 1474              		.loc 1 179 39
+ 1475 0366 37EE277A 		vadd.f32	s14, s14, s15
+ 1476              		.loc 1 179 60
+ 1477 036a D7ED156A 		vldr.32	s13, [r7, #84]
+ 1478 036e D7ED227A 		vldr.32	s15, [r7, #136]
+ 1479 0372 66EEA77A 		vmul.f32	s15, s13, s15
+ 1480              		.loc 1 179 53
+ 1481 0376 37EE677A 		vsub.f32	s14, s14, s15
+ 1482              		.loc 1 179 65
+ 1483 037a D7ED127A 		vldr.32	s15, [r7, #72]
+ 1484 037e 37EE677A 		vsub.f32	s14, s14, s15
+ 1485              		.loc 1 179 79
+ 1486 0382 D7ED106A 		vldr.32	s13, [r7, #64]
+ 1487 0386 D7ED0E7A 		vldr.32	s15, [r7, #56]
+ 1488 038a 66EEA77A 		vmul.f32	s15, s13, s15
+ 1489              		.loc 1 179 72
+ 1490 038e 37EE277A 		vadd.f32	s14, s14, s15
+ 1491              		.loc 1 179 93
+ 1492 0392 D7ED106A 		vldr.32	s13, [r7, #64]
+ 1493 0396 D7ED0D7A 		vldr.32	s15, [r7, #52]
+ARM GAS  /tmp/cczAStci.s 			page 30
+
+
+ 1494 039a 66EEA77A 		vmul.f32	s15, s13, s15
+ 1495              		.loc 1 179 86
+ 1496 039e 37EE277A 		vadd.f32	s14, s14, s15
+ 1497              		.loc 1 179 107
+ 1498 03a2 D7ED126A 		vldr.32	s13, [r7, #72]
+ 1499 03a6 D7ED217A 		vldr.32	s15, [r7, #132]
+ 1500 03aa 66EEA77A 		vmul.f32	s15, s13, s15
+ 1501              		.loc 1 179 8
+ 1502 03ae 77EE277A 		vadd.f32	s15, s14, s15
+ 1503 03b2 C7ED097A 		vstr.32	s15, [r7, #36]
+ 180:./Hardware/Src/Mahony.c ****     e3 = 4.0f * q1q1 * q3 - _2q1 * ax + 4.0f * q2q2 * q3 - _2q2 * ay;
+ 1504              		.loc 1 180 15
+ 1505 03b6 D7ED0E7A 		vldr.32	s15, [r7, #56]
+ 1506 03ba B1EE007A 		vmov.f32	s14, #4.0e+0
+ 1507 03be 27EE877A 		vmul.f32	s14, s15, s14
+ 1508              		.loc 1 180 22
+ 1509 03c2 0C4B     		ldr	r3, .L21+8
+ 1510 03c4 D3ED007A 		vldr.32	s15, [r3]
+ 1511 03c8 27EE277A 		vmul.f32	s14, s14, s15
+ 1512              		.loc 1 180 34
+ 1513 03cc D7ED176A 		vldr.32	s13, [r7, #92]
+ 1514 03d0 D7ED237A 		vldr.32	s15, [r7, #140]
+ 1515 03d4 66EEA77A 		vmul.f32	s15, s13, s15
+ 1516              		.loc 1 180 27
+ 1517 03d8 37EE677A 		vsub.f32	s14, s14, s15
+ 1518              		.loc 1 180 46
+ 1519 03dc D7ED0D7A 		vldr.32	s15, [r7, #52]
+ 1520 03e0 F1EE006A 		vmov.f32	s13, #4.0e+0
+ 1521 03e4 67EEA66A 		vmul.f32	s13, s15, s13
+ 1522 03e8 08E0     		b	.L22
+ 1523              	.L23:
+ 1524 03ea 00BF     		.align	2
+ 1525              	.L21:
+ 1526 03ec 00000000 		.word	q1
+ 1527 03f0 00000000 		.word	q2
+ 1528 03f4 00000000 		.word	q3
+ 1529 03f8 00000000 		.word	q0
+ 1530              	.L22:
+ 1531              		.loc 1 180 53
+ 1532 03fc DC4B     		ldr	r3, .L24+8
+ 1533 03fe D3ED007A 		vldr.32	s15, [r3]
+ 1534 0402 66EEA77A 		vmul.f32	s15, s13, s15
+ 1535              		.loc 1 180 39
+ 1536 0406 37EE277A 		vadd.f32	s14, s14, s15
+ 1537              		.loc 1 180 65
+ 1538 040a D7ED166A 		vldr.32	s13, [r7, #88]
+ 1539 040e D7ED227A 		vldr.32	s15, [r7, #136]
+ 1540 0412 66EEA77A 		vmul.f32	s15, s13, s15
+ 1541              		.loc 1 180 8
+ 1542 0416 77EE677A 		vsub.f32	s15, s14, s15
+ 1543 041a C7ED087A 		vstr.32	s15, [r7, #32]
+ 181:./Hardware/Src/Mahony.c **** 	
+ 182:./Hardware/Src/Mahony.c **** 	norm = GetInvSqrt(e0*e0 + e1*e1 + e2*e2 + e3*e3); 
+ 1544              		.loc 1 182 22
+ 1545 041e D7ED0B7A 		vldr.32	s15, [r7, #44]
+ 1546 0422 27EEA77A 		vmul.f32	s14, s15, s15
+ 1547              		.loc 1 182 30
+ARM GAS  /tmp/cczAStci.s 			page 31
+
+
+ 1548 0426 D7ED0A7A 		vldr.32	s15, [r7, #40]
+ 1549 042a 67EEA77A 		vmul.f32	s15, s15, s15
+ 1550              		.loc 1 182 26
+ 1551 042e 37EE277A 		vadd.f32	s14, s14, s15
+ 1552              		.loc 1 182 38
+ 1553 0432 D7ED097A 		vldr.32	s15, [r7, #36]
+ 1554 0436 67EEA77A 		vmul.f32	s15, s15, s15
+ 1555              		.loc 1 182 34
+ 1556 043a 37EE277A 		vadd.f32	s14, s14, s15
+ 1557              		.loc 1 182 46
+ 1558 043e D7ED087A 		vldr.32	s15, [r7, #32]
+ 1559 0442 67EEA77A 		vmul.f32	s15, s15, s15
+ 1560              		.loc 1 182 9
+ 1561 0446 77EE277A 		vadd.f32	s15, s14, s15
+ 1562 044a B0EE670A 		vmov.f32	s0, s15
+ 1563 044e FFF7FEFF 		bl	GetInvSqrt
+ 1564 0452 87ED190A 		vstr.32	s0, [r7, #100]
+ 183:./Hardware/Src/Mahony.c ****     e0 = e0 * norm;
+ 1565              		.loc 1 183 8
+ 1566 0456 97ED0B7A 		vldr.32	s14, [r7, #44]
+ 1567 045a D7ED197A 		vldr.32	s15, [r7, #100]
+ 1568 045e 67EE277A 		vmul.f32	s15, s14, s15
+ 1569 0462 C7ED0B7A 		vstr.32	s15, [r7, #44]
+ 184:./Hardware/Src/Mahony.c ****     e1 = e1 * norm;
+ 1570              		.loc 1 184 8
+ 1571 0466 97ED0A7A 		vldr.32	s14, [r7, #40]
+ 1572 046a D7ED197A 		vldr.32	s15, [r7, #100]
+ 1573 046e 67EE277A 		vmul.f32	s15, s14, s15
+ 1574 0472 C7ED0A7A 		vstr.32	s15, [r7, #40]
+ 185:./Hardware/Src/Mahony.c ****     e2 = e2 * norm;
+ 1575              		.loc 1 185 8
+ 1576 0476 97ED097A 		vldr.32	s14, [r7, #36]
+ 1577 047a D7ED197A 		vldr.32	s15, [r7, #100]
+ 1578 047e 67EE277A 		vmul.f32	s15, s14, s15
+ 1579 0482 C7ED097A 		vstr.32	s15, [r7, #36]
+ 186:./Hardware/Src/Mahony.c ****     e3 = e3 * norm;
+ 1580              		.loc 1 186 8
+ 1581 0486 97ED087A 		vldr.32	s14, [r7, #32]
+ 1582 048a D7ED197A 		vldr.32	s15, [r7, #100]
+ 1583 048e 67EE277A 		vmul.f32	s15, s14, s15
+ 1584 0492 C7ED087A 		vstr.32	s15, [r7, #32]
+ 187:./Hardware/Src/Mahony.c **** 	
+ 188:./Hardware/Src/Mahony.c **** 	qDot1 -= BETA * e0;
+ 1585              		.loc 1 188 8
+ 1586 0496 786F     		ldr	r0, [r7, #116]	@ float
+ 1587 0498 FFF7FEFF 		bl	__aeabi_f2d
+ 1588 049c 8046     		mov	r8, r0
+ 1589 049e 8946     		mov	r9, r1
+ 1590              		.loc 1 188 16
+ 1591 04a0 F86A     		ldr	r0, [r7, #44]	@ float
+ 1592 04a2 FFF7FEFF 		bl	__aeabi_f2d
+ 1593 04a6 B0A3     		adr	r3, .L24
+ 1594 04a8 D3E90023 		ldrd	r2, [r3]
+ 1595 04ac FFF7FEFF 		bl	__aeabi_dmul
+ 1596 04b0 0246     		mov	r2, r0
+ 1597 04b2 0B46     		mov	r3, r1
+ 1598              		.loc 1 188 8
+ARM GAS  /tmp/cczAStci.s 			page 32
+
+
+ 1599 04b4 4046     		mov	r0, r8
+ 1600 04b6 4946     		mov	r1, r9
+ 1601 04b8 FFF7FEFF 		bl	__aeabi_dsub
+ 1602 04bc 0246     		mov	r2, r0
+ 1603 04be 0B46     		mov	r3, r1
+ 1604 04c0 1046     		mov	r0, r2
+ 1605 04c2 1946     		mov	r1, r3
+ 1606 04c4 FFF7FEFF 		bl	__aeabi_d2f
+ 1607 04c8 0346     		mov	r3, r0	@ float
+ 1608 04ca 7B67     		str	r3, [r7, #116]	@ float
+ 189:./Hardware/Src/Mahony.c ****     qDot2 -= BETA * e1;
+ 1609              		.loc 1 189 11
+ 1610 04cc 386F     		ldr	r0, [r7, #112]	@ float
+ 1611 04ce FFF7FEFF 		bl	__aeabi_f2d
+ 1612 04d2 8046     		mov	r8, r0
+ 1613 04d4 8946     		mov	r9, r1
+ 1614              		.loc 1 189 19
+ 1615 04d6 B86A     		ldr	r0, [r7, #40]	@ float
+ 1616 04d8 FFF7FEFF 		bl	__aeabi_f2d
+ 1617 04dc A2A3     		adr	r3, .L24
+ 1618 04de D3E90023 		ldrd	r2, [r3]
+ 1619 04e2 FFF7FEFF 		bl	__aeabi_dmul
+ 1620 04e6 0246     		mov	r2, r0
+ 1621 04e8 0B46     		mov	r3, r1
+ 1622              		.loc 1 189 11
+ 1623 04ea 4046     		mov	r0, r8
+ 1624 04ec 4946     		mov	r1, r9
+ 1625 04ee FFF7FEFF 		bl	__aeabi_dsub
+ 1626 04f2 0246     		mov	r2, r0
+ 1627 04f4 0B46     		mov	r3, r1
+ 1628 04f6 1046     		mov	r0, r2
+ 1629 04f8 1946     		mov	r1, r3
+ 1630 04fa FFF7FEFF 		bl	__aeabi_d2f
+ 1631 04fe 0346     		mov	r3, r0	@ float
+ 1632 0500 3B67     		str	r3, [r7, #112]	@ float
+ 190:./Hardware/Src/Mahony.c ****     qDot3 -= BETA * e2;
+ 1633              		.loc 1 190 11
+ 1634 0502 F86E     		ldr	r0, [r7, #108]	@ float
+ 1635 0504 FFF7FEFF 		bl	__aeabi_f2d
+ 1636 0508 8046     		mov	r8, r0
+ 1637 050a 8946     		mov	r9, r1
+ 1638              		.loc 1 190 19
+ 1639 050c 786A     		ldr	r0, [r7, #36]	@ float
+ 1640 050e FFF7FEFF 		bl	__aeabi_f2d
+ 1641 0512 95A3     		adr	r3, .L24
+ 1642 0514 D3E90023 		ldrd	r2, [r3]
+ 1643 0518 FFF7FEFF 		bl	__aeabi_dmul
+ 1644 051c 0246     		mov	r2, r0
+ 1645 051e 0B46     		mov	r3, r1
+ 1646              		.loc 1 190 11
+ 1647 0520 4046     		mov	r0, r8
+ 1648 0522 4946     		mov	r1, r9
+ 1649 0524 FFF7FEFF 		bl	__aeabi_dsub
+ 1650 0528 0246     		mov	r2, r0
+ 1651 052a 0B46     		mov	r3, r1
+ 1652 052c 1046     		mov	r0, r2
+ 1653 052e 1946     		mov	r1, r3
+ARM GAS  /tmp/cczAStci.s 			page 33
+
+
+ 1654 0530 FFF7FEFF 		bl	__aeabi_d2f
+ 1655 0534 0346     		mov	r3, r0	@ float
+ 1656 0536 FB66     		str	r3, [r7, #108]	@ float
+ 191:./Hardware/Src/Mahony.c ****     qDot4 -= BETA * e3;
+ 1657              		.loc 1 191 11
+ 1658 0538 B86E     		ldr	r0, [r7, #104]	@ float
+ 1659 053a FFF7FEFF 		bl	__aeabi_f2d
+ 1660 053e 8046     		mov	r8, r0
+ 1661 0540 8946     		mov	r9, r1
+ 1662              		.loc 1 191 19
+ 1663 0542 386A     		ldr	r0, [r7, #32]	@ float
+ 1664 0544 FFF7FEFF 		bl	__aeabi_f2d
+ 1665 0548 87A3     		adr	r3, .L24
+ 1666 054a D3E90023 		ldrd	r2, [r3]
+ 1667 054e FFF7FEFF 		bl	__aeabi_dmul
+ 1668 0552 0246     		mov	r2, r0
+ 1669 0554 0B46     		mov	r3, r1
+ 1670              		.loc 1 191 11
+ 1671 0556 4046     		mov	r0, r8
+ 1672 0558 4946     		mov	r1, r9
+ 1673 055a FFF7FEFF 		bl	__aeabi_dsub
+ 1674 055e 0246     		mov	r2, r0
+ 1675 0560 0B46     		mov	r3, r1
+ 1676 0562 1046     		mov	r0, r2
+ 1677 0564 1946     		mov	r1, r3
+ 1678 0566 FFF7FEFF 		bl	__aeabi_d2f
+ 1679 056a 0346     		mov	r3, r0	@ float
+ 1680 056c BB66     		str	r3, [r7, #104]	@ float
+ 192:./Hardware/Src/Mahony.c **** 	
+ 193:./Hardware/Src/Mahony.c **** 	q0 += qDot1 * T;
+ 1681              		.loc 1 193 14
+ 1682 056e D7ED1D7A 		vldr.32	s15, [r7, #116]
+ 1683 0572 9FED807A 		vldr.32	s14, .L24+12
+ 1684 0576 27EE877A 		vmul.f32	s14, s15, s14
+ 1685              		.loc 1 193 5
+ 1686 057a 7F4B     		ldr	r3, .L24+16
+ 1687 057c D3ED007A 		vldr.32	s15, [r3]
+ 1688 0580 77EE277A 		vadd.f32	s15, s14, s15
+ 1689 0584 7C4B     		ldr	r3, .L24+16
+ 1690 0586 C3ED007A 		vstr.32	s15, [r3]
+ 194:./Hardware/Src/Mahony.c ****     q1 += qDot2 * T;
+ 1691              		.loc 1 194 17
+ 1692 058a D7ED1C7A 		vldr.32	s15, [r7, #112]
+ 1693 058e 9FED797A 		vldr.32	s14, .L24+12
+ 1694 0592 27EE877A 		vmul.f32	s14, s15, s14
+ 1695              		.loc 1 194 8
+ 1696 0596 794B     		ldr	r3, .L24+20
+ 1697 0598 D3ED007A 		vldr.32	s15, [r3]
+ 1698 059c 77EE277A 		vadd.f32	s15, s14, s15
+ 1699 05a0 764B     		ldr	r3, .L24+20
+ 1700 05a2 C3ED007A 		vstr.32	s15, [r3]
+ 195:./Hardware/Src/Mahony.c ****     q2 += qDot3 * T;
+ 1701              		.loc 1 195 17
+ 1702 05a6 D7ED1B7A 		vldr.32	s15, [r7, #108]
+ 1703 05aa 9FED727A 		vldr.32	s14, .L24+12
+ 1704 05ae 27EE877A 		vmul.f32	s14, s15, s14
+ 1705              		.loc 1 195 8
+ARM GAS  /tmp/cczAStci.s 			page 34
+
+
+ 1706 05b2 734B     		ldr	r3, .L24+24
+ 1707 05b4 D3ED007A 		vldr.32	s15, [r3]
+ 1708 05b8 77EE277A 		vadd.f32	s15, s14, s15
+ 1709 05bc 704B     		ldr	r3, .L24+24
+ 1710 05be C3ED007A 		vstr.32	s15, [r3]
+ 196:./Hardware/Src/Mahony.c ****     q3 += qDot4 * T;
+ 1711              		.loc 1 196 17
+ 1712 05c2 D7ED1A7A 		vldr.32	s15, [r7, #104]
+ 1713 05c6 9FED6B7A 		vldr.32	s14, .L24+12
+ 1714 05ca 27EE877A 		vmul.f32	s14, s15, s14
+ 1715              		.loc 1 196 8
+ 1716 05ce 684B     		ldr	r3, .L24+8
+ 1717 05d0 D3ED007A 		vldr.32	s15, [r3]
+ 1718 05d4 77EE277A 		vadd.f32	s15, s14, s15
+ 1719 05d8 654B     		ldr	r3, .L24+8
+ 1720 05da C3ED007A 		vstr.32	s15, [r3]
+ 197:./Hardware/Src/Mahony.c **** 	
+ 198:./Hardware/Src/Mahony.c **** 	norm = GetInvSqrt( q0*q0 + q1*q1 + q2*q2 + q3*q3 );
+ 1721              		.loc 1 198 23
+ 1722 05de 664B     		ldr	r3, .L24+16
+ 1723 05e0 93ED007A 		vldr.32	s14, [r3]
+ 1724 05e4 644B     		ldr	r3, .L24+16
+ 1725 05e6 D3ED007A 		vldr.32	s15, [r3]
+ 1726 05ea 27EE277A 		vmul.f32	s14, s14, s15
+ 1727              		.loc 1 198 31
+ 1728 05ee 634B     		ldr	r3, .L24+20
+ 1729 05f0 D3ED006A 		vldr.32	s13, [r3]
+ 1730 05f4 614B     		ldr	r3, .L24+20
+ 1731 05f6 D3ED007A 		vldr.32	s15, [r3]
+ 1732 05fa 66EEA77A 		vmul.f32	s15, s13, s15
+ 1733              		.loc 1 198 27
+ 1734 05fe 37EE277A 		vadd.f32	s14, s14, s15
+ 1735              		.loc 1 198 39
+ 1736 0602 5F4B     		ldr	r3, .L24+24
+ 1737 0604 D3ED006A 		vldr.32	s13, [r3]
+ 1738 0608 5D4B     		ldr	r3, .L24+24
+ 1739 060a D3ED007A 		vldr.32	s15, [r3]
+ 1740 060e 66EEA77A 		vmul.f32	s15, s13, s15
+ 1741              		.loc 1 198 35
+ 1742 0612 37EE277A 		vadd.f32	s14, s14, s15
+ 1743              		.loc 1 198 47
+ 1744 0616 564B     		ldr	r3, .L24+8
+ 1745 0618 D3ED006A 		vldr.32	s13, [r3]
+ 1746 061c 544B     		ldr	r3, .L24+8
+ 1747 061e D3ED007A 		vldr.32	s15, [r3]
+ 1748 0622 66EEA77A 		vmul.f32	s15, s13, s15
+ 1749              		.loc 1 198 9
+ 1750 0626 77EE277A 		vadd.f32	s15, s14, s15
+ 1751 062a B0EE670A 		vmov.f32	s0, s15
+ 1752 062e FFF7FEFF 		bl	GetInvSqrt
+ 1753 0632 87ED190A 		vstr.32	s0, [r7, #100]
+ 199:./Hardware/Src/Mahony.c **** 	q0 = q0 * norm;
+ 1754              		.loc 1 199 10
+ 1755 0636 504B     		ldr	r3, .L24+16
+ 1756 0638 93ED007A 		vldr.32	s14, [r3]
+ 1757 063c D7ED197A 		vldr.32	s15, [r7, #100]
+ 1758 0640 67EE277A 		vmul.f32	s15, s14, s15
+ARM GAS  /tmp/cczAStci.s 			page 35
+
+
+ 1759              		.loc 1 199 5
+ 1760 0644 4C4B     		ldr	r3, .L24+16
+ 1761 0646 C3ED007A 		vstr.32	s15, [r3]
+ 200:./Hardware/Src/Mahony.c **** 	q1 = q1 * norm;
+ 1762              		.loc 1 200 10
+ 1763 064a 4C4B     		ldr	r3, .L24+20
+ 1764 064c 93ED007A 		vldr.32	s14, [r3]
+ 1765 0650 D7ED197A 		vldr.32	s15, [r7, #100]
+ 1766 0654 67EE277A 		vmul.f32	s15, s14, s15
+ 1767              		.loc 1 200 5
+ 1768 0658 484B     		ldr	r3, .L24+20
+ 1769 065a C3ED007A 		vstr.32	s15, [r3]
+ 201:./Hardware/Src/Mahony.c **** 	q2 = q2 * norm;
+ 1770              		.loc 1 201 10
+ 1771 065e 484B     		ldr	r3, .L24+24
+ 1772 0660 93ED007A 		vldr.32	s14, [r3]
+ 1773 0664 D7ED197A 		vldr.32	s15, [r7, #100]
+ 1774 0668 67EE277A 		vmul.f32	s15, s14, s15
+ 1775              		.loc 1 201 5
+ 1776 066c 444B     		ldr	r3, .L24+24
+ 1777 066e C3ED007A 		vstr.32	s15, [r3]
+ 202:./Hardware/Src/Mahony.c **** 	q3 = q3 * norm;
+ 1778              		.loc 1 202 10
+ 1779 0672 3F4B     		ldr	r3, .L24+8
+ 1780 0674 93ED007A 		vldr.32	s14, [r3]
+ 1781 0678 D7ED197A 		vldr.32	s15, [r7, #100]
+ 1782 067c 67EE277A 		vmul.f32	s15, s14, s15
+ 1783              		.loc 1 202 5
+ 1784 0680 3B4B     		ldr	r3, .L24+8
+ 1785 0682 C3ED007A 		vstr.32	s15, [r3]
+ 203:./Hardware/Src/Mahony.c **** 	
+ 204:./Hardware/Src/Mahony.c **** 	float g1,g2,g3,g4,g5;
+ 205:./Hardware/Src/Mahony.c **** 	g1=2.0f * (q1*q3 - q0*q2);
+ 1786              		.loc 1 205 15
+ 1787 0686 3D4B     		ldr	r3, .L24+20
+ 1788 0688 93ED007A 		vldr.32	s14, [r3]
+ 1789 068c 384B     		ldr	r3, .L24+8
+ 1790 068e D3ED007A 		vldr.32	s15, [r3]
+ 1791 0692 27EE277A 		vmul.f32	s14, s14, s15
+ 1792              		.loc 1 205 23
+ 1793 0696 384B     		ldr	r3, .L24+16
+ 1794 0698 D3ED006A 		vldr.32	s13, [r3]
+ 1795 069c 384B     		ldr	r3, .L24+24
+ 1796 069e D3ED007A 		vldr.32	s15, [r3]
+ 1797 06a2 66EEA77A 		vmul.f32	s15, s13, s15
+ 1798              		.loc 1 205 19
+ 1799 06a6 77EE677A 		vsub.f32	s15, s14, s15
+ 1800              		.loc 1 205 4
+ 1801 06aa 77EEA77A 		vadd.f32	s15, s15, s15
+ 1802 06ae C7ED077A 		vstr.32	s15, [r7, #28]
+ 206:./Hardware/Src/Mahony.c **** 	g2=2.0f * (q0*q1 + q2*q3);
+ 1803              		.loc 1 206 15
+ 1804 06b2 314B     		ldr	r3, .L24+16
+ 1805 06b4 93ED007A 		vldr.32	s14, [r3]
+ 1806 06b8 304B     		ldr	r3, .L24+20
+ 1807 06ba D3ED007A 		vldr.32	s15, [r3]
+ 1808 06be 27EE277A 		vmul.f32	s14, s14, s15
+ARM GAS  /tmp/cczAStci.s 			page 36
+
+
+ 1809              		.loc 1 206 23
+ 1810 06c2 2F4B     		ldr	r3, .L24+24
+ 1811 06c4 D3ED006A 		vldr.32	s13, [r3]
+ 1812 06c8 294B     		ldr	r3, .L24+8
+ 1813 06ca D3ED007A 		vldr.32	s15, [r3]
+ 1814 06ce 66EEA77A 		vmul.f32	s15, s13, s15
+ 1815              		.loc 1 206 19
+ 1816 06d2 77EE277A 		vadd.f32	s15, s14, s15
+ 1817              		.loc 1 206 4
+ 1818 06d6 77EEA77A 		vadd.f32	s15, s15, s15
+ 1819 06da C7ED067A 		vstr.32	s15, [r7, #24]
+ 207:./Hardware/Src/Mahony.c **** 	g3= q0*q0 - q1*q1 - q2*q2 + q3*q3;
+ 1820              		.loc 1 207 8
+ 1821 06de 264B     		ldr	r3, .L24+16
+ 1822 06e0 93ED007A 		vldr.32	s14, [r3]
+ 1823 06e4 244B     		ldr	r3, .L24+16
+ 1824 06e6 D3ED007A 		vldr.32	s15, [r3]
+ 1825 06ea 27EE277A 		vmul.f32	s14, s14, s15
+ 1826              		.loc 1 207 16
+ 1827 06ee 234B     		ldr	r3, .L24+20
+ 1828 06f0 D3ED006A 		vldr.32	s13, [r3]
+ 1829 06f4 214B     		ldr	r3, .L24+20
+ 1830 06f6 D3ED007A 		vldr.32	s15, [r3]
+ 1831 06fa 66EEA77A 		vmul.f32	s15, s13, s15
+ 1832              		.loc 1 207 12
+ 1833 06fe 37EE677A 		vsub.f32	s14, s14, s15
+ 1834              		.loc 1 207 24
+ 1835 0702 1F4B     		ldr	r3, .L24+24
+ 1836 0704 D3ED006A 		vldr.32	s13, [r3]
+ 1837 0708 1D4B     		ldr	r3, .L24+24
+ 1838 070a D3ED007A 		vldr.32	s15, [r3]
+ 1839 070e 66EEA77A 		vmul.f32	s15, s13, s15
+ 1840              		.loc 1 207 20
+ 1841 0712 37EE677A 		vsub.f32	s14, s14, s15
+ 1842              		.loc 1 207 32
+ 1843 0716 164B     		ldr	r3, .L24+8
+ 1844 0718 D3ED006A 		vldr.32	s13, [r3]
+ 1845 071c 144B     		ldr	r3, .L24+8
+ 1846 071e D3ED007A 		vldr.32	s15, [r3]
+ 1847 0722 66EEA77A 		vmul.f32	s15, s13, s15
+ 1848              		.loc 1 207 4
+ 1849 0726 77EE277A 		vadd.f32	s15, s14, s15
+ 1850 072a C7ED057A 		vstr.32	s15, [r7, #20]
+ 208:./Hardware/Src/Mahony.c **** 	g4=2.0f * (q1*q2 + q0*q3);
+ 1851              		.loc 1 208 15
+ 1852 072e 134B     		ldr	r3, .L24+20
+ 1853 0730 93ED007A 		vldr.32	s14, [r3]
+ 1854 0734 124B     		ldr	r3, .L24+24
+ 1855 0736 D3ED007A 		vldr.32	s15, [r3]
+ 1856 073a 27EE277A 		vmul.f32	s14, s14, s15
+ 1857              		.loc 1 208 23
+ 1858 073e 0E4B     		ldr	r3, .L24+16
+ 1859 0740 D3ED006A 		vldr.32	s13, [r3]
+ 1860 0744 0A4B     		ldr	r3, .L24+8
+ 1861 0746 D3ED007A 		vldr.32	s15, [r3]
+ 1862 074a 66EEA77A 		vmul.f32	s15, s13, s15
+ 1863              		.loc 1 208 19
+ARM GAS  /tmp/cczAStci.s 			page 37
+
+
+ 1864 074e 77EE277A 		vadd.f32	s15, s14, s15
+ 1865              		.loc 1 208 4
+ 1866 0752 77EEA77A 		vadd.f32	s15, s15, s15
+ 1867 0756 C7ED047A 		vstr.32	s15, [r7, #16]
+ 209:./Hardware/Src/Mahony.c **** 	g5= q0*q0 + q1*q1 - q2*q2 - q3*q3;
+ 1868              		.loc 1 209 8
+ 1869 075a 074B     		ldr	r3, .L24+16
+ 1870 075c 93ED007A 		vldr.32	s14, [r3]
+ 1871 0760 10E0     		b	.L25
+ 1872              	.L26:
+ 1873 0762 00BFAFF3 		.align	3
+ 1873      0080
+ 1874              	.L24:
+ 1875 0768 7B14AE47 		.word	1202590843
+ 1876 076c E17A943F 		.word	1066695393
+ 1877 0770 00000000 		.word	q3
+ 1878 0774 0AD7A33C 		.word	1017370378
+ 1879 0778 00000000 		.word	q0
+ 1880 077c 00000000 		.word	q1
+ 1881 0780 00000000 		.word	q2
+ 1882              	.L25:
+ 1883 0784 464B     		ldr	r3, .L27+8
+ 1884 0786 D3ED007A 		vldr.32	s15, [r3]
+ 1885 078a 27EE277A 		vmul.f32	s14, s14, s15
+ 1886              		.loc 1 209 16
+ 1887 078e 454B     		ldr	r3, .L27+12
+ 1888 0790 D3ED006A 		vldr.32	s13, [r3]
+ 1889 0794 434B     		ldr	r3, .L27+12
+ 1890 0796 D3ED007A 		vldr.32	s15, [r3]
+ 1891 079a 66EEA77A 		vmul.f32	s15, s13, s15
+ 1892              		.loc 1 209 12
+ 1893 079e 37EE277A 		vadd.f32	s14, s14, s15
+ 1894              		.loc 1 209 24
+ 1895 07a2 414B     		ldr	r3, .L27+16
+ 1896 07a4 D3ED006A 		vldr.32	s13, [r3]
+ 1897 07a8 3F4B     		ldr	r3, .L27+16
+ 1898 07aa D3ED007A 		vldr.32	s15, [r3]
+ 1899 07ae 66EEA77A 		vmul.f32	s15, s13, s15
+ 1900              		.loc 1 209 20
+ 1901 07b2 37EE677A 		vsub.f32	s14, s14, s15
+ 1902              		.loc 1 209 32
+ 1903 07b6 3D4B     		ldr	r3, .L27+20
+ 1904 07b8 D3ED006A 		vldr.32	s13, [r3]
+ 1905 07bc 3B4B     		ldr	r3, .L27+20
+ 1906 07be D3ED007A 		vldr.32	s15, [r3]
+ 1907 07c2 66EEA77A 		vmul.f32	s15, s13, s15
+ 1908              		.loc 1 209 4
+ 1909 07c6 77EE677A 		vsub.f32	s15, s14, s15
+ 1910 07ca C7ED037A 		vstr.32	s15, [r7, #12]
+ 210:./Hardware/Src/Mahony.c **** 	
+ 211:./Hardware/Src/Mahony.c **** 	Att_Data->roll  = -asin(g1)    * 57.296f;
+ 1911              		.loc 1 211 21
+ 1912 07ce F869     		ldr	r0, [r7, #28]	@ float
+ 1913 07d0 FFF7FEFF 		bl	__aeabi_f2d
+ 1914 07d4 0246     		mov	r2, r0
+ 1915 07d6 0B46     		mov	r3, r1
+ 1916 07d8 43EC102B 		vmov	d0, r2, r3
+ARM GAS  /tmp/cczAStci.s 			page 38
+
+
+ 1917 07dc FFF7FEFF 		bl	asin
+ 1918 07e0 53EC102B 		vmov	r2, r3, d0
+ 1919              		.loc 1 211 20
+ 1920 07e4 1446     		mov	r4, r2
+ 1921 07e6 83F00045 		eor	r5, r3, #-2147483648
+ 1922              		.loc 1 211 33
+ 1923 07ea 2BA3     		adr	r3, .L27
+ 1924 07ec D3E90023 		ldrd	r2, [r3]
+ 1925 07f0 2046     		mov	r0, r4
+ 1926 07f2 2946     		mov	r1, r5
+ 1927 07f4 FFF7FEFF 		bl	__aeabi_dmul
+ 1928 07f8 0246     		mov	r2, r0
+ 1929 07fa 0B46     		mov	r3, r1
+ 1930 07fc 1046     		mov	r0, r2
+ 1931 07fe 1946     		mov	r1, r3
+ 1932 0800 FFF7FEFF 		bl	__aeabi_d2f
+ 1933 0804 0246     		mov	r2, r0	@ float
+ 1934              		.loc 1 211 18
+ 1935 0806 3B68     		ldr	r3, [r7]
+ 1936 0808 5A60     		str	r2, [r3, #4]	@ float
+ 212:./Hardware/Src/Mahony.c **** 	Att_Data->pitch = atan2(g2,g3) * 57.296f;
+ 1937              		.loc 1 212 20
+ 1938 080a B869     		ldr	r0, [r7, #24]	@ float
+ 1939 080c FFF7FEFF 		bl	__aeabi_f2d
+ 1940 0810 0446     		mov	r4, r0
+ 1941 0812 0D46     		mov	r5, r1
+ 1942 0814 7869     		ldr	r0, [r7, #20]	@ float
+ 1943 0816 FFF7FEFF 		bl	__aeabi_f2d
+ 1944 081a 0246     		mov	r2, r0
+ 1945 081c 0B46     		mov	r3, r1
+ 1946 081e 43EC112B 		vmov	d1, r2, r3
+ 1947 0822 45EC104B 		vmov	d0, r4, r5
+ 1948 0826 FFF7FEFF 		bl	atan2
+ 1949 082a 51EC100B 		vmov	r0, r1, d0
+ 1950              		.loc 1 212 33
+ 1951 082e 1AA3     		adr	r3, .L27
+ 1952 0830 D3E90023 		ldrd	r2, [r3]
+ 1953 0834 FFF7FEFF 		bl	__aeabi_dmul
+ 1954 0838 0246     		mov	r2, r0
+ 1955 083a 0B46     		mov	r3, r1
+ 1956 083c 1046     		mov	r0, r2
+ 1957 083e 1946     		mov	r1, r3
+ 1958 0840 FFF7FEFF 		bl	__aeabi_d2f
+ 1959 0844 0246     		mov	r2, r0	@ float
+ 1960              		.loc 1 212 18
+ 1961 0846 3B68     		ldr	r3, [r7]
+ 1962 0848 1A60     		str	r2, [r3]	@ float
+ 213:./Hardware/Src/Mahony.c **** 	Att_Data->yaw   = atan2(g4,g5) * 57.296f;
+ 1963              		.loc 1 213 20
+ 1964 084a 3869     		ldr	r0, [r7, #16]	@ float
+ 1965 084c FFF7FEFF 		bl	__aeabi_f2d
+ 1966 0850 0446     		mov	r4, r0
+ 1967 0852 0D46     		mov	r5, r1
+ 1968 0854 F868     		ldr	r0, [r7, #12]	@ float
+ 1969 0856 FFF7FEFF 		bl	__aeabi_f2d
+ 1970 085a 0246     		mov	r2, r0
+ 1971 085c 0B46     		mov	r3, r1
+ARM GAS  /tmp/cczAStci.s 			page 39
+
+
+ 1972 085e 43EC112B 		vmov	d1, r2, r3
+ 1973 0862 45EC104B 		vmov	d0, r4, r5
+ 1974 0866 FFF7FEFF 		bl	atan2
+ 1975 086a 51EC100B 		vmov	r0, r1, d0
+ 1976              		.loc 1 213 33
+ 1977 086e 0AA3     		adr	r3, .L27
+ 1978 0870 D3E90023 		ldrd	r2, [r3]
+ 1979 0874 FFF7FEFF 		bl	__aeabi_dmul
+ 1980 0878 0246     		mov	r2, r0
+ 1981 087a 0B46     		mov	r3, r1
+ 1982 087c 1046     		mov	r0, r2
+ 1983 087e 1946     		mov	r1, r3
+ 1984 0880 FFF7FEFF 		bl	__aeabi_d2f
+ 1985 0884 0246     		mov	r2, r0	@ float
+ 1986              		.loc 1 213 18
+ 1987 0886 3B68     		ldr	r3, [r7]
+ 1988 0888 9A60     		str	r2, [r3, #8]	@ float
+ 214:./Hardware/Src/Mahony.c **** 	
+ 215:./Hardware/Src/Mahony.c **** 	return ;
+ 1989              		.loc 1 215 2
+ 1990 088a 00BF     		nop
+ 216:./Hardware/Src/Mahony.c **** }
+ 1991              		.loc 1 216 1
+ 1992 088c 9037     		adds	r7, r7, #144
+ 1993              		.cfi_def_cfa_offset 24
+ 1994 088e BD46     		mov	sp, r7
+ 1995              		.cfi_def_cfa_register 13
+ 1996              		@ sp needed
+ 1997 0890 BDE8B083 		pop	{r4, r5, r7, r8, r9, pc}
+ 1998              	.L28:
+ 1999 0894 AFF30080 		.align	3
+ 2000              	.L27:
+ 2001 0898 00000060 		.word	1610612736
+ 2002 089c E3A54C40 		.word	1078765027
+ 2003 08a0 00000000 		.word	q0
+ 2004 08a4 00000000 		.word	q1
+ 2005 08a8 00000000 		.word	q2
+ 2006 08ac 00000000 		.word	q3
+ 2007              		.cfi_endproc
+ 2008              	.LFE129:
+ 2010              		.text
+ 2011              	.Letext0:
+ 2012              		.file 2 "./Hardware/Inc/Mahony.h"
+ 2013              		.file 3 "/usr/lib/gcc/arm-none-eabi/12.2.1/include/stdint.h"
+ 2014              		.file 4 "./Hardware/Inc/MPU6050.h"
+ 2015              		.file 5 "/usr/include/newlib/math.h"
+ARM GAS  /tmp/cczAStci.s 			page 40
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 Mahony.c
+     /tmp/cczAStci.s:25     .bss.MyAngle:0000000000000000 MyAngle
+     /tmp/cczAStci.s:22     .bss.MyAngle:0000000000000000 $d
+     /tmp/cczAStci.s:32     .bss.MPU6050:0000000000000000 MPU6050
+     /tmp/cczAStci.s:29     .bss.MPU6050:0000000000000000 $d
+     /tmp/cczAStci.s:35     .text.Prepare_RawData:0000000000000000 $t
+     /tmp/cczAStci.s:41     .text.Prepare_RawData:0000000000000000 Prepare_RawData
+     /tmp/cczAStci.s:170    .text.Prepare_RawData:0000000000000104 $d
+     /tmp/cczAStci.s:187    .text.GetInvSqrt:0000000000000000 $t
+     /tmp/cczAStci.s:193    .text.GetInvSqrt:0000000000000000 GetInvSqrt
+     /tmp/cczAStci.s:238    .text.GetInvSqrt:0000000000000048 $d
+     /tmp/cczAStci.s:247    .bss.exInt:0000000000000000 exInt
+     /tmp/cczAStci.s:244    .bss.exInt:0000000000000000 $d
+     /tmp/cczAStci.s:254    .bss.eyInt:0000000000000000 eyInt
+     /tmp/cczAStci.s:251    .bss.eyInt:0000000000000000 $d
+     /tmp/cczAStci.s:261    .bss.ezInt:0000000000000000 ezInt
+     /tmp/cczAStci.s:258    .bss.ezInt:0000000000000000 $d
+     /tmp/cczAStci.s:268    .data.q0:0000000000000000 q0
+     /tmp/cczAStci.s:265    .data.q0:0000000000000000 $d
+     /tmp/cczAStci.s:275    .bss.q1:0000000000000000 q1
+     /tmp/cczAStci.s:272    .bss.q1:0000000000000000 $d
+     /tmp/cczAStci.s:282    .bss.q2:0000000000000000 q2
+     /tmp/cczAStci.s:279    .bss.q2:0000000000000000 $d
+     /tmp/cczAStci.s:289    .bss.q3:0000000000000000 q3
+     /tmp/cczAStci.s:286    .bss.q3:0000000000000000 $d
+     /tmp/cczAStci.s:293    .rodata:0000000000000000 $d
+     /tmp/cczAStci.s:305    .text.Mahony_Update_Attitude:0000000000000000 $t
+     /tmp/cczAStci.s:311    .text.Mahony_Update_Attitude:0000000000000000 Mahony_Update_Attitude
+     /tmp/cczAStci.s:680    .text.Mahony_Update_Attitude:0000000000000388 $d
+     /tmp/cczAStci.s:692    .text.Mahony_Update_Attitude:00000000000003b4 $t
+     /tmp/cczAStci.s:1047   .text.Mahony_Update_Attitude:0000000000000738 $d
+     /tmp/cczAStci.s:1056   .text.Mahony_Update_Attitude:0000000000000758 $t
+     /tmp/cczAStci.s:1112   .text.Mahony_Update_Attitude:00000000000007d0 $d
+     /tmp/cczAStci.s:1119   .text.Madgwick_Update_Attitude:0000000000000000 $t
+     /tmp/cczAStci.s:1125   .text.Madgwick_Update_Attitude:0000000000000000 Madgwick_Update_Attitude
+     /tmp/cczAStci.s:1526   .text.Madgwick_Update_Attitude:00000000000003ec $d
+     /tmp/cczAStci.s:1532   .text.Madgwick_Update_Attitude:00000000000003fc $t
+     /tmp/cczAStci.s:1875   .text.Madgwick_Update_Attitude:0000000000000768 $d
+     /tmp/cczAStci.s:1883   .text.Madgwick_Update_Attitude:0000000000000784 $t
+     /tmp/cczAStci.s:2001   .text.Madgwick_Update_Attitude:0000000000000898 $d
+
+UNDEFINED SYMBOLS
+MPU6050_data
+__aeabi_f2d
+__aeabi_ddiv
+__aeabi_d2f
+sqrt
+__aeabi_dmul
+asin
+atan2
+__aeabi_dsub

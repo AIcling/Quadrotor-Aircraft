@@ -22,18 +22,20 @@ struct Angle angle = {0,0,0};
 float e0,e1,e2,e3 ;
 float Gyro_Xerr,Gyro_Yerr,Gyro_Zerr = 0.0f;
 float Acc_Xerr,Acc_Yerr,Acc_Yerr = 0.0f;
+float Wx,Wy,Wz=0.0f;
+
 #ifdef Use_Mag
 void CalAngle(struct Angle *angle, float time){
   float Mx = (HMC5883L_data[0]-Ox)/Rx/1090;
   float My = (HMC5883L_data[1]-Oy)/Ry/1090;
   float Mz = (HMC5883L_data[2]-Oz)/Rz/1090;
-  float Wx = (MPU6050_data[4]*K/Pic);
-  float Wy = (MPU6050_data[5]*K/Pic);
-  float Wz = (MPU6050_data[6]*K/Pic);
+   Wx = (MPU6050_data[4]*K/Pic);
+   Wy = (MPU6050_data[5]*K/Pic);
+   Wz = (MPU6050_data[6]*K/Pic);
   float Ax = MPU6050_data[0] * Kg;
   float Ay = MPU6050_data[1] * Kg;
   float Az = MPU6050_data[2] * Kg;
-  float _2q0, _2q1, _2q2, _2q3, _4q0, _4q1, _4q2 ,_8q1, _8q2, q0q0,q0q1,q0q2,q0q3,_2q0q2, q1q1, q1q2,q2q2, q2q3,q3q3,_2q2q3,q1q3,_2q0Mx,_2q0My,_2q0Mz,_2q1Mx,hx,hy,_2bx,_2bz,_4bx,_4bz ;
+  float _2q0, _2q1, _2q2, _2q3, q0q0,q0q1,q0q2,q0q3,_2q0q2, q1q1, q1q2,q2q2, q2q3,q3q3,_2q2q3,q1q3,_2q0Mx,_2q0My,_2q0Mz,_2q1Mx,hx,hy,_2bx,_2bz,_4bx,_4bz ;
 //加速度归一化
   float sum_ac = sqrt(pow(Ax,2)+pow(Ay,2)+pow(Az,2));
   Ax = Ax/sum_ac;
@@ -49,11 +51,6 @@ void CalAngle(struct Angle *angle, float time){
 		_2q1 = 2.0f * QNum.q1;
 		_2q2 = 2.0f * QNum.q2;
 		_2q3 = 2.0f * QNum.q3;
-		_4q0 = 4.0f * QNum.q0;
-		_4q1 = 4.0f * QNum.q1;
-		_4q2 = 4.0f * QNum.q2;
-		_8q1 = 8.0f * QNum.q1;
-		_8q2 = 8.0f * QNum.q2;
 		q0q0 = QNum.q0 * QNum.q0;
     q0q1 = QNum.q0 * QNum.q1;
     q0q2 = QNum.q0 * QNum.q2;
@@ -112,6 +109,7 @@ void HMC5883L_Motify(void){
   float Xmin,Xmax = HMC5883L_data[0];
   float Ymin,Ymax = HMC5883L_data[1];
   float Zmin,Zmax = HMC5883L_data[2];
+
   int i = 200;
   while(i--){
     HMC588CL_ReadData(HMC5883L_data);
